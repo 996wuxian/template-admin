@@ -11,7 +11,7 @@
       <div class="flex pos-relative">
         <svg-icon name="start" :width="50" :height="50" class="m-b-20px m-l-auto m-r-auto" />
         <div class="theme">
-          <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item.name)">
+          <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item)">
             <i v-if="item.id === themeValue" class="theme-icon" :class="[item.icon, item.color]" />
           </div>
         </div>
@@ -66,18 +66,19 @@ const rules = {
   }
 }
 
-const themeValue = ref(0)
-const changeTheme = (val: string) => {
+const themeValue = ref(useTheme.$state.themeValue)
+
+const changeTheme = (item: any) => {
   if (themeValue.value >= 2) {
     themeValue.value = -1
   }
+
   themeValue.value++
 
-  window.document.documentElement.setAttribute(
-    'data-theme',
-    themeDatas.value[themeValue.value].name
-  )
-  useTheme.setTheme({ themeType: val })
+  window.document.documentElement.setAttribute('data-theme', themeDatas.value[item.id].name)
+
+  useTheme.setThemeType({ themeType: item.name })
+  useTheme.setThemeValue({ themeValue: item.id })
 }
 
 const themeDatas = ref([

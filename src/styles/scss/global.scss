@@ -7,12 +7,3 @@
     transition: all 0.5s;
   }
 }
-
-.follow-theme {
-  @media (prefers-color-scheme: dark) {
-    background: getVar1('bgColor', 'dark');
-  }
-  @media (prefers-color-scheme: light) {
-    background: getVar1('bgColor', 'light');
-  }
-}

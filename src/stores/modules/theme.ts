@@ -8,11 +8,16 @@ const useThemeStore = defineStore(
   () => {
     const state = reactive({
       themeType: Local.get('themeType') || 'default',
+      themeValue: Local.get('themeValue') || 0,
       fontSize: Local.get('fontSize') || 'default'
     })
 
-    const setTheme = (actions: { themeType: string }) => {
+    const setThemeType = (actions: { themeType: string }) => {
       state.themeType = actions.themeType
+    }
+
+    const setThemeValue = (actions: { themeValue: string }) => {
+      state.themeValue = actions.themeValue
     }
 
     const setFontSize = (actions: { fontSize: string }) => {
@@ -21,14 +26,15 @@ const useThemeStore = defineStore(
 
     return {
       ...toRefs(state),
-      setTheme,
+      setThemeType,
+      setThemeValue,
       setFontSize
     }
   },
   {
     // 注意defineStore的第三个参数可以传入插件配置
     // persist: true // 保存state下所有属性 格式为: theme : {state: {theme: 'black'}}
-    persist: piniaPersistConfig('theme', ['themeType', 'fontSize']) // 保存指定属性 格式为：themeType: {themeType: 'black'}
+    persist: piniaPersistConfig('theme', ['themeType', 'themeValue', 'fontSize']) // 保存指定属性 格式为：themeType: {themeType: 'black'}
   }
 )
 

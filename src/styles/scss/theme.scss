@@ -21,6 +21,14 @@ $curTheme: light;
     $curTheme: $key !global; // 告诉他是一个全局变量
     html[data-theme='#{$key}'] & {
       @content;
+      @if $key == 'default' {
+        @media (prefers-color-scheme: dark) {
+          background: getVar1('bgColor', 'dark');
+        }
+        @media (prefers-color-scheme: light) {
+          background: getVar1('bgColor', 'light');
+        }
+      }
     }
   }
 }

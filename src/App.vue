@@ -6,6 +6,7 @@ const useTheme = useThemeStore()
 
 onMounted(() => {
   const type = useTheme.$state.themeType
+  console.log('🚀 ~ onMounted ~ type:', type)
   window.document.documentElement.setAttribute('data-theme', type)
 })
 </script>
