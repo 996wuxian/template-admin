@@ -17,6 +17,9 @@ importers:
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5))
+      pinia-plugin-persistedstate:
+        specifier: ^3.2.1
+        version: 3.2.1(pinia@2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5)))
       qs:
         specifier: ^6.12.3
         version: 6.12.3
@@ -2251,6 +2254,11 @@ packages:
     resolution: {integrity: sha512-eG2dWTVw5bzqGRztnHExczNxt5VGsE6OwTeCG3fdUf9KBsZzO3R5OIIIzWR+iZA0NtZ+RDVdaoE2dK1cn6jH4g==}
     engines: {node: '>=0.10'}
     hasBin: true
+
+  pinia-plugin-persistedstate@3.2.1:
+    resolution: {integrity: sha512-MK++8LRUsGF7r45PjBFES82ISnPzyO6IZx3CH5vyPseFLZCk1g2kgx6l/nW8pEBKxxd4do0P6bJw+mUSZIEZUQ==}
+    peerDependencies:
+      pinia: ^2.0.0
 
   pinia@2.1.7:
     resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==}
@@ -5284,6 +5292,10 @@ snapshots:
   picomatch@2.3.1: {}
 
   pidtree@0.6.0: {}
+
+  pinia-plugin-persistedstate@3.2.1(pinia@2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5))):
+    dependencies:
+      pinia: 2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5))
 
   pinia@2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5)):
     dependencies:

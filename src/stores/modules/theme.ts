@@ -1,20 +1,21 @@
 import { defineStore } from 'pinia'
 import { reactive, toRefs } from 'vue'
 import piniaPersistConfig from '@/utils/persist' // 引入指定属性的持久化配置文件
+import { Local } from '@/utils/storage'
 
 const useThemeStore = defineStore(
   'theme',
   () => {
     const state = reactive({
-      themeType: localStorage.getItem('themeType') || 'white',
-      fontSize: localStorage.getItem('fontSize') || 'default'
+      themeType: Local.get('themeType') || 'default',
+      fontSize: Local.get('fontSize') || 'default'
     })
 
-    const setTheme = (actions) => {
+    const setTheme = (actions: { themeType: string }) => {
       state.themeType = actions.themeType
     }
 
-    const setFontSize = (actions) => {
+    const setFontSize = (actions: { fontSize: string }) => {
       state.fontSize = actions.fontSize
     }
 

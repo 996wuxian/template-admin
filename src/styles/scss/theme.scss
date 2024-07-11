@@ -1,0 +1,36 @@
+$themes: (
+  default: (
+    bgColor: #f0f5ff,
+    textColor: #333
+  ),
+  light: (
+    bgColor: #f0f5ff,
+    textColor: #333
+  ),
+  dark: (
+    bgColor: #282a36,
+    textColor: #fff
+  )
+);
+
+// 定义全局变量每次改变主意重新赋值
+$curTheme: light;
+
+@mixin useTheme() {
+  @each $key, $value in $themes {
+    $curTheme: $key !global; // 告诉他是一个全局变量
+    html[data-theme='#{$key}'] & {
+      @content;
+    }
+  }
+}
+
+// 获取对应主题的属性
+@function getVar($key) {
+  @return map-get(map-get($themes, $curTheme), $key);
+}
+
+// 获取对应主题的属性
+@function getVar1($key, $curTheme) {
+  @return map-get(map-get($themes, $curTheme), $key);
+}

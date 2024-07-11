@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import themeOverrides from '@/config/theme.config'
+import useThemeStore from '@/stores/modules/theme'
+const useTheme = useThemeStore()
+
+onMounted(() => {
+  const type = useTheme.$state.themeType
+  window.document.documentElement.setAttribute('data-theme', type)
+})
 </script>
 
 <template>

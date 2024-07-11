@@ -16,6 +16,7 @@
     "axios": "^1.7.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "qs": "^6.12.3",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"

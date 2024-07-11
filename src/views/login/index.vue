@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page theme-option">
     <n-form
       ref="$form"
       :label-width="50"
@@ -10,10 +10,10 @@
     >
       <div class="flex pos-relative">
         <svg-icon name="start" :width="50" :height="50" class="m-b-20px m-l-auto m-r-auto" />
-        <div class="theme" @click="changeTheme">
-          <i i-solar-sun-fog-bold-duotone class="theme-icon" v-if="themeValue === 1" />
-          <i i-solar-planet-2-bold-duotone class="theme-icon" v-if="themeValue === 2" />
-          <i i-solar-moon-fog-bold-duotone class="theme-icon" v-if="themeValue === 3" />
+        <div class="theme">
+          <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item.name)">
+            <i v-if="item.id === themeValue" class="theme-icon" :class="[item.icon, item.color]" />
+          </div>
         </div>
       </div>
 
@@ -47,6 +47,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import useThemeStore from '@/stores/modules/theme'
+const useTheme = useThemeStore()
 
 const $form = ref()
 const form = ref<any>({})
@@ -60,22 +62,49 @@ const rules = {
   password: {
     required: true,
     message: '请输入密码',
-    trigger: ['input', 'blur']
+    trigger: ['blur']
   }
 }
 
-const themeValue = ref(1)
-const changeTheme = () => {
-  if (themeValue.value > 2) {
-    themeValue.value = 0
+const themeValue = ref(0)
+const changeTheme = (val: string) => {
+  if (themeValue.value >= 2) {
+    themeValue.value = -1
   }
   themeValue.value++
+
+  window.document.documentElement.setAttribute(
+    'data-theme',
+    themeDatas.value[themeValue.value].name
+  )
+  useTheme.setTheme({ themeType: val })
 }
+
+const themeDatas = ref([
+  {
+    id: 0,
+    name: 'light',
+    color: 'color-[#FDA736]',
+    icon: 'i-solar-sun-fog-bold-duotone'
+  },
+  {
+    id: 1,
+    name: 'default',
+    color: '',
+    icon: 'i-solar-asteroid-bold-duotone'
+  },
+  {
+    id: 2,
+    name: 'dark',
+    color: 'color-[#282A36]',
+    icon: 'i-solar-moon-fog-bold-duotone'
+  }
+])
 </script>
 
 <style lang="scss" scoped>
 .page {
-  @apply w-100vw h-100vh bg-[#f0f5ff] flex-center;
+  @apply w-100vw h-100vh  flex-center;
 }
 
 .form {
@@ -93,7 +122,7 @@ const changeTheme = () => {
   transition: all 0.3s;
 
   &-icon {
-    @apply inline-block w-20px h-20px color-[#FDA736];
+    @apply inline-block w-20px h-20px;
   }
 
   &:hover {

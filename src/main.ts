@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import store from '@/stores'
 import './plugins/asstets'
 
 import App from './App.vue'
@@ -11,7 +11,7 @@ import svgIcon from '@/plugins/svg-icon'
 const app = createApp(App)
 
 setupNProgress()
-app.use(createPinia())
+app.use(store)
 app.use(svgIcon)
 setupRouter(app)
 
