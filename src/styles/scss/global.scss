@@ -7,3 +7,15 @@
     transition: all 0.5s;
   }
 }
+
+$color: getVar('bdColor');
+
+.theme-box {
+  @include useTheme() {
+    background: getVar('boxColor');
+    @if $curTheme == 'dark' {
+      box-shadow: 0 0 10px rgba($color, 0.5);
+    }
+    transition: all 0.5s;
+  }
+}

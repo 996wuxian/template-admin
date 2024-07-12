@@ -6,7 +6,7 @@
       :model="form"
       :rules="rules"
       label-placement="left"
-      class="form"
+      class="form theme-box"
     >
       <div class="flex pos-relative">
         <svg-icon name="start" :width="50" :height="50" class="m-b-20px m-l-auto m-r-auto" />
@@ -78,7 +78,7 @@ const changeTheme = (item: any) => {
   window.document.documentElement.setAttribute('data-theme', themeDatas.value[item.id].name)
 
   useTheme.setThemeType({ themeType: item.name })
-  useTheme.setThemeValue({ themeValue: item.id })
+  useTheme.setThemeValue({ themeValue: themeValue.value })
 }
 
 const themeDatas = ref([

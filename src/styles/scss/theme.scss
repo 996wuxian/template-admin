@@ -1,15 +1,16 @@
 $themes: (
   default: (
     bgColor: #f0f5ff,
-    textColor: #333
+    boxColor: #fff
   ),
   light: (
     bgColor: #f0f5ff,
-    textColor: #333
+    boxColor: #fff
   ),
   dark: (
     bgColor: #282a36,
-    textColor: #fff
+    boxColor: #282a36,
+    bdColor: #a6e3e9
   )
 );
 
@@ -34,11 +35,6 @@ $curTheme: light;
 }
 
 // 获取对应主题的属性
-@function getVar($key) {
-  @return map-get(map-get($themes, $curTheme), $key);
-}
-
-// 获取对应主题的属性
-@function getVar1($key, $curTheme) {
+@function getVar($key, $curTheme: $curTheme) {
   @return map-get(map-get($themes, $curTheme), $key);
 }
