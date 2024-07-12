@@ -11,9 +11,10 @@
       <div class="flex pos-relative">
         <svg-icon name="start" :width="50" :height="50" class="m-b-20px m-l-auto m-r-auto" />
         <div class="theme">
-          <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item)">
+          <ThemeToggler />
+          <!-- <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item)">
             <i v-if="item.id === themeValue" class="theme-icon" :class="[item.icon, item.color]" />
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -39,7 +40,7 @@
         />
       </n-form-item>
       <n-form-item>
-        <n-button attr-type="button" type="primary" class="btn"> 登陆 </n-button>
+        <n-button attr-type="button" type="primary" class="btn" @click="login"> 登陆 </n-button>
       </n-form-item>
     </n-form>
   </div>
@@ -47,11 +48,18 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import useThemeStore from '@/stores/modules/theme'
-const useTheme = useThemeStore()
+import { useRouter } from 'vue-router'
+import ThemeToggler from '@/components/custom/theme-toggler.vue'
+import { Login } from '@/service/api/mock-api'
+const message = useMessage()
+const router = useRouter()
+import { Session } from '@/utils/storage'
 
 const $form = ref()
-const form = ref<any>({})
+const form = ref<any>({
+  userName: 'admin',
+  password: '123456'
+})
 
 const rules = {
   userName: {
@@ -66,41 +74,18 @@ const rules = {
   }
 }
 
-const themeValue = ref(useTheme.$state.themeValue)
-
-const changeTheme = (item: any) => {
-  if (themeValue.value >= 2) {
-    themeValue.value = -1
-  }
-
-  themeValue.value++
-
-  window.document.documentElement.setAttribute('data-theme', themeDatas.value[item.id].name)
-
-  useTheme.setThemeType({ themeType: item.name })
-  useTheme.setThemeValue({ themeValue: themeValue.value })
+const login = () => {
+  $form.value.validate(async (valid: boolean) => {
+    if (!valid) {
+      const { data } = await Login(form.value)
+      Session.set('token', data.token)
+      router.push('/home')
+      message.success('登录成功')
+    } else {
+      message.error('请输入账号密码')
+    }
+  })
 }
-
-const themeDatas = ref([
-  {
-    id: 0,
-    name: 'light',
-    color: 'color-[#FDA736]',
-    icon: 'i-solar-sun-fog-bold-duotone'
-  },
-  {
-    id: 1,
-    name: 'default',
-    color: '',
-    icon: 'i-solar-asteroid-bold-duotone'
-  },
-  {
-    id: 2,
-    name: 'dark',
-    color: 'color-[#282A36]',
-    icon: 'i-solar-moon-fog-bold-duotone'
-  }
-])
 </script>
 
 <style lang="scss" scoped>
@@ -121,10 +106,6 @@ const themeDatas = ref([
   @apply absolute top-0 right-0 px-10px pt-10px pb-5px b-rd-5px;
   cursor: pointer;
   transition: all 0.3s;
-
-  &-icon {
-    @apply inline-block w-20px h-20px;
-  }
 
   &:hover {
     background-color: #ececed;

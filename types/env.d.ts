@@ -9,3 +9,7 @@ declare module 'nprogress'
 declare interface Window {
   NProgress: any
 }
+
+declare module 'mockjs'
+
+declare module 'qs'

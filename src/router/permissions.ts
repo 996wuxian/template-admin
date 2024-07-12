@@ -4,21 +4,18 @@
 import { Session } from '@/utils/storage'
 import { Router } from 'vue-router'
 import useRoutesStore from '@/stores/modules/routes'
-import useUserStore from '@/stores/modules/user'
 import getPageTitle from '@/utils/pageTitle'
 import { setting } from '@/config/setting.config'
+import { $msg } from '@/config/interaction.config'
 
 export function setupPermissions(router: Router) {
   const useRouter = useRoutesStore()
-  const useUser = useUserStore()
   router.beforeEach(async (to: any, from: any, next: any) => {
     //设置页面title
     document.title = getPageTitle(to.meta.title)
-    const hasRoles = useUser.userInfo.roles
     window?.NProgress?.start()
 
-    // const token = Session.get('token')
-    const token = ''
+    const token = Session.get('token')
     if (token) {
       if (to.path === '/login') {
         next({ path: '/' })
@@ -30,10 +27,10 @@ export function setupPermissions(router: Router) {
       if (setting.routesWhiteList.indexOf(to.path) !== -1) {
         next()
       } else {
-        // ElMessage({
-        //   type: 'warning',
-        //   message: '登录失效，请重新登录'
-        // })
+        $msg({
+          type: 'warning',
+          msg: '登录失效，请重新登录'
+        })
         next(`/login`)
       }
     }
