@@ -12,9 +12,6 @@
         <svg-icon name="start" :width="50" :height="50" class="m-b-20px m-l-auto m-r-auto" />
         <div class="theme">
           <ThemeToggler />
-          <!-- <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item)">
-            <i v-if="item.id === themeValue" class="theme-icon" :class="[item.icon, item.color]" />
-          </div> -->
         </div>
       </div>
 
