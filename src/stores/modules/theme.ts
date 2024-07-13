@@ -9,7 +9,15 @@ const useThemeStore = defineStore(
     const state = reactive({
       themeType: Local.get('themeType') || 'default',
       themeValue: Local.get('themeValue') || 0,
-      fontSize: Local.get('fontSize') || 'default'
+      fontSize: Local.get('fontSize') || 'default',
+      layoutItem: Local.get('layoutItem') || {
+        // 默认布局
+        id: 0,
+        side: true,
+        header: true,
+        content: true,
+        isActive: true
+      }
     })
 
     const setThemeType = (actions: { themeType: string }) => {

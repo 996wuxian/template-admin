@@ -1,10 +1,12 @@
 <template>
-  <div v-for="item in themeDatas" :key="item.id" @click="changeTheme(item)">
-    <i
-      v-if="item.id === themeValue"
-      class="inline-block w-20px h-20px"
-      :class="[item.icon, item.color]"
-    />
+  <div class="w-20px h-20px overflow-hidden">
+    <div v-for="item in themeDatas" :key="item.id" @click.stop="changeTheme(item)">
+      <i
+        v-show="item.id === themeValue"
+        class="inline-block w-20px h-20px"
+        :class="[item.icon, item.color]"
+      />
+    </div>
   </div>
 </template>
 
@@ -13,6 +15,13 @@ import { ref } from 'vue'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const themeValue = ref(useTheme.$state.themeValue)
+
+watch(
+  () => useTheme.$state.themeValue,
+  (newValue) => {
+    themeValue.value = newValue
+  }
+)
 
 const changeTheme = (item: any) => {
   if (themeValue.value >= 2) {
@@ -47,6 +56,15 @@ const themeDatas = ref([
     icon: 'i-solar-moon-fog-bold-duotone'
   }
 ])
+
+defineProps({
+  showAll: {
+    type: Boolean,
+    default: false
+  }
+})
+
+// defineExpose({ changeTheme })
 </script>
 
 <style lang="scss" scoped></style>

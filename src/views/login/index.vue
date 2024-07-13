@@ -77,7 +77,6 @@ const login = () => {
       const { data } = await Login(form.value)
       Session.set('token', data.token)
       router.push('/home')
-      message.success('登录成功')
     } else {
       message.error('请输入账号密码')
     }
@@ -100,7 +99,7 @@ const login = () => {
 }
 
 .theme {
-  @apply absolute top-0 right-0 px-10px pt-10px pb-5px b-rd-5px;
+  @apply absolute top-0 right-0 p-10px b-rd-5px;
   cursor: pointer;
   transition: all 0.3s;
 

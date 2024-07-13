@@ -1,16 +1,26 @@
 $themes: (
   default: (
-    bgColor: #f0f5ff,
-    boxColor: #fff
+    // 登录背景
+    loginBg: #f0f5ff,
+    // 盒子背景
+    boxBg: #fff,
+    // 字体颜色
+    textColor: #333,
+    // header 背景
+    hdBoxBg: #fff
   ),
   light: (
-    bgColor: #f0f5ff,
-    boxColor: #fff
+    loginBg: #f0f5ff,
+    boxBg: #fff,
+    textColor: #333,
+    hdBoxBg: #fff
   ),
   dark: (
-    bgColor: #282a36,
-    boxColor: #282a36,
-    bdColor: #a6e3e9
+    loginBg: #282a36,
+    boxBg: #282a36,
+    bdColor: #f0f5ff,
+    textColor: #fff,
+    hdBoxBg: #ececed
   )
 );
 
@@ -24,10 +34,10 @@ $curTheme: light;
       @content;
       @if $key == 'default' {
         @media (prefers-color-scheme: dark) {
-          background: getVar1('bgColor', 'dark');
+          background: getVar('boxBg', 'dark');
         }
         @media (prefers-color-scheme: light) {
-          background: getVar1('bgColor', 'light');
+          background: getVar('boxBg', 'light');
         }
       }
     }

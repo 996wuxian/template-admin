@@ -1,21 +1,31 @@
 @import './scrollbar.scss';
 @import './theme.scss';
 
+// login
 .theme-option {
   @include useTheme() {
-    background: getVar('bgColor');
+    background: getVar('loginBg');
     transition: all 0.5s;
   }
 }
 
 $color: getVar('bdColor');
 
+// box
 .theme-box {
   @include useTheme() {
-    background: getVar('boxColor');
+    background: getVar('boxBg');
     @if $curTheme == 'dark' {
       box-shadow: 0 0 10px rgba($color, 0.5);
     }
-    transition: all 0.5s;
+    transition: all 0.3s;
+  }
+}
+
+// page
+.theme-page {
+  @include useTheme() {
+    background: getVar('boxBg');
+    transition: all 0.3s;
   }
 }

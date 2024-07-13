@@ -1,87 +1,140 @@
 <template>
-  <el-drawer v-model="drawerShow" title="设置" direction="rtl" size="300px">
-    <el-row :gutter="20" align="middle" style="padding-left: 10px">
-      <el-row :gutter="20">
-        <el-col :span="6">主题</el-col>
-        <el-col :span="18">
-          <el-select v-model="theme" size="small" @change="changeTheme">
-            <el-option label="夜间" value="black" />
-            <el-option label="白昼" value="white" />
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" style="margin-top: 20px">
-        <el-col :span="6">语言</el-col>
-        <el-col :span="18">
-          <el-select v-model="languages" size="small" @change="changeLanguage">
-            <el-option label="中文简体" value="zh" />
-            <el-option label="中文繁体" value="tc" />
-            <el-option label="英文" value="en" />
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" style="margin-top: 20px">
-        <el-col :span="6">字号</el-col>
-        <el-col :span="18">
-          <el-select v-model="fontSize" size="small" @change="changeFontSize">
-            <el-option label="小号" value="small" />
-            <el-option label="默认" value="default" />
-            <el-option label="大号" value="large" />
-          </el-select>
-        </el-col>
-      </el-row>
-    </el-row>
-    <div style="margin-top: 20px">正在建设中...</div>
-    <div class="changebox"></div>
-  </el-drawer>
+  <n-drawer
+    v-model:show="drawerShow"
+    :width="width"
+    :placement="placement"
+    close-on-esc
+    mask-closable
+    :trap-focus="false"
+    @mask-click="closeDrawer"
+    @esc="closeDrawer"
+    @update:show="closeDrawer"
+  >
+    <n-drawer-content>
+      <template #header>
+        {{ title }}
+      </template>
+      <div class="flex flex-col">
+        <n-divider> 主题模式 </n-divider>
+        <div class="block">
+          <ThemeToggler />
+        </div>
+        <n-divider> 布局模式 </n-divider>
+        <div class="flex flex-wrap justify-between h-200px px-20px">
+          <div v-for="item in layoutOption" :key="item.id" @click="changeLayout(item)">
+            <Layout
+              :nav="item?.nav"
+              :side="item?.side"
+              :header="item?.header"
+              :aside="item?.aside"
+              :content="item?.content"
+              :is-active="item.isActive"
+            />
+          </div>
+        </div>
+      </div>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-const { locale } = useI18n()
-
-locale.value = Local.get('lang') || 'zh'
-
+<script lang="ts" setup>
+import { ref, defineEmits } from 'vue'
+import Layout from './layout.vue'
+import { Local } from '@/utils/storage'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
+console.log('🚀 ~ useTheme:', useTheme.$state.layoutItem, 'layoutItem')
 
-import { useHeaderStore } from '../store/index'
-import { Local } from '@/utils/storage'
-const { drawerShow } = useHeaderStore()
-// 主题
-const theme = ref()
-theme.value = useTheme.themeType
+const drawerShow = ref(false)
 
-const changeTheme = () => {
-  document.documentElement.setAttribute('data-theme', theme.value)
-  useTheme.setTheme({ themeType: theme.value })
-}
-
-// 语言
-const languages = ref(Local.get('lang') || 'zh')
-
-const changeLanguage = () => {
-  if (languages.value === 'zh') {
-    Local.set('lang', 'zh')
-    locale.value = languages.value
-  } else if (languages.value === 'tc') {
-    locale.value = 'tc'
-    Local.set('lang', 'tc')
-  } else if (languages.value === 'en') {
-    locale.value = 'en'
-    Local.set('lang', 'en')
+const props = defineProps({
+  drawerShow: {
+    type: Boolean,
+    default: false
+  },
+  width: {
+    type: Number,
+    default: 360
+  },
+  placement: {
+    type: String,
+    default: 'right'
+  },
+  title: {
+    type: String,
+    default: '标题'
   }
+})
+
+drawerShow.value = props.drawerShow
+
+const emit = defineEmits(['close'])
+
+const closeDrawer = () => {
+  emit('close')
 }
 
-// 字号
-const fontSize = ref()
-fontSize.value = useTheme.fontSize
+const layoutOption = ref([
+  {
+    id: 0,
+    side: true,
+    header: true,
+    content: true,
+    isActive: false
+  },
+  {
+    id: 1,
+    nav: true,
+    side: true,
+    header: true,
+    content: true,
+    isActive: false
+  },
+  {
+    id: 2,
+    header: true,
+    content: true,
+    isActive: false
+  },
+  {
+    id: 3,
+    header: true,
+    aside: true,
+    content: true,
+    isActive: false
+  }
+])
 
-const changeFontSize = () => {
-  document.documentElement.setAttribute('data-size', fontSize.value)
-  useTheme.setFontSize({ fontSize: fontSize.value })
+onMounted(() => {
+  console.log(useTheme.$state.layoutItem, 'useTheme.$state.layoutItem.id')
+  const choose = JSON.parse(useTheme.$state.layoutItem)
+  console.log('🚀 ~ onMounted ~ choose:', choose)
+
+  layoutOption.value.forEach((v) => {
+    if (v.id === choose.id) {
+      v.isActive = true
+    }
+  })
+})
+
+const changeLayout = (item: any) => {
+  layoutOption.value.forEach((v) => {
+    v.isActive = false
+  })
+  item.isActive = true
+  Local.set('layoutItem', JSON.stringify(item))
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped>
+.block {
+  @apply flex-center p-10px b-rd-5px w-100%;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ececed !important;
+    transition: all 0.3s;
+  }
+}
+</style>

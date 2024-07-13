@@ -1,3 +1,4 @@
+import { $msg } from '@/config/interaction.config'
 import { Session } from '@/utils/storage'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -36,7 +37,14 @@ const fullscreen = () => {
 const drawerShow = ref(false)
 
 // 退出登录
-const loginOut = () => {}
+const loginOut = () => {
+  Session.clear()
+  router.push('/login')
+  $msg({
+    type: 'success',
+    msg: '退出成功'
+  })
+}
 
 export const useHeaderStore = () => {
   router = useRouter()

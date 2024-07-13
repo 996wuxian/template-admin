@@ -14,7 +14,8 @@ const themeOverrides: GlobalThemeOverrides = {
   },
   Button: {
     textColorPrimary: '#fff',
-    textColorInfo: '#333'
+    textColorInfo: '#333',
+    textColorHoverPrimary: '#fff'
   }
 }
 
