@@ -10,6 +10,8 @@ import { setupNProgress } from './plugins'
 import svgIcon from '@/plugins/svg-icon'
 
 const app = createApp(App)
+// 关闭警告
+app.config.warnHandler = () => null
 
 setupNProgress()
 app.use(store)

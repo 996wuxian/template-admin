@@ -62,7 +62,7 @@ export const asyncRoutes = [
     name: 'System',
     meta: {
       title: '系统管理',
-      icon: 'Menu',
+      icon: 'i-solar-round-arrow-down-bold-duotone',
       hidden: false
     },
     component: Layout,
@@ -95,7 +95,19 @@ export const asyncRoutes = [
           title: '用户管理',
           icon: 'Menu',
           hidden: false
-        }
+        },
+        children: [
+          {
+            path: '/user123',
+            name: 'User123',
+            component: () => import('@/views/user/index.vue'),
+            meta: {
+              title: '用户管理1123',
+              icon: 'Menu',
+              hidden: false
+            }
+          }
+        ]
       }
     ]
   },

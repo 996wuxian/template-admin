@@ -4,9 +4,9 @@
       <i i-solar-mirror-left-bold></i>
       <!-- <i i-solar-mirror-right-bold></i> -->
     </div>
-    <div class="header-block m-l-auto">
-      <i i-solar-maximize-square-minimalistic-outline></i>
-      <!-- <i i-solar-minimize-square-minimalistic-linear></i> -->
+    <div class="header-block m-l-auto" @click="toggleFullscreen">
+      <i i-solar-maximize-square-minimalistic-outline v-if="!isFullscreen"></i>
+      <i i-solar-minimize-square-minimalistic-linear v-else></i>
     </div>
     <!-- <i i-solar-rewind-back-circle-bold></i>
     <i i-solar-rewind-forward-circle-bold></i> -->
@@ -46,8 +46,17 @@
 import { useRoute } from 'vue-router'
 import { useHeaderStore } from './store/index'
 import Drawer from './components/drawer.vue'
-
+import { useFullscreen } from '@/utils/fullScrenn'
+const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
+
+const toggleFullscreen = () => {
+  if (isFullscreen.value) {
+    exitFullscreen()
+  } else {
+    enterFullscreen()
+  }
+}
 
 const { whetherData, getWhether, fullscreen, drawerShow, loginOut } = useHeaderStore()
 
@@ -70,6 +79,7 @@ const options = [
 <style scoped lang="scss">
 .header {
   @apply flex flex-items-center w-100% h-58px px-20px;
+  border-bottom: 1px solid #ebebeb;
 
   &-block {
     @apply flex-center p-10px b-rd-5px m-r-20px;

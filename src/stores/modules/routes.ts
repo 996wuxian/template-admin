@@ -13,6 +13,7 @@ const modules = import.meta.glob('../../views/*/*.vue')
 
 import { asyncRoutes, addRouter } from '@/router'
 import { setting } from '@/config/setting.config'
+import { RouteRecordRaw } from 'vue-router'
 
 const useRoutesStore = defineStore('routes', () => {
   const state = reactive({
@@ -40,19 +41,55 @@ const useRoutesStore = defineStore('routes', () => {
       // state.routes = [...res]
     } else {
       // 前端写死的动态路由
-      const routes = [...asyncRoutes]
-      console.log('🚀 ~ setRoutes ~ routes:', routes)
-      routes.forEach((item) => {
-        if (item.children) {
-          if (item.children.length === 1 && item.children[0].meta.title === item.meta.title) {
-            item.path = item.children[0].path
-          } else if (item.children.length > 1) {
-            item.children = item.children.filter((_item) => _item.meta.title !== item.meta.title)
-          }
-        }
-      })
+      const routes = mapRoute(asyncRoutes)
       state.routes = routes
     }
+  }
+
+  interface Router {
+    label?: string
+    key?: string
+    path?: string
+    name?: string
+    meta?: {
+      title?: string
+      hidden?: boolean
+      icon?: string
+    }
+    redirect?: string
+    children?: Router[]
+  }
+
+  const renderIcon = (icon: any) => {
+    return () => h('div', { class: icon }, { default: () => null })
+  }
+
+  const mapRoute = (routes: Router[]) => {
+    const mapChildren = (children: Router[]): Router[] => {
+      return children
+        .filter((child) => !child?.meta?.hidden)
+        .map((child) => ({
+          key: child?.path,
+          label: child.meta?.title,
+          children: child.children ? mapChildren(child.children) : undefined,
+          icon: renderIcon(child?.meta?.icon)
+        }))
+    }
+
+    return routes
+      .filter((route) => !route?.meta?.hidden)
+      .map((route) => {
+        const children = route.children ? mapChildren(route.children) : []
+        return {
+          key:
+            children.length === 1 && children[0]?.meta?.title === route?.meta?.title
+              ? children[0].path
+              : route.redirect || route.path,
+          label: route.meta?.title,
+          children: children.length > 1 ? children : undefined,
+          icon: renderIcon(route?.meta?.icon)
+        }
+      })
   }
 
   /**

@@ -29,6 +29,7 @@
               :aside="item?.aside"
               :content="item?.content"
               :is-active="item.isActive"
+              :tip="item.tip"
             />
           </div>
         </div>
@@ -43,7 +44,7 @@ import Layout from './layout.vue'
 import { Local } from '@/utils/storage'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
-console.log('🚀 ~ useTheme:', useTheme.$state.layoutItem, 'layoutItem')
+console.log('🚀 ~ useTheme:', useTheme.$state.layout, 'layout')
 
 const drawerShow = ref(false)
 
@@ -80,7 +81,9 @@ const layoutOption = ref([
     side: true,
     header: true,
     content: true,
-    isActive: false
+    isActive: false,
+    tip: '左侧菜单模式',
+    name: 'left_menu'
   },
   {
     id: 1,
@@ -88,30 +91,34 @@ const layoutOption = ref([
     side: true,
     header: true,
     content: true,
-    isActive: false
+    isActive: false,
+    tip: '左侧菜单混合模式',
+    name: 'left_menu_mixin'
   },
   {
     id: 2,
     header: true,
     content: true,
-    isActive: false
+    isActive: false,
+    tip: '顶部菜单模式',
+    name: 'top_menu'
   },
   {
     id: 3,
     header: true,
     aside: true,
     content: true,
-    isActive: false
+    isActive: false,
+    tip: '顶部菜单混合模式',
+    name: 'top_menu_mixin'
   }
 ])
 
 onMounted(() => {
-  console.log(useTheme.$state.layoutItem, 'useTheme.$state.layoutItem.id')
-  const choose = JSON.parse(useTheme.$state.layoutItem)
-  console.log('🚀 ~ onMounted ~ choose:', choose)
+  const choose = useTheme.$state.layout
 
   layoutOption.value.forEach((v) => {
-    if (v.id === choose.id) {
+    if (v.name === choose) {
       v.isActive = true
     }
   })
@@ -122,7 +129,8 @@ const changeLayout = (item: any) => {
     v.isActive = false
   })
   item.isActive = true
-  Local.set('layoutItem', JSON.stringify(item))
+  Local.set('layout', item.name)
+  useTheme.setLayout({ layout: item.name })
 }
 </script>
 
