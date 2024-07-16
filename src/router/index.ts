@@ -42,7 +42,7 @@ export const asyncRoutes = [
     redirect: '/home',
     meta: {
       title: '首页',
-      icon: 'Menu',
+      icon: 'i-solar-home-smile-bold',
       hidden: false
     },
     children: [
@@ -52,7 +52,7 @@ export const asyncRoutes = [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
-          icon: 'Menu'
+          icon: 'i-solar-home-smile-bold'
         }
       }
     ]
@@ -62,7 +62,7 @@ export const asyncRoutes = [
     name: 'System',
     meta: {
       title: '系统管理',
-      icon: 'i-solar-round-arrow-down-bold-duotone',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
       hidden: false
     },
     component: Layout,
@@ -73,7 +73,7 @@ export const asyncRoutes = [
         component: () => import('@/views/role/index.vue'),
         meta: {
           title: '角色管理',
-          icon: 'Menu',
+          icon: 'i-solar-user-plus-bold-duotone',
           hidden: false
         }
       },
@@ -83,7 +83,7 @@ export const asyncRoutes = [
         component: () => import('@/views/menu/index.vue'),
         meta: {
           title: '菜单管理',
-          icon: 'Menu',
+          icon: 'i-solar-widget-4-bold-duotone',
           hidden: false
         }
       },
@@ -93,21 +93,9 @@ export const asyncRoutes = [
         component: () => import('@/views/user/index.vue'),
         meta: {
           title: '用户管理',
-          icon: 'Menu',
+          icon: 'i-solar-user-bold-duotone',
           hidden: false
-        },
-        children: [
-          {
-            path: '/user123',
-            name: 'User123',
-            component: () => import('@/views/user/index.vue'),
-            meta: {
-              title: '用户管理1123',
-              icon: 'Menu',
-              hidden: false
-            }
-          }
-        ]
+        }
       }
     ]
   },

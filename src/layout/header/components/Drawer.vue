@@ -129,7 +129,6 @@ const changeLayout = (item: any) => {
     v.isActive = false
   })
   item.isActive = true
-  Local.set('layout', item.name)
   useTheme.setLayout({ layout: item.name })
 }
 </script>

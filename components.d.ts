@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    LoadingBar: typeof import('./src/components/custom/loading-bar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
@@ -29,7 +28,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./src/components/common/svg-icon.vue')['default']
-    Theme: typeof import('./src/components/common/theme.vue')['default']
     ThemeToggler: typeof import('./src/components/custom/theme-toggler.vue')['default']
   }
 }

@@ -11,7 +11,8 @@ const useThemeStore = defineStore(
       themeType: Local.get('themeType') || setting.defaultTheme,
       themeValue: Local.get('themeValue') || setting.defaultThemeValue,
       fontSize: Local.get('fontSize') || 'default',
-      layout: Local.get('layout') || setting.defaultLayout
+      layout: Local.get('layout') || setting.defaultLayout,
+      sideWidth: Number(Local.get('sideWidth')) || setting.sideWidth
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -26,6 +27,10 @@ const useThemeStore = defineStore(
       state.layout = actions.layout
     }
 
+    const setSideWidth = (actions: { sideWidth: number }) => {
+      state.sideWidth = actions.sideWidth
+    }
+
     const setFontSize = (actions: { fontSize: string }) => {
       state.fontSize = actions.fontSize
     }
@@ -35,13 +40,20 @@ const useThemeStore = defineStore(
       setThemeType,
       setThemeValue,
       setLayout,
+      setSideWidth,
       setFontSize
     }
   },
   {
     // 注意defineStore的第三个参数可以传入插件配置
     // persist: true // 保存state下所有属性 格式为: theme : {state: {theme: 'black'}}
-    persist: piniaPersistConfig('theme', ['themeType', 'themeValue', 'fontSize']) // 保存指定属性 格式为：themeType: {themeType: 'black'}
+    persist: piniaPersistConfig('theme', [
+      'themeType',
+      'themeValue',
+      'layout',
+      'sideWidth',
+      'fontSize'
+    ]) // 保存指定属性 格式为：themeType: {themeType: 'black'}
   }
 )
 

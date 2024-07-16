@@ -1,8 +1,8 @@
 <template>
   <div class="header theme-page">
-    <div class="header-block">
-      <i i-solar-mirror-left-bold></i>
-      <!-- <i i-solar-mirror-right-bold></i> -->
+    <div class="header-block" @click="changeSide">
+      <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
+      <i i-solar-mirror-left-bold v-else></i>
     </div>
     <div class="header-block m-l-auto" @click="toggleFullscreen">
       <i i-solar-maximize-square-minimalistic-outline v-if="!isFullscreen"></i>
@@ -24,17 +24,9 @@
       @select="(key: any) => key === 'loginOut' && loginOut()"
     >
       <div class="header-block">
-        <svg-icon
-          name="user"
-          class="m-r-10px"
-          :width="22"
-          :height="22"
-          hoverFill="#409eff"
-          hoverable
-          fill="#333"
-        />
-        Belinda
-        <i i-solar-alt-arrow-down-bold-duotone class="m-l-5px"></i>
+        <i i-solar-user-bold-duotone class="w-20px h-20px"></i>
+        <span class="mx-10px">Belinda</span>
+        <i i-solar-alt-arrow-down-bold-duotone></i>
       </div>
     </n-dropdown>
   </div>
@@ -43,13 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
 import { useHeaderStore } from './store/index'
 import Drawer from './components/drawer.vue'
 import { useFullscreen } from '@/utils/fullScrenn'
 const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
-
+import useThemeStore from '@/stores/modules/theme'
+const themeStore = useThemeStore()
+const sideWidth = computed(() => themeStore.$state.sideWidth)
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
     exitFullscreen()
@@ -58,11 +51,15 @@ const toggleFullscreen = () => {
   }
 }
 
-const { whetherData, getWhether, fullscreen, drawerShow, loginOut } = useHeaderStore()
+const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 
-const route = useRoute()
+const changeSide = () => {
+  themeStore.setSideWidth({
+    sideWidth: themeStore.sideWidth === 200 ? 90 : 200
+  })
+}
 
-getWhether()
+// getWhether()
 
 const close = () => {
   drawerShow.value = false

@@ -41,7 +41,7 @@ const useRoutesStore = defineStore('routes', () => {
       // state.routes = [...res]
     } else {
       // 前端写死的动态路由
-      const routes = mapRoute(asyncRoutes)
+      const routes = await mapRoute(asyncRoutes)
       state.routes = routes
     }
   }
@@ -60,11 +60,7 @@ const useRoutesStore = defineStore('routes', () => {
     children?: Router[]
   }
 
-  const renderIcon = (icon: any) => {
-    return () => h('div', { class: icon }, { default: () => null })
-  }
-
-  const mapRoute = (routes: Router[]) => {
+  async function mapRoute(routes: Router[]) {
     const mapChildren = (children: Router[]): Router[] => {
       return children
         .filter((child) => !child?.meta?.hidden)
@@ -72,7 +68,7 @@ const useRoutesStore = defineStore('routes', () => {
           key: child?.path,
           label: child.meta?.title,
           children: child.children ? mapChildren(child.children) : undefined,
-          icon: renderIcon(child?.meta?.icon)
+          icon: child?.meta?.icon ? child.meta.icon : undefined
         }))
     }
 
@@ -87,7 +83,7 @@ const useRoutesStore = defineStore('routes', () => {
               : route.redirect || route.path,
           label: route.meta?.title,
           children: children.length > 1 ? children : undefined,
-          icon: renderIcon(route?.meta?.icon)
+          icon: route?.meta?.icon ? route.meta.icon : undefined
         }
       })
   }

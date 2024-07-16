@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from 'node:url'
+import path from 'path'
 import { defineConfig } from 'vite'
 
 import { setupVitePlugins } from './build/plugins'
@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: setupVitePlugins(),
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': path.resolve(__dirname, 'src')
     }
   },
   css: {

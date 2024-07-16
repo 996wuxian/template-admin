@@ -24,7 +24,7 @@
       <n-form-item label="密码 : " path="password">
         <template #label>
           <i
-            i-solar-password-minimalistic-input-bold-duotone
+            i-solar-key-minimalistic-bold-duotone
             class="inline-block w-25px h-25px color-[#71C9CE]"
           />
         </template>

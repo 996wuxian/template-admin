@@ -6,6 +6,7 @@ import { setupUnocss } from './unocss'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 export function setupVitePlugins() {
@@ -33,6 +34,13 @@ export function setupVitePlugins() {
     }),
     Components({
       resolvers: [NaiveUiResolver()]
+    }),
+    // 打包分析
+    visualizer({
+      open: true, //在默认用户代理中打开生成的文件
+      gzipSize: true, // 收集 gzip 大小并将其显示
+      brotliSize: true, // 收集 brotli 大小并将其显示
+      filename: 'analysis.html' // 分析图生成的文件名
     })
   ]
   return plugins
