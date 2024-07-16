@@ -1,6 +1,10 @@
 <template>
   <div class="header theme-page">
-    <div class="header-block" @click="changeSide">
+    <div
+      class="header-block"
+      @click="changeSide"
+      v-if="layout === 'left_menu' || layout === 'left_menu_mixin'"
+    >
       <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
@@ -43,6 +47,7 @@ import ThemeToggler from '@/components/custom/theme-toggler.vue'
 import useThemeStore from '@/stores/modules/theme'
 const themeStore = useThemeStore()
 const sideWidth = computed(() => themeStore.$state.sideWidth)
+const layout = computed(() => themeStore.$state.layout)
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
     exitFullscreen()
@@ -54,6 +59,8 @@ const toggleFullscreen = () => {
 const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 
 const changeSide = () => {
+  console.log(sideWidth, 'sideWidth')
+
   themeStore.setSideWidth({
     sideWidth: themeStore.sideWidth === 200 ? 90 : 200
   })

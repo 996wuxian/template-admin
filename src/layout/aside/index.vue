@@ -12,6 +12,8 @@
     :render-icon="renderMenuIcon"
     :root-indent="36"
     :indent="12"
+    :collapsed="sideWidth === 90 ? true : false"
+    :collapsed-width="90"
     class="w-100%"
   />
 </template>

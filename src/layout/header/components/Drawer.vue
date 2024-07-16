@@ -41,10 +41,8 @@
 <script lang="ts" setup>
 import { ref, defineEmits } from 'vue'
 import Layout from './layout.vue'
-import { Local } from '@/utils/storage'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
-console.log('🚀 ~ useTheme:', useTheme.$state.layout, 'layout')
 
 const drawerShow = ref(false)
 
@@ -130,6 +128,12 @@ const changeLayout = (item: any) => {
   })
   item.isActive = true
   useTheme.setLayout({ layout: item.name })
+
+  if (item.name === 'left_menu_mixin') {
+    useTheme.setSideWidth({ sideWidth: 90 })
+  } else {
+    useTheme.setSideWidth({ sideWidth: 200 })
+  }
 }
 </script>
 

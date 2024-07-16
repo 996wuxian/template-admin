@@ -1,7 +1,7 @@
 <template>
   <n-layout has-sider class="w-100vw h-100vh">
     <n-layout-sider
-      :width="layout === 'left_menu' ? sideWidth : layout === 'left_menu_mixin' ? 90 : 0"
+      :width="layout === 'left_menu' || layout === 'left_menu_mixin' ? sideWidth : 0"
       collapse-mode="width"
       class="aside"
     >
