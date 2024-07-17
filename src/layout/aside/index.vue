@@ -4,12 +4,12 @@
       <div
         i-solar-widget-5-bold-duotone
         :style="[
-          Number(sideWidth) === 200
+          Number(sideWidth) >= 200
             ? { width: '20px', height: '20px' }
             : { width: '25px', height: '25px' }
         ]"
       ></div>
-      <span v-show="Number(sideWidth) === 200" class="m-l-10px"> {{ setting.title }}</span>
+      <span v-show="Number(sideWidth) >= 200" class="m-l-10px"> {{ setting.title }}</span>
     </div>
     <n-menu
       v-if="menuOptions"

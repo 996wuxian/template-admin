@@ -1,11 +1,15 @@
 <template>
   <div class="tag">
+    <!-- tag-item_radio -->
     <div
-      class="tag-item_button tag-item_radio"
+      class="tag-item tag-item_button"
       v-for="(item, index) in tagData"
       :key="index"
       @click="toPage(item)"
-      :class="{ 'tag-item-active': item.isActive === true }"
+      :class="{
+        'tag-item-active': item.isActive === true,
+        'tag-item-radio-active': item.isActive === true
+      }"
     >
       <i :class="item.icon" class="inline-block m-r-5px m-b-2px"></i>{{ item.label }}
       <i
@@ -43,10 +47,51 @@ const removeTag = (item: any) => {
   @apply w-100% h-44px flex items-center px-20px;
   border-bottom: 1px solid #ebebeb;
 
-  &-item_button {
-    @apply flex-center px-10px py-5px b-rd-3px m-r-10px b-1px b-solid b-gray-300;
+  &-item {
+    @apply flex-center m-r-10px px-10px py-5px;
     cursor: pointer;
     transition: all 0.3s;
+
+    &-close {
+      @apply w-16px h-16px m-b-2px m-l-10px;
+
+      &:hover {
+        color: #f56c6c !important;
+      }
+    }
+
+    &-active {
+      @apply bg-[#A6E3E9] text-white;
+      border-color: #a6e3e9 !important;
+    }
+
+    &-radio-active {
+      &::before,
+      &::after {
+        position: absolute;
+        bottom: 0;
+        content: '';
+        width: 15px;
+        height: 20px;
+        border-radius: 100%;
+        box-shadow: 0 0 0 40px #a6e3e9 !important; /*使用box-shadow不影响尺寸*/
+        transition: all 0.5s;
+      }
+
+      &::before {
+        left: -15px;
+        clip-path: inset(50% -10px 0 50%);
+      }
+
+      &::after {
+        right: -15px;
+        clip-path: inset(50% 50% 0 -10px);
+      }
+    }
+  }
+
+  &-item_button {
+    @apply flex-center b-rd-3px b-1px b-solid b-gray-300;
 
     &:hover {
       @apply b-[#A6E3E9];
@@ -58,17 +103,44 @@ const removeTag = (item: any) => {
         transition: all 0.3s;
       }
     }
+  }
 
-    &-close {
-      @apply w-16px h-16px m-b-2px m-l-10px;
+  &-item_radio {
+    @apply relative flex-center h-35px m-t-auto;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s;
 
-      &:hover {
-        color: #f56c6c !important;
+    &:hover {
+      @apply bg-[#A6E3E9];
+      transition: all 0.3s;
+      color: #fff;
+
+      &::before,
+      &::after {
+        box-shadow: 0 0 0 40px #a6e3e9; /*使用box-shadow不影响尺寸*/
+        transition: all 0.3s;
       }
     }
 
-    &-active {
-      @apply b-[#A6E3E9] bg-[#A6E3E9] text-white;
+    &::before,
+    &::after {
+      position: absolute;
+      bottom: 0;
+      content: '';
+      width: 15px;
+      height: 20px;
+      border-radius: 100%;
+      box-shadow: 0 0 0 40px transparent; /*使用box-shadow不影响尺寸*/
+    }
+
+    &::before {
+      left: -15px;
+      clip-path: inset(50% -10px 0 50%);
+    }
+
+    &::after {
+      right: -15px;
+      clip-path: inset(50% 50% 0 -10px);
     }
   }
 }

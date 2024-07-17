@@ -5,6 +5,16 @@ import { Local } from '@/utils/storage'
 import { setting } from '@/config/setting.config'
 import { useRouter } from 'vue-router'
 
+const defaultTag = [
+  {
+    key: '/home',
+    label: '首页',
+    icon: 'i-solar-home-smile-bold',
+    close: false,
+    isActive: true
+  }
+]
+
 const useThemeStore = defineStore(
   'theme',
   () => {
@@ -16,15 +26,11 @@ const useThemeStore = defineStore(
       fontSize: Local.get('fontSize') || 'default',
       layout: Local.get('layout') || setting.defaultLayout,
       sideWidth: Number(Local.get('sideWidth')) || setting.sideWidth,
-      tagData: Local.get('tagData') || [
-        {
-          key: '/home',
-          label: '首页',
-          icon: 'i-solar-home-smile-bold',
-          close: false,
-          isActive: true
-        }
-      ]
+      headerHeight: Number(Local.get('headerHeight')) || setting.headerHeight,
+      tagData: Local.get('tagData') || defaultTag,
+      whether: Local.get('whether') || setting.whether,
+      breadcrumb: Local.get('breadcrumb') || setting.breadcrumb,
+      breadcrumbIcon: Local.get('breadcrumbIcon') || setting.breadcrumbIcon
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -43,31 +49,34 @@ const useThemeStore = defineStore(
       state.sideWidth = actions.sideWidth
     }
 
-    const setTagData = (actions: { tag: object }) => {
+    const setTagData = (actions: { tag: any }) => {
       const item = state.tagData.find((item: any) => item.label === actions.tag.label)
       if (item) {
-        state.tagData.forEach((element) => {
+        state.tagData.forEach((element: any) => {
           element.isActive = false
         })
         item.isActive = true
         return
       }
-      state.tagData.forEach((element) => {
+      state.tagData.forEach((element: any) => {
         element.isActive = false
       })
       actions.tag.isActive = true
       state.tagData.push(actions.tag)
     }
 
-    const removeTag = (actions: { tag: object }) => {
-      state.tagData = state.tagData.filter((item) => item.label !== actions.tag.label)
-      state.tagData.forEach((item) => {
+    const removeTag = (actions: { tag: any }) => {
+      state.tagData = state.tagData.filter((item: any) => item.label !== actions.tag.label)
+      state.tagData.forEach((item: any) => {
         item.isActive = false
       })
       state.tagData[state.tagData.length - 1].isActive = true
       router.push(state.tagData[state.tagData.length - 1].key)
     }
 
+    const setStatus = (actions: { type: string; bool: boolean }) => {
+      state[actions.type] = actions.bool
+    }
     const setFontSize = (actions: { fontSize: string }) => {
       state.fontSize = actions.fontSize
     }
@@ -80,6 +89,7 @@ const useThemeStore = defineStore(
       setSideWidth,
       setTagData,
       removeTag,
+      setStatus,
       setFontSize
     }
   },
@@ -92,6 +102,9 @@ const useThemeStore = defineStore(
       'layout',
       'sideWidth',
       'tagData',
+      'whether',
+      'breadcrumb',
+      'breadcrumbIcon',
       'fontSize'
     ]) // 保存指定属性 格式为：themeType: {themeType: 'black'}
   }

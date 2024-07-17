@@ -16,6 +16,26 @@ export const setting = {
   defaultThemeValue: 1, // 0: light -> 1: default -> 2: dark -> 0: light
   // 默认布局
   defaultLayout: 'left_menu', // left_menu left_menu_mixin top_menu top_menu_mixin
-  // 默认布局
-  sideWidth: 200
+  // 默认菜单宽度
+  sideWidth: 200,
+  // 默认菜单宽度
+  headerHeight: 58,
+  // 是否需要天气
+  whether: true,
+  // 是否需要面包屑 系统管理 / 用户管理
+  breadcrumb: true,
+  // 是否需要面包屑图标
+  breadcrumbIcon: true,
+  // 是否需要标签栏
+  tag: true,
+  // 标签栏风格 button / radio
+  tagStyle: 'radio',
+  // 是否需要多标签页缓存
+  multiTagsCache: true,
+  // 是否需要固定头部
+  fixedHeader: true,
+  // 是否需要固定侧边栏
+  fixedSideBar: true,
+  // 是否需要固定底部
+  fixedFooter: false
 }

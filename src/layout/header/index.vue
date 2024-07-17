@@ -8,14 +8,26 @@
       <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
-    <n-breadcrumb class="m-t-4px">
+    <n-breadcrumb class="m-t-4px" v-if="breadcrumb">
       <n-breadcrumb-item v-for="(item, index) in crumb" :key="index">
         <div class="flex items-center">
-          <i :class="item.icon" class="m-r-5px m-b-3px"></i>
+          <i :class="item.icon" class="m-r-5px m-b-3px" v-if="breadcrumbIcon"></i>
           {{ item.name }}
         </div>
       </n-breadcrumb-item>
     </n-breadcrumb>
+
+    <div class="flex m-l-auto m-t-4px items-center" v-if="whetherData && whether">
+      <div i-solar-cloud-sun-bold-duotone v-if="whetherData?.weather === '阴'"></div>
+      <div i-solar-clouds-outline v-if="whetherData?.weather === '多云'"></div>
+      <div class="m-l-10px">地区 : {{ whetherData?.province }}-{{ whetherData?.city }}</div>
+      <n-divider vertical />
+      <div>天气 : {{ whetherData?.weather }}-室外温度 : {{ whetherData?.temperature }}℃</div>
+      <n-divider vertical />
+      <div>风向 : {{ whetherData?.winddirection }}</div>
+      <n-divider vertical />
+      <div>上次更新时间 : {{ whetherData?.reporttime }}</div>
+    </div>
 
     <div class="header-block m-l-auto" @click="toggleFullscreen">
       <i i-solar-maximize-square-minimalistic-outline v-if="!isFullscreen"></i>
@@ -23,7 +35,7 @@
     </div>
     <!-- <i i-solar-rewind-back-circle-bold></i>
     <i i-solar-rewind-forward-circle-bold></i> -->
-    <!-- <i i-solar-logout-3-bold-duotone></i> -->
+    <!--  -->
     <div class="header-block">
       <i i-solar-palette-bold-duotone class="m-l-auto" @click="drawerShow = true"></i>
     </div>
@@ -34,6 +46,7 @@
       trigger="click"
       :options="options"
       :show-arrow="true"
+      :render-icon="renderIcon"
       @select="(key: any) => key === 'loginOut' && loginOut()"
     >
       <div class="header-block">
@@ -48,16 +61,18 @@
 </template>
 
 <script setup lang="ts">
+import { h } from 'vue'
 import { useHeaderStore } from './store/index'
+import { useRoute } from 'vue-router'
+import { NIcon } from 'naive-ui'
 import Drawer from './components/drawer.vue'
 import { useFullscreen } from '@/utils/fullScrenn'
-const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
-import useThemeStore from '@/stores/modules/theme'
-const themeStore = useThemeStore()
-const sideWidth = computed(() => themeStore.$state.sideWidth)
-const layout = computed(() => themeStore.$state.layout)
-import { useRoute } from 'vue-router'
+import useuseTheme from '@/stores/modules/theme'
+const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
+const useTheme = useuseTheme()
+const sideWidth = computed(() => useTheme.$state.sideWidth)
+const layout = computed(() => useTheme.$state.layout)
 const route = useRoute()
 const crumb = computed(() =>
   removeDuplicatesByName(
@@ -66,7 +81,9 @@ const crumb = computed(() =>
     })
   )
 )
-console.log('🚀 ~ crumb:', crumb)
+const whether = computed(() => useTheme.$state.whether)
+const breadcrumb = computed(() => useTheme.$state.breadcrumb)
+const breadcrumbIcon = computed(() => useTheme.$state.breadcrumbIcon)
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
     exitFullscreen()
@@ -78,12 +95,12 @@ const toggleFullscreen = () => {
 const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 
 const changeSide = () => {
-  themeStore.setSideWidth({
-    sideWidth: themeStore.sideWidth === 200 ? 90 : 200
+  useTheme.setSideWidth({
+    sideWidth: useTheme.sideWidth === 200 ? 90 : 200
   })
 }
 
-// getWhether()
+getWhether()
 
 const removeDuplicatesByName = (arr: any) => {
   const nameMap = new Map()
@@ -104,9 +121,20 @@ const close = () => {
 const options = [
   {
     label: '退出登录',
-    key: 'loginOut'
+    key: 'loginOut',
+    icon: 'i-solar-logout-3-bold-duotone'
   }
 ]
+
+function renderIcon(option: any) {
+  if (option.icon) {
+    return h(NIcon, {
+      class: `${option.icon}`
+    })
+  } else {
+    return null
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -126,6 +154,7 @@ const options = [
     &:hover {
       background-color: #ececed !important;
       transition: all 0.3s;
+      color: #409eff;
 
       i {
         color: #409eff;
