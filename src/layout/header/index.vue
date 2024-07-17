@@ -8,6 +8,15 @@
       <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
+    <n-breadcrumb class="m-t-4px">
+      <n-breadcrumb-item v-for="(item, index) in crumb" :key="index">
+        <div class="flex items-center">
+          <i :class="item.icon" class="m-r-5px m-b-3px"></i>
+          {{ item.name }}
+        </div>
+      </n-breadcrumb-item>
+    </n-breadcrumb>
+
     <div class="header-block m-l-auto" @click="toggleFullscreen">
       <i i-solar-maximize-square-minimalistic-outline v-if="!isFullscreen"></i>
       <i i-solar-minimize-square-minimalistic-linear v-else></i>
@@ -48,6 +57,16 @@ import useThemeStore from '@/stores/modules/theme'
 const themeStore = useThemeStore()
 const sideWidth = computed(() => themeStore.$state.sideWidth)
 const layout = computed(() => themeStore.$state.layout)
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const crumb = computed(() =>
+  removeDuplicatesByName(
+    route.matched.map((item: any) => {
+      return { name: item.meta.title, path: item.path, icon: item.meta.icon }
+    })
+  )
+)
+console.log('🚀 ~ crumb:', crumb)
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
     exitFullscreen()
@@ -59,14 +78,24 @@ const toggleFullscreen = () => {
 const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 
 const changeSide = () => {
-  console.log(sideWidth, 'sideWidth')
-
   themeStore.setSideWidth({
     sideWidth: themeStore.sideWidth === 200 ? 90 : 200
   })
 }
 
 // getWhether()
+
+const removeDuplicatesByName = (arr: any) => {
+  const nameMap = new Map()
+
+  for (const item of arr) {
+    if (!nameMap.has(item.name)) {
+      nameMap.set(item.name, item)
+    }
+  }
+
+  return Array.from(nameMap.values())
+}
 
 const close = () => {
   drawerShow.value = false
@@ -82,7 +111,7 @@ const options = [
 
 <style scoped lang="scss">
 .header {
-  @apply flex flex-items-center w-100% h-58px px-20px;
+  @apply flex flex-items-center w-100% h-100% px-20px;
   border-bottom: 1px solid #ebebeb;
 
   &-block {

@@ -1,5 +1,5 @@
 <template>
-  <n-layout has-sider class="w-100vw h-100vh">
+  <n-layout has-sider class="w-100vw h-100vh overflow-hidden">
     <n-layout-sider
       :width="layout === 'left_menu' || layout === 'left_menu_mixin' ? sideWidth : 0"
       collapse-mode="width"
@@ -8,7 +8,8 @@
       <Aside />
     </n-layout-sider>
     <n-layout class="w-100% h-100% transition-all">
-      <n-layout-header><Header /></n-layout-header>
+      <n-layout-header class="h-58px"><Header /></n-layout-header>
+      <Tag />
       <n-layout has-sider class="content">
         <n-layout-sider
           :width="layout === 'top_menu_mixin' ? sideWidth : 0"
@@ -17,11 +18,15 @@
         >
           <Aside />
         </n-layout-sider>
-        <n-layout-content content-style="padding: 24px;" class="">
-          <router-view />
-        </n-layout-content>
+        <div class="w-100% h-100% flex flex-col">
+          <n-layout-content content-style="padding: 10px; ">
+            <router-view />
+          </n-layout-content>
+          <n-layout-footer class="h-48px m-t-auto flex-center"
+            >Copyright MIT © 2090 Template</n-layout-footer
+          >
+        </div>
       </n-layout>
-      <n-layout-footer class="h-58px"></n-layout-footer>
     </n-layout>
   </n-layout>
 </template>
@@ -29,6 +34,7 @@
 <script setup lang="ts">
 import Header from './header/index.vue'
 import Aside from './aside/index.vue'
+import Tag from './tag/index.vue'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const layout = computed(() => useTheme.$state.layout)
@@ -37,7 +43,7 @@ const sideWidth = computed(() => useTheme.$state.sideWidth)
 
 <style scoped lang="scss">
 .content {
-  height: calc(100% - 116px);
+  height: calc(100vh - 102px);
   box-sizing: border-box;
 }
 
