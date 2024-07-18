@@ -26,11 +26,14 @@ const useThemeStore = defineStore(
       fontSize: Local.get('fontSize') || 'default',
       layout: Local.get('layout') || setting.defaultLayout,
       sideWidth: Number(Local.get('sideWidth')) || setting.sideWidth,
+      sideFoldWidth: Number(Local.get('sideFoldWidth')) || setting.sideFoldWidth,
       headerHeight: Number(Local.get('headerHeight')) || setting.headerHeight,
       tagData: Local.get('tagData') || defaultTag,
       whether: Local.get('whether') || setting.whether,
       breadcrumb: Local.get('breadcrumb') || setting.breadcrumb,
-      breadcrumbIcon: Local.get('breadcrumbIcon') || setting.breadcrumbIcon
+      breadcrumbIcon: Local.get('breadcrumbIcon') || setting.breadcrumbIcon,
+      tag: Local.get('tag') || setting.tag,
+      tagStyle: Local.get('tagStyle') || setting.tagStyle
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -45,8 +48,8 @@ const useThemeStore = defineStore(
       state.layout = actions.layout
     }
 
-    const setSideWidth = (actions: { sideWidth: number }) => {
-      state.sideWidth = actions.sideWidth
+    const setSize = (actions: { type: keyof typeof state; size: number }) => {
+      state[actions.type] = actions.size
     }
 
     const setTagData = (actions: { tag: any }) => {
@@ -74,9 +77,14 @@ const useThemeStore = defineStore(
       router.push(state.tagData[state.tagData.length - 1].key)
     }
 
-    const setStatus = (actions: { type: string; bool: boolean }) => {
+    const setStatus = (actions: { type: keyof typeof state; bool: boolean }) => {
       state[actions.type] = actions.bool
     }
+
+    const setTagStyle = (actions: { tagStyle: string }) => {
+      state.tagStyle = actions.tagStyle
+    }
+
     const setFontSize = (actions: { fontSize: string }) => {
       state.fontSize = actions.fontSize
     }
@@ -86,27 +94,31 @@ const useThemeStore = defineStore(
       setThemeType,
       setThemeValue,
       setLayout,
-      setSideWidth,
+      setSize,
       setTagData,
       removeTag,
       setStatus,
+      setTagStyle,
       setFontSize
     }
   },
   {
-    // 注意defineStore的第三个参数可以传入插件配置
     // persist: true // 保存state下所有属性 格式为: theme : {state: {theme: 'black'}}
     persist: piniaPersistConfig('theme', [
       'themeType',
       'themeValue',
       'layout',
       'sideWidth',
+      'sideFoldWidth',
+      'headerHeight',
       'tagData',
       'whether',
       'breadcrumb',
       'breadcrumbIcon',
+      'tag',
+      'tagType',
       'fontSize'
-    ]) // 保存指定属性 格式为：themeType: {themeType: 'black'}
+    ])
   }
 )
 

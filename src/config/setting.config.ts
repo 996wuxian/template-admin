@@ -16,9 +16,11 @@ export const setting = {
   defaultThemeValue: 1, // 0: light -> 1: default -> 2: dark -> 0: light
   // 默认布局
   defaultLayout: 'left_menu', // left_menu left_menu_mixin top_menu top_menu_mixin
-  // 默认菜单宽度
+  // 默认侧边栏宽度
   sideWidth: 200,
-  // 默认菜单宽度
+  // 默认侧边栏折叠宽度
+  sideFoldWidth: 90,
+  // 默认头部宽度
   headerHeight: 58,
   // 是否需要天气
   whether: true,

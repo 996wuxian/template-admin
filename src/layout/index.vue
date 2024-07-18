@@ -8,9 +8,9 @@
       <Aside />
     </n-layout-sider>
     <n-layout class="w-100% h-100% transition-all">
-      <n-layout-header class="h-58px"><Header /></n-layout-header>
-      <Tag />
-      <n-layout has-sider class="content">
+      <n-layout-header :style="{ height: headerHeight + 'px' }"><Header /></n-layout-header>
+      <Tag v-if="tag" />
+      <n-layout has-sider class="content" :class="{ 'content-has-tag': tag }">
         <n-layout-sider
           :width="layout === 'top_menu_mixin' ? sideWidth : 0"
           collapse-mode="width"
@@ -39,12 +39,20 @@ import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const layout = computed(() => useTheme.$state.layout)
 const sideWidth = computed(() => useTheme.$state.sideWidth)
+const tag = computed(() => useTheme.$state.tag)
+const headerHeight = computed(() => useTheme.$state.headerHeight)
 </script>
 
 <style scoped lang="scss">
 .content {
-  height: calc(100vh - 102px);
   box-sizing: border-box;
+  height: calc(100vh - 58px);
+  transition: all 0.3s;
+}
+
+.content-has-tag {
+  height: calc(100vh - 102px);
+  transition: all 0.3s;
 }
 
 .aside {

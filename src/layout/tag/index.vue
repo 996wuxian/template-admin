@@ -1,13 +1,14 @@
 <template>
   <div class="tag">
-    <!-- tag-item_radio -->
     <div
-      class="tag-item tag-item_button"
+      class="tag-item"
       v-for="(item, index) in tagData"
       :key="index"
       @click="toPage(item)"
       :class="{
+        'tag-item_button': tagStyle === 'button',
         'tag-item-active': item.isActive === true,
+        'tag-item_radio': tagStyle === 'radio',
         'tag-item-radio-active': item.isActive === true
       }"
     >
@@ -29,6 +30,7 @@ const router = useRouter()
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const tagData = computed(() => useTheme.$state.tagData)
+const tagStyle = computed(() => useTheme.$state.tagStyle)
 
 const toPage = (item: any) => {
   router.push(item.key)
@@ -106,7 +108,7 @@ const removeTag = (item: any) => {
   }
 
   &-item_radio {
-    @apply relative flex-center h-35px m-t-auto;
+    @apply relative flex-center h-35px m-t-auto m-r-20px;
     border-radius: 10px 10px 0 0;
     transition: all 0.3s;
 

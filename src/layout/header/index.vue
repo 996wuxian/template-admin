@@ -72,6 +72,7 @@ import useuseTheme from '@/stores/modules/theme'
 const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 const useTheme = useuseTheme()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
+
 const layout = computed(() => useTheme.$state.layout)
 const route = useRoute()
 const crumb = computed(() =>
@@ -95,8 +96,9 @@ const toggleFullscreen = () => {
 const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 
 const changeSide = () => {
-  useTheme.setSideWidth({
-    sideWidth: useTheme.sideWidth === 200 ? 90 : 200
+  useTheme.setSize({
+    type: 'sideWidth',
+    size: useTheme.sideWidth === 200 ? 90 : 200
   })
 }
 

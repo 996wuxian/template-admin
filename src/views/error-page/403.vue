@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import roleImg from '@/assets/error_images/403.png'
-import cloudImg from '@/assets/error_images/cloud.png'
+import roleImg from '@/assets/img/error_images/403.png'
+import cloudImg from '@/assets/img/error_images/cloud.png'
 
 import { reactive } from 'vue'
 const state = reactive({
@@ -15,15 +15,14 @@ const state = reactive({
 <template>
   <div class="error-container">
     <div class="error-content">
-      <el-row :gutter="20">
-        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+      <n-grid x-gap="12" :cols="2">
+        <n-gi>
           <div class="pic-error">
             <el-image class="pic-error-parent" :src="roleImg" />
             <el-image class="pic-error-child left" :src="cloudImg" />
           </div>
-        </el-col>
-
-        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+        </n-gi>
+        <n-gi>
           <div class="bullshit">
             <div class="bullshit-oops">{{ state.oops }}</div>
             <div class="bullshit-headline">{{ state.headline }}</div>
@@ -34,43 +33,32 @@ const state = reactive({
               </a>
             </router-link>
           </div>
-        </el-col>
-      </el-row>
+        </n-gi>
+      </n-grid>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .error-container {
-  position: relative;
-  min-height: 100vh;
+  @apply w-100vw h-100vh relative;
 
   .error-content {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    width: 40vw;
-    height: 400px;
+    @apply absolute top-50% left-50% w-40vw h-400px;
     transform: translate(-50%, -50%);
 
     .pic-error {
-      position: relative;
-      float: left;
-      width: 100%;
-      overflow: hidden;
+      @apply relative w-100% overflow-hidden float-left;
 
       &-parent {
-        width: 100%;
+        @apply w-100%;
       }
 
       &-child {
-        position: absolute;
+        @apply absolute;
 
         &.left {
-          top: 17px;
-          left: 220px;
-          width: 80px;
-          opacity: 0;
+          @apply top-17px left-220px w-80px opacity-0;
           animation-name: cloud-left;
           animation-duration: 2s;
           animation-timing-function: linear;
@@ -107,31 +95,17 @@ const state = reactive({
     }
 
     .bullshit {
-      position: relative;
-      float: left;
-      width: 300px;
-      padding: 30px 0;
-      overflow: hidden;
+      @apply relative float-left w-300px py-30px overflow-hidden;
 
       &-oops {
-        margin-bottom: 20px;
-        font-size: 32px;
-        font-weight: bold;
-        line-height: 40px;
-        color: #282c34;
-        opacity: 0;
+        @apply m-b-20px text-32px font-bold line-height-40px text-[#333] opacity-0;
         animation-name: slide-up;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
       }
 
       &-headline {
-        margin-bottom: 10px;
-        font-size: 20px;
-        font-weight: bold;
-        line-height: 24px;
-        color: #222;
-        opacity: 0;
+        @apply m-b-10px text-20px font-bold line-height-24px text-[#222] opacity-0;
         animation-name: slide-up;
         animation-duration: 0.5s;
         animation-delay: 0.1s;
@@ -139,11 +113,7 @@ const state = reactive({
       }
 
       &-info {
-        margin-bottom: 30px;
-        font-size: 13px;
-        line-height: 21px;
-        color: #282c34;
-        opacity: 0;
+        @apply m-b-30px text-13px line-height-21px text-[#444] opacity-0;
         animation-name: slide-up;
         animation-duration: 0.5s;
         animation-delay: 0.2s;
@@ -151,18 +121,8 @@ const state = reactive({
       }
 
       &-return-home {
-        display: block;
-        float: left;
-        width: 110px;
-        height: 36px;
-        font-size: 14px;
-        line-height: 36px;
-        color: #fff;
-        text-align: center;
+        @apply px-20px block float-left h-36px text-14px line-height-36px text-[#fff] text-align-center bg-[#30a0fa] b-rd-100px opacity-0;
         cursor: pointer;
-        background: #fff;
-        border-radius: 100px;
-        opacity: 0;
         animation-name: slide-up;
         animation-duration: 0.5s;
         animation-delay: 0.3s;

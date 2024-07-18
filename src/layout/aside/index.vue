@@ -69,8 +69,9 @@ const change = (key: any, item: any) => {
 }
 
 const changeSide = () => {
-  useTheme.setSideWidth({
-    sideWidth: useTheme.sideWidth === 200 ? 90 : 200
+  useTheme.setSize({
+    type: 'sideWidth',
+    size: useTheme.sideWidth === 200 ? 90 : 200
   })
 }
 </script>
