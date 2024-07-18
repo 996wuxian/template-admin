@@ -32,12 +32,8 @@ export const setting = {
   tag: true,
   // 标签栏风格 button / radio
   tagStyle: 'radio',
-  // 是否需要多标签页缓存
-  multiTagsCache: true,
-  // 是否需要固定头部
-  fixedHeader: true,
-  // 是否需要固定侧边栏
-  fixedSideBar: true,
-  // 是否需要固定底部
-  fixedFooter: false
+  // 是否需要底部
+  footer: true,
+  // 默认底部宽度
+  footerHeight: 48
 }

@@ -22,7 +22,10 @@
           <n-layout-content content-style="padding: 10px; ">
             <router-view />
           </n-layout-content>
-          <n-layout-footer class="h-48px m-t-auto flex-center"
+          <n-layout-footer
+            v-if="footer"
+            class="m-t-auto flex-center"
+            :style="{ height: footerHeight + 'px' }"
             >Copyright MIT © 2090 Template</n-layout-footer
           >
         </div>
@@ -41,6 +44,8 @@ const layout = computed(() => useTheme.$state.layout)
 const sideWidth = computed(() => useTheme.$state.sideWidth)
 const tag = computed(() => useTheme.$state.tag)
 const headerHeight = computed(() => useTheme.$state.headerHeight)
+const footer = computed(() => useTheme.$state.footer)
+const footerHeight = computed(() => useTheme.$state.footerHeight)
 </script>
 
 <style scoped lang="scss">

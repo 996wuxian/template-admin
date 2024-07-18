@@ -20,12 +20,12 @@
       :render-icon="renderMenuIcon"
       :root-indent="36"
       :indent="12"
-      :collapsed="sideWidth === 90 ? true : false"
-      :collapsed-width="90"
+      :collapsed="sideWidth === sideFoldWidth ? true : false"
+      :collapsed-width="sideFoldWidth"
       class="w-100%"
     />
     <div class="theme-block" @click="changeSide" v-if="layout === 'top_menu_mixin'">
-      <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
+      <i i-solar-mirror-right-bold v-if="sideWidth > sideFoldWidth"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
   </div>
@@ -40,6 +40,8 @@ import { NIcon } from 'naive-ui'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
+const oldSideWidth = computed(() => useTheme.$state.oldSideWidth)
+const sideFoldWidth = computed(() => useTheme.$state.sideFoldWidth)
 const layout = computed(() => useTheme.$state.layout)
 const routes = useRoutesStore().routes
 const route = useRoute()
@@ -47,7 +49,7 @@ const router = useRouter()
 
 const menuOptions = ref(routes)
 
-// todo 动态渲染菜单图标 缺陷：只能写死, 动态的显示不出来
+// todo 动态渲染菜单图标 缺陷：需要在uno.config.ts的safelist中先添加对应icon
 function renderMenuIcon(option: any) {
   if (option.icon) {
     return h(NIcon, {
@@ -71,7 +73,7 @@ const change = (key: any, item: any) => {
 const changeSide = () => {
   useTheme.setSize({
     type: 'sideWidth',
-    size: useTheme.sideWidth === 200 ? 90 : 200
+    size: sideWidth.value > sideFoldWidth.value ? sideFoldWidth.value : oldSideWidth.value
   })
 }
 </script>

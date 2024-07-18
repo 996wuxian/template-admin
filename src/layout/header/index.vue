@@ -5,7 +5,7 @@
       @click="changeSide"
       v-if="layout === 'left_menu' || layout === 'left_menu_mixin'"
     >
-      <i i-solar-mirror-right-bold v-if="sideWidth === 200"></i>
+      <i i-solar-mirror-right-bold v-if="sideWidth > sideFoldWidth"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
     <n-breadcrumb class="m-t-4px" v-if="breadcrumb">
@@ -20,6 +20,7 @@
     <div class="flex m-l-auto m-t-4px items-center" v-if="whetherData && whether">
       <div i-solar-cloud-sun-bold-duotone v-if="whetherData?.weather === '阴'"></div>
       <div i-solar-clouds-outline v-if="whetherData?.weather === '多云'"></div>
+      <div i-solar-cloud-storm-broken v-if="whetherData?.weather === '雷阵雨'"></div>
       <div class="m-l-10px">地区 : {{ whetherData?.province }}-{{ whetherData?.city }}</div>
       <n-divider vertical />
       <div>天气 : {{ whetherData?.weather }}-室外温度 : {{ whetherData?.temperature }}℃</div>
@@ -72,7 +73,8 @@ import useuseTheme from '@/stores/modules/theme'
 const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 const useTheme = useuseTheme()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
-
+const oldSideWidth = computed(() => useTheme.$state.oldSideWidth)
+const sideFoldWidth = computed(() => useTheme.$state.sideFoldWidth)
 const layout = computed(() => useTheme.$state.layout)
 const route = useRoute()
 const crumb = computed(() =>
@@ -98,7 +100,7 @@ const { whetherData, getWhether, drawerShow, loginOut } = useHeaderStore()
 const changeSide = () => {
   useTheme.setSize({
     type: 'sideWidth',
-    size: useTheme.sideWidth === 200 ? 90 : 200
+    size: sideWidth.value > sideFoldWidth.value ? sideFoldWidth.value : oldSideWidth.value
   })
 }
 

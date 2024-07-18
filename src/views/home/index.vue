@@ -1,5 +1,5 @@
 <template>
-  <div>home123</div>
+  <div class="w-100% h-100% bg-[#30a0fa]">home123</div>
 </template>
 
 <script lang="ts" setup>

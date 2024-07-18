@@ -26,6 +26,7 @@ const useThemeStore = defineStore(
       fontSize: Local.get('fontSize') || 'default',
       layout: Local.get('layout') || setting.defaultLayout,
       sideWidth: Number(Local.get('sideWidth')) || setting.sideWidth,
+      oldSideWidth: Number(Local.get('oldSideWidth')) || setting.sideWidth,
       sideFoldWidth: Number(Local.get('sideFoldWidth')) || setting.sideFoldWidth,
       headerHeight: Number(Local.get('headerHeight')) || setting.headerHeight,
       tagData: Local.get('tagData') || defaultTag,
@@ -33,7 +34,9 @@ const useThemeStore = defineStore(
       breadcrumb: Local.get('breadcrumb') || setting.breadcrumb,
       breadcrumbIcon: Local.get('breadcrumbIcon') || setting.breadcrumbIcon,
       tag: Local.get('tag') || setting.tag,
-      tagStyle: Local.get('tagStyle') || setting.tagStyle
+      tagStyle: Local.get('tagStyle') || setting.tagStyle,
+      footer: Local.get('footer') || setting.footer,
+      footerHeight: Number(Local.get('footerHeight')) || setting.footerHeight
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -117,6 +120,8 @@ const useThemeStore = defineStore(
       'breadcrumbIcon',
       'tag',
       'tagType',
+      'footer',
+      'footerHeight',
       'fontSize'
     ])
   }

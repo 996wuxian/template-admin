@@ -34,87 +34,53 @@
           </div>
         </div>
         <n-divider> 页面功能 </n-divider>
-        <div class="step-block">
-          侧边栏宽度
-          <n-input-number
-            v-model:value="sideWidth"
-            style="width: 120px"
+        <div v-for="setting in settings" :key="setting.label" class="step-block">
+          {{ setting.label }}
+          <component
+            :is="setting.component"
+            v-model:value="setting.model"
             placeholder=""
-            @update:value="sideWidthChange"
-            :min="90"
-            :max="500"
-          />
-        </div>
-        <div class="step-block">
-          侧边栏折叠宽度
-          <n-input-number
-            v-model:value="sideFoldWidth"
-            style="width: 120px"
-            placeholder=""
-            @update:value="sideWidthChange"
-            :min="70"
-            :max="120"
-          />
-        </div>
-        <div class="step-block">
-          头部高度
-          <n-input-number
-            v-model:value="headerHeight"
-            style="width: 120px"
-            placeholder=""
-            @update:value="heightChange"
-            :min="40"
-            :max="100"
-          />
-        </div>
-        <div class="step-block">
-          显示天气
-          <n-switch v-model:value="whether" @update:value="whetherChange" />
-        </div>
-        <div class="step-block">
-          显示面包屑
-          <n-switch v-model:value="breadcrumb" @update:value="breadcrumbChange" />
-        </div>
-        <div class="step-block">
-          显示面包屑图标
-          <n-switch v-model:value="breadcrumbIcon" @update:value="breadcrumbIconChange" />
-        </div>
-        <div class="step-block">
-          显示标签栏
-          <n-switch v-model:value="tag" @update:value="tagChange" />
-        </div>
-        <div class="step-block">
-          标签栏风格
-          <n-select
-            v-model:value="tagStyle"
-            :options="options"
-            style="width: 120px"
-            placeholder=""
-            @update:value="tagStyleChange"
+            v-bind="setting.props"
+            @update:value="(value: any) => setting.handler(value, setting.type, setting?.text)"
           />
         </div>
       </div>
+      <n-button>重置配置</n-button>
     </n-drawer-content>
   </n-drawer>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, onMounted, defineProps } from 'vue'
 import Layout from './layout.vue'
 import { $msg } from '@/config/interaction.config'
 import useThemeStore from '@/stores/modules/theme'
+import { State } from '@/types/theme-state-type'
+import { NInputNumber, NSwitch, NSelect } from 'naive-ui'
+
 const useTheme = useThemeStore()
 const whether = ref(useTheme.$state.whether)
 const breadcrumb = ref(useTheme.$state.breadcrumb)
 const breadcrumbIcon = ref(useTheme.$state.breadcrumbIcon)
 const sideWidth = ref(useTheme.$state.sideWidth)
 const sideFoldWidth = ref(useTheme.$state.sideFoldWidth)
-console.log('🚀 ~ sideFoldWidth:', sideFoldWidth)
 const headerHeight = ref(useTheme.$state.headerHeight)
 const tag = ref(useTheme.$state.tag)
 const tagStyle = ref(useTheme.$state.tagStyle)
+const footer = ref(useTheme.$state.footer)
+const footerHeight = ref(useTheme.$state.footerHeight)
 
-const drawerShow = ref(false)
+interface LayoutOption {
+  id: number
+  nav?: boolean
+  side?: boolean
+  header?: boolean
+  aside?: boolean
+  content?: boolean
+  isActive: boolean
+  tip: string
+  name: string
+}
 
 const props = defineProps({
   drawerShow: {
@@ -135,15 +101,9 @@ const props = defineProps({
   }
 })
 
-drawerShow.value = props.drawerShow
+const drawerShow = ref(props.drawerShow)
 
-const emit = defineEmits(['close'])
-
-const closeDrawer = () => {
-  emit('close')
-}
-
-const layoutOption = ref([
+const layoutOption = ref<LayoutOption[]>([
   {
     id: 0,
     side: true,
@@ -193,16 +153,6 @@ const options = [
   }
 ]
 
-onMounted(() => {
-  const choose = useTheme.$state.layout
-
-  layoutOption.value.forEach((v) => {
-    if (v.name === choose) {
-      v.isActive = true
-    }
-  })
-})
-
 const changeLayout = (item: any) => {
   layoutOption.value.forEach((v) => {
     v.isActive = false
@@ -217,50 +167,147 @@ const changeLayout = (item: any) => {
   }
 }
 
-const loadMessage = (msg: string) => {
+const loadMessage = (value: boolean, text: string) => {
+  let msg = value ? `已显示${text}` : `已隐藏${text}`
   $msg({
     type: 'success',
     msg
   })
 }
 
-const sideWidthChange = (value: number) => {
-  useTheme.setSize({ type: 'sideWidth', size: value })
+// 对于某些处理器不需要使用到的参数（如_text），可以通过下划线前缀来标记它是未使用的，这是一种常见的TS做法。
+const sizeChange = (value: number, type: keyof State, _text: string) => {
+  useTheme.setSize({ type: type, size: value })
+  if (type === 'sideWidth') {
+    useTheme.setSize({ type: 'oldSideWidth', size: value })
+  }
 }
 
-const heightChange = (value: number) => {
-  useTheme.setSize({ type: 'headerHeight', size: value })
+const switchChange = (value: boolean, type: keyof State, text: string) => {
+  useTheme.setStatus({ type: type, bool: !useTheme.$state[type] })
+  loadMessage(value, text)
 }
 
-const whetherChange = (value: boolean) => {
-  useTheme.setStatus({ type: 'whether', bool: !useTheme.$state.whether })
-  let msg = value ? '已显示天气' : '已隐藏天气'
-  loadMessage(msg)
-}
-
-const breadcrumbChange = (value: boolean) => {
-  useTheme.setStatus({ type: 'breadcrumb', bool: !useTheme.$state.breadcrumb })
-  let msg = value ? '已显示面包屑' : '已隐藏面包屑'
-  loadMessage(msg)
-}
-
-const breadcrumbIconChange = (value: boolean) => {
-  useTheme.setStatus({ type: 'breadcrumbIcon', bool: !useTheme.$state.breadcrumbIcon })
-  let msg = value ? '已显示面包屑图标' : '已隐藏面包屑图标'
-  loadMessage(msg)
-}
-
-const tagChange = (value: boolean) => {
-  useTheme.setStatus({ type: 'tag', bool: !useTheme.$state.tag })
-  let msg = value ? '已显示标签栏' : '已隐藏标签栏'
-  loadMessage(msg)
-}
-
-const tagStyleChange = (value: string) => {
+const selectChange = (value: string, _type: keyof State, _text: string) => {
   useTheme.setTagStyle({ tagStyle: value })
-  let msg = value ? '已切换标签栏风格' : ''
-  loadMessage(msg)
 }
+
+// type HandlerType = (value: number | boolean | string, type: keyof State, text: string) => void;
+
+interface Settings {
+  label?: string
+  component?: any
+  model?: any
+  props?: any
+  handler?: any
+  type?: keyof State
+  text?: string
+}
+
+const settings = ref<Settings[]>([
+  {
+    label: '侧边栏宽度',
+    component: NInputNumber,
+    model: sideWidth,
+    props: { min: 90, max: 500, style: { width: '120px' } },
+    handler: sizeChange,
+    type: 'sideWidth'
+  },
+  {
+    label: '侧边栏折叠宽度',
+    component: NInputNumber,
+    model: sideFoldWidth,
+    props: { min: 70, max: 120, style: { width: '120px' } },
+    handler: sizeChange,
+    type: 'sideFoldWidth'
+  },
+  {
+    label: '头部高度',
+    component: NInputNumber,
+    model: headerHeight,
+    props: { min: 40, max: 100, style: { width: '120px' } },
+    handler: sizeChange,
+    type: 'headerHeight'
+  },
+  {
+    label: '显示天气',
+    component: NSwitch,
+    model: whether,
+    props: {},
+    handler: switchChange,
+    type: 'whether',
+    text: '天气'
+  },
+  {
+    label: '显示面包屑',
+    component: NSwitch,
+    model: breadcrumb,
+    props: {},
+    handler: switchChange,
+    type: 'breadcrumb',
+    text: '面包屑'
+  },
+  {
+    label: '显示面包屑图标',
+    component: NSwitch,
+    model: breadcrumbIcon,
+    props: {},
+    handler: switchChange,
+    type: 'breadcrumbIcon',
+    text: '面包屑图标'
+  },
+  {
+    label: '显示标签栏',
+    component: NSwitch,
+    model: tag,
+    props: {},
+    handler: switchChange,
+    type: 'tag',
+    text: '标签栏'
+  },
+  {
+    label: '标签栏风格',
+    component: NSelect,
+    model: tagStyle,
+    props: { options, style: { width: '120px' } },
+    handler: selectChange,
+    type: 'tagStyle',
+    text: '标签栏风格'
+  },
+  {
+    label: '显示底部',
+    component: NSwitch,
+    model: footer,
+    props: {},
+    handler: switchChange,
+    type: 'footer',
+    text: '底部'
+  },
+  {
+    label: '底部高度',
+    component: NInputNumber,
+    model: footerHeight,
+    props: { min: 20, max: 150, style: { width: '120px' } },
+    handler: sizeChange,
+    type: 'footerHeight'
+  }
+])
+
+const emit = defineEmits(['close'])
+
+const closeDrawer = () => {
+  emit('close')
+}
+
+onMounted(() => {
+  const choose = useTheme.$state.layout
+
+  layoutOption.value.forEach((v) => {
+    if (v.name === choose) {
+      v.isActive = true
+    }
+  })
+})
 </script>
 
 <style lang="scss" scoped>

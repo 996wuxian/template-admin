@@ -1,6 +1,10 @@
 @import './scrollbar.scss';
 @import './theme.scss';
 
+* {
+  @include scrollbar();
+}
+
 // login
 .theme-option {
   @include useTheme() {
