@@ -3,13 +3,14 @@ import { watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useOsTheme, darkTheme } from 'naive-ui'
 import type { GlobalTheme } from 'naive-ui'
-import themeOverrides from '@/config/theme.config'
+import { getThemeOverrides } from '@/config/theme.config'
 import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const osThemeRef = useOsTheme() // 跟随系统
 const theme = ref<GlobalTheme | null>(null)
 const themeType = computed(() => useTheme.themeType)
 const osThemeType = computed(() => osThemeRef.value)
+const themeOverrides = getThemeOverrides()
 watch(
   () => [themeType.value, osThemeType.value],
   ([newType, newOsTheme]) => {

@@ -36,6 +36,7 @@ export const setting = {
     tag: true,
     tagStyle: 'radio',
     footer: true,
-    footerHeight: 48
+    footerHeight: 48,
+    primaryColor: '#A6E3E9'
   }
 }

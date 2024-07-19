@@ -34,7 +34,15 @@
           </div>
         </div>
         <n-divider> 主题颜色 </n-divider>
-
+        <div v-for="cs in colorSetting" :key="cs.label" class="step-block">
+          {{ cs.label }}
+          <component
+            style="width: 120px"
+            :is="cs.component"
+            v-model:value="cs.color"
+            @update:value="(value: any) => cs.handler(value)"
+          />
+        </div>
         <n-divider> 页面功能 </n-divider>
         <div v-for="setting in settings" :key="setting.label">
           <div class="step-block" v-if="!setting.hidden">
@@ -63,7 +71,9 @@ import Layout from './layout.vue'
 import { $msg } from '@/config/interaction.config'
 import useThemeStore from '@/stores/modules/theme'
 import { State } from '@/types/theme-state-type'
-import { NInputNumber, NSwitch, NSelect } from 'naive-ui'
+import { NInputNumber, NSwitch, NSelect, NColorPicker } from 'naive-ui'
+import { getThemeOverrides } from '@/config/theme.config'
+const themeOverrides = getThemeOverrides() // 在组件中调用
 import useClipboard from 'vue-clipboard3'
 const { toClipboard } = useClipboard()
 
@@ -216,6 +226,11 @@ const selectChange = (value: string, _type: keyof State, _text: string) => {
   useTheme.setTagStyle({ tagStyle: value })
 }
 
+const colorChange = (value: string) => {
+  useTheme.setColor({ type: 'primaryColor', value: value })
+  console.log('🚀 ~ colorChange ~ value:', value)
+}
+
 interface Settings {
   label?: string
   component?: any
@@ -323,6 +338,39 @@ const settings = ref<Settings[]>([
     handler: sizeChange,
     type: 'footerHeight',
     hidden: footer.value ? false : true
+  }
+])
+
+const colorSetting = ref([
+  {
+    label: '主色',
+    color: themeOverrides.common?.primaryColor,
+    component: NColorPicker,
+    handler: colorChange
+  },
+  {
+    label: '成功色',
+    color: '#67C23A',
+    component: NColorPicker,
+    handler: colorChange
+  },
+  {
+    label: '警告色',
+    color: '#E6A23C',
+    component: NColorPicker,
+    handler: colorChange
+  },
+  {
+    label: '错误色',
+    color: '#F56C6C',
+    component: NColorPicker,
+    handler: colorChange
+  },
+  {
+    label: '信息色',
+    color: '#909399',
+    component: NColorPicker,
+    handler: colorChange
   }
 ])
 

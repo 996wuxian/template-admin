@@ -62,8 +62,6 @@ const props = defineProps({
   collapsed: { type: Boolean, default: true }
 })
 
-console.log(props.collapsed)
-
 // todo 动态渲染菜单图标 缺陷：需要在uno.config.ts的safelist中先添加对应icon
 function renderMenuIcon(option: any) {
   if (option.icon) {

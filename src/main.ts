@@ -13,8 +13,8 @@ const app = createApp(App)
 // 关闭警告
 app.config.warnHandler = () => null
 
-setupNProgress()
 app.use(store)
+setupNProgress()
 app.use(svgIcon)
 setupRouter(app)
 

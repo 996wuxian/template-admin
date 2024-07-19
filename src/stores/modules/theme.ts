@@ -36,7 +36,8 @@ const useThemeStore = defineStore(
       tag: Local.get('tag') || setting.theme.tag,
       tagStyle: Local.get('tagStyle') || setting.theme.tagStyle,
       footer: Local.get('footer') || setting.theme.footer,
-      footerHeight: Number(Local.get('footerHeight')) || setting.theme.footerHeight
+      footerHeight: Number(Local.get('footerHeight')) || setting.theme.footerHeight,
+      primaryColor: Local.get('primaryColor') || setting.theme.primaryColor
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -88,6 +89,11 @@ const useThemeStore = defineStore(
       state.tagStyle = actions.tagStyle
     }
 
+    const setColor = (actions: { type: keyof typeof state; value: string }) => {
+      state[actions.type] = actions.value
+      console.log(actions.type, actions.value)
+    }
+
     const setFontSize = (actions: { fontSize: string }) => {
       state.fontSize = actions.fontSize
     }
@@ -119,6 +125,7 @@ const useThemeStore = defineStore(
       setStatus,
       setTagStyle,
       setFontSize,
+      setColor,
       initTheme
     }
   },
@@ -139,7 +146,8 @@ const useThemeStore = defineStore(
       'tagType',
       'footer',
       'footerHeight',
-      'fontSize'
+      'fontSize',
+      'primaryColor'
     ])
   }
 )
