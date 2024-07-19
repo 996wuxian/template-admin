@@ -1,15 +1,20 @@
 <template>
-  <div class="flex flex-col w-100% h-100% flex-items-center overflow-hidden">
-    <div class="title">
+  <div
+    class="flex w-100% h-100% flex-items-center overflow-hidden"
+    :class="{ 'flex-col': props.mode === 'vertical' }"
+  >
+    <div class="title" v-if="title">
       <div
         i-solar-widget-5-bold-duotone
         :style="[
-          Number(sideWidth) >= 200
+          Number(sideWidth) >= 200 || !collapsed
             ? { width: '20px', height: '20px' }
             : { width: '25px', height: '25px' }
         ]"
       ></div>
-      <span v-show="Number(sideWidth) >= 200" class="m-l-10px"> {{ setting.title }}</span>
+      <span v-show="Number(sideWidth) >= 200 || !collapsed" class="m-l-10px">
+        {{ setting.title }}</span
+      >
     </div>
     <n-menu
       v-if="menuOptions"
@@ -20,11 +25,13 @@
       :render-icon="renderMenuIcon"
       :root-indent="36"
       :indent="12"
-      :collapsed="sideWidth === sideFoldWidth ? true : false"
+      :collapsed="collapsed && sideWidth === sideFoldWidth ? true : false"
       :collapsed-width="sideFoldWidth"
+      :mode="mode"
+      responsive
       class="w-100%"
     />
-    <div class="theme-block" @click="changeSide" v-if="layout === 'top_menu_mixin'">
+    <div class="theme-block" @click="changeSide" v-if="layout === 'top_menu_mixin' && collapsed">
       <i i-solar-mirror-right-bold v-if="sideWidth > sideFoldWidth"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
@@ -48,6 +55,14 @@ const route = useRoute()
 const router = useRouter()
 
 const menuOptions = ref(routes)
+
+const props = defineProps({
+  mode: { type: String, default: 'vertical' },
+  title: { type: Boolean, default: true },
+  collapsed: { type: Boolean, default: true }
+})
+
+console.log(props.collapsed)
 
 // todo 动态渲染菜单图标 缺陷：需要在uno.config.ts的safelist中先添加对应icon
 function renderMenuIcon(option: any) {
@@ -81,6 +96,7 @@ const changeSide = () => {
 <style lang="scss" scoped>
 .title {
   @apply text-18px font-700 color-[#71C9CE] cursor-pointer text-center my-10px flex flex-items-center justify-around;
+  min-width: 200px;
 }
 
 .theme-block {

@@ -5,21 +5,21 @@
       collapse-mode="width"
       class="aside"
     >
-      <Aside />
+      <Aside v-if="layout === 'left_menu' || layout === 'left_menu_mixin'" />
     </n-layout-sider>
-    <n-layout class="w-100% h-100% transition-all">
+    <n-layout class="main">
       <n-layout-header :style="{ height: headerHeight + 'px' }"><Header /></n-layout-header>
-      <Tag v-if="tag" />
-      <n-layout has-sider class="content" :class="{ 'content-has-tag': tag }">
+      <n-layout has-sider class="main-content" :style="`height: calc(100vh - ${headerHeight}px)`">
         <n-layout-sider
           :width="layout === 'top_menu_mixin' ? sideWidth : 0"
           collapse-mode="width"
           class="aside"
         >
-          <Aside />
+          <Aside v-if="layout === 'top_menu_mixin'" :title="false" />
         </n-layout-sider>
         <div class="w-100% h-100% flex flex-col">
-          <n-layout-content content-style="padding: 10px; ">
+          <Tag v-if="tag" class="main-tag" />
+          <n-layout-content content-style="padding: 10px;" style="flex-1">
             <router-view />
           </n-layout-content>
           <n-layout-footer
@@ -49,10 +49,18 @@ const footerHeight = computed(() => useTheme.$state.footerHeight)
 </script>
 
 <style scoped lang="scss">
-.content {
-  box-sizing: border-box;
-  height: calc(100vh - 58px);
-  transition: all 0.3s;
+.main {
+  @apply flex-1  h-100% transition-all;
+
+  &-tag {
+    @apply h-44px;
+    min-width: 1000px;
+  }
+
+  &-content {
+    box-sizing: border-box;
+    transition: all 0.3s;
+  }
 }
 
 .content-has-tag {

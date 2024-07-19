@@ -33,19 +33,26 @@
             />
           </div>
         </div>
+        <n-divider> 主题颜色 </n-divider>
+
         <n-divider> 页面功能 </n-divider>
-        <div v-for="setting in settings" :key="setting.label" class="step-block">
-          {{ setting.label }}
-          <component
-            :is="setting.component"
-            v-model:value="setting.model"
-            placeholder=""
-            v-bind="setting.props"
-            @update:value="(value: any) => setting.handler(value, setting.type, setting?.text)"
-          />
+        <div v-for="setting in settings" :key="setting.label">
+          <div class="step-block" v-if="!setting.hidden">
+            {{ setting.label }}
+            <component
+              :is="setting.component"
+              v-model:value="setting.model"
+              placeholder=""
+              v-bind="setting.props"
+              @update:value="(value: any) => setting.handler(value, setting.type, setting?.text)"
+            />
+          </div>
         </div>
       </div>
-      <n-button>重置配置</n-button>
+      <div class="w-100% flex m-t-20px">
+        <n-button type="primary" @click="initTheme">重置配置</n-button>
+        <n-button type="primary" @click="copyTheme" class="m-l-auto">复制配置</n-button>
+      </div>
     </n-drawer-content>
   </n-drawer>
 </template>
@@ -57,18 +64,20 @@ import { $msg } from '@/config/interaction.config'
 import useThemeStore from '@/stores/modules/theme'
 import { State } from '@/types/theme-state-type'
 import { NInputNumber, NSwitch, NSelect } from 'naive-ui'
+import useClipboard from 'vue-clipboard3'
+const { toClipboard } = useClipboard()
 
 const useTheme = useThemeStore()
-const whether = ref(useTheme.$state.whether)
-const breadcrumb = ref(useTheme.$state.breadcrumb)
-const breadcrumbIcon = ref(useTheme.$state.breadcrumbIcon)
-const sideWidth = ref(useTheme.$state.sideWidth)
-const sideFoldWidth = ref(useTheme.$state.sideFoldWidth)
-const headerHeight = ref(useTheme.$state.headerHeight)
-const tag = ref(useTheme.$state.tag)
-const tagStyle = ref(useTheme.$state.tagStyle)
-const footer = ref(useTheme.$state.footer)
-const footerHeight = ref(useTheme.$state.footerHeight)
+const whether = computed(() => useTheme.whether)
+const breadcrumb = computed(() => useTheme.breadcrumb)
+const breadcrumbIcon = computed(() => useTheme.breadcrumbIcon)
+const sideWidth = computed(() => useTheme.sideWidth)
+const sideFoldWidth = computed(() => useTheme.sideFoldWidth)
+const headerHeight = computed(() => useTheme.headerHeight)
+const tag = computed(() => useTheme.tag)
+const tagStyle = computed(() => useTheme.tagStyle)
+const footer = computed(() => useTheme.footer)
+const footerHeight = computed(() => useTheme.footerHeight)
 
 interface LayoutOption {
   id: number
@@ -186,13 +195,26 @@ const sizeChange = (value: number, type: keyof State, _text: string) => {
 const switchChange = (value: boolean, type: keyof State, text: string) => {
   useTheme.setStatus({ type: type, bool: !useTheme.$state[type] })
   loadMessage(value, text)
+
+  if (type === 'breadcrumb') {
+    const data = settings.value.find((item) => item.type === 'breadcrumbIcon')
+    data!.hidden = !data!.hidden
+  }
+
+  if (type === 'tag') {
+    const data = settings.value.find((item) => item.type === 'tagStyle')
+    data!.hidden = !data!.hidden
+  }
+
+  if (type === 'footer') {
+    const data = settings.value.find((item) => item.type === 'footerHeight')
+    data!.hidden = !data!.hidden
+  }
 }
 
 const selectChange = (value: string, _type: keyof State, _text: string) => {
   useTheme.setTagStyle({ tagStyle: value })
 }
-
-// type HandlerType = (value: number | boolean | string, type: keyof State, text: string) => void;
 
 interface Settings {
   label?: string
@@ -202,101 +224,175 @@ interface Settings {
   handler?: any
   type?: keyof State
   text?: string
+  hidden?: boolean
 }
 
 const settings = ref<Settings[]>([
   {
     label: '侧边栏宽度',
     component: NInputNumber,
-    model: sideWidth,
+    model: sideWidth.value,
     props: { min: 90, max: 500, style: { width: '120px' } },
     handler: sizeChange,
-    type: 'sideWidth'
+    type: 'sideWidth',
+    hidden: false
   },
   {
     label: '侧边栏折叠宽度',
     component: NInputNumber,
-    model: sideFoldWidth,
+    model: sideFoldWidth.value,
     props: { min: 70, max: 120, style: { width: '120px' } },
     handler: sizeChange,
-    type: 'sideFoldWidth'
+    type: 'sideFoldWidth',
+    hidden: false
   },
   {
     label: '头部高度',
     component: NInputNumber,
-    model: headerHeight,
+    model: headerHeight.value,
     props: { min: 40, max: 100, style: { width: '120px' } },
     handler: sizeChange,
-    type: 'headerHeight'
+    type: 'headerHeight',
+    hidden: false
   },
   {
     label: '显示天气',
     component: NSwitch,
-    model: whether,
+    model: whether.value,
     props: {},
     handler: switchChange,
     type: 'whether',
-    text: '天气'
+    text: '天气',
+    hidden: false
   },
   {
     label: '显示面包屑',
     component: NSwitch,
-    model: breadcrumb,
+    model: breadcrumb.value,
     props: {},
     handler: switchChange,
     type: 'breadcrumb',
-    text: '面包屑'
+    text: '面包屑',
+    hidden: false
   },
   {
     label: '显示面包屑图标',
     component: NSwitch,
-    model: breadcrumbIcon,
+    model: breadcrumbIcon.value,
     props: {},
     handler: switchChange,
     type: 'breadcrumbIcon',
-    text: '面包屑图标'
+    text: '面包屑图标',
+    hidden: breadcrumb.value ? false : true
   },
   {
     label: '显示标签栏',
     component: NSwitch,
-    model: tag,
+    model: tag.value,
     props: {},
     handler: switchChange,
     type: 'tag',
-    text: '标签栏'
+    text: '标签栏',
+    hidden: false
   },
   {
     label: '标签栏风格',
     component: NSelect,
-    model: tagStyle,
+    model: tagStyle.value,
     props: { options, style: { width: '120px' } },
     handler: selectChange,
     type: 'tagStyle',
-    text: '标签栏风格'
+    text: '标签栏风格',
+    hidden: tag.value ? false : true
   },
   {
     label: '显示底部',
     component: NSwitch,
-    model: footer,
+    model: footer.value,
     props: {},
     handler: switchChange,
     type: 'footer',
-    text: '底部'
+    text: '底部',
+    hidden: false
   },
   {
     label: '底部高度',
     component: NInputNumber,
-    model: footerHeight,
+    model: footerHeight.value,
     props: { min: 20, max: 150, style: { width: '120px' } },
     handler: sizeChange,
-    type: 'footerHeight'
+    type: 'footerHeight',
+    hidden: footer.value ? false : true
   }
 ])
+
+watch(
+  () => ({
+    sideWidth: useTheme.sideWidth,
+    sideFoldWidth: useTheme.sideFoldWidth,
+    headerHeight: useTheme.headerHeight,
+    footerHeight: useTheme.footerHeight
+  }),
+  (newValues) => {
+    settings.value = settings.value.map((setting) => {
+      switch (setting.type) {
+        case 'sideWidth':
+          setting.model = newValues.sideWidth
+          break
+        case 'sideFoldWidth':
+          setting.model = newValues.sideFoldWidth
+          break
+        case 'headerHeight':
+          setting.model = newValues.headerHeight
+          break
+        case 'footerHeight':
+          setting.model = newValues.footerHeight
+          break
+      }
+      return setting
+    })
+  }
+)
 
 const emit = defineEmits(['close'])
 
 const closeDrawer = () => {
   emit('close')
+}
+
+const initTheme = () => {
+  useTheme.initTheme()
+}
+
+const copyTheme = async () => {
+  const data = {
+    defaultTheme: useTheme.themeType,
+    defaultThemeValue: useTheme.themeValue,
+    defaultLayout: useTheme.layout,
+    sideWidth: useTheme.sideWidth,
+    sideFoldWidth: useTheme.sideFoldWidth,
+    headerHeight: useTheme.headerHeight,
+    whether: useTheme.whether,
+    breadcrumb: useTheme.breadcrumb,
+    breadcrumbIcon: useTheme.breadcrumbIcon,
+    tag: useTheme.tag,
+    tagStyle: useTheme.tagStyle,
+    footer: useTheme.footer,
+    footerHeight: useTheme.footerHeight
+  }
+
+  try {
+    await toClipboard(JSON.stringify(data))
+    $msg({
+      type: 'success',
+      msg: '复制成功, 请在代码config/setting.config.ts中粘贴修改'
+    })
+  } catch (e) {
+    $msg({
+      type: 'error',
+      msg: '复制失败'
+    })
+  }
 }
 
 onMounted(() => {

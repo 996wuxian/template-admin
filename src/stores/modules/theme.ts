@@ -21,22 +21,22 @@ const useThemeStore = defineStore(
     const router = useRouter()
 
     const state = reactive({
-      themeType: Local.get('themeType') || setting.defaultTheme,
-      themeValue: Local.get('themeValue') || setting.defaultThemeValue,
+      themeType: Local.get('themeType') || setting.theme.defaultTheme,
+      themeValue: Local.get('themeValue') || setting.theme.defaultThemeValue,
       fontSize: Local.get('fontSize') || 'default',
-      layout: Local.get('layout') || setting.defaultLayout,
-      sideWidth: Number(Local.get('sideWidth')) || setting.sideWidth,
-      oldSideWidth: Number(Local.get('oldSideWidth')) || setting.sideWidth,
-      sideFoldWidth: Number(Local.get('sideFoldWidth')) || setting.sideFoldWidth,
-      headerHeight: Number(Local.get('headerHeight')) || setting.headerHeight,
+      layout: Local.get('layout') || setting.theme.defaultLayout,
+      sideWidth: Number(Local.get('sideWidth')) || setting.theme.sideWidth,
+      oldSideWidth: Number(Local.get('oldSideWidth')) || setting.theme.sideWidth,
+      sideFoldWidth: Number(Local.get('sideFoldWidth')) || setting.theme.sideFoldWidth,
+      headerHeight: Number(Local.get('headerHeight')) || setting.theme.headerHeight,
       tagData: Local.get('tagData') || defaultTag,
-      whether: Local.get('whether') || setting.whether,
-      breadcrumb: Local.get('breadcrumb') || setting.breadcrumb,
-      breadcrumbIcon: Local.get('breadcrumbIcon') || setting.breadcrumbIcon,
-      tag: Local.get('tag') || setting.tag,
-      tagStyle: Local.get('tagStyle') || setting.tagStyle,
-      footer: Local.get('footer') || setting.footer,
-      footerHeight: Number(Local.get('footerHeight')) || setting.footerHeight
+      whether: Local.get('whether') || setting.theme.whether,
+      breadcrumb: Local.get('breadcrumb') || setting.theme.breadcrumb,
+      breadcrumbIcon: Local.get('breadcrumbIcon') || setting.theme.breadcrumbIcon,
+      tag: Local.get('tag') || setting.theme.tag,
+      tagStyle: Local.get('tagStyle') || setting.theme.tagStyle,
+      footer: Local.get('footer') || setting.theme.footer,
+      footerHeight: Number(Local.get('footerHeight')) || setting.theme.footerHeight
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -92,6 +92,22 @@ const useThemeStore = defineStore(
       state.fontSize = actions.fontSize
     }
 
+    const initTheme = () => {
+      state.themeType = setting.theme.defaultTheme
+      state.themeValue = setting.theme.defaultThemeValue
+      state.layout = setting.theme.defaultLayout
+      state.sideWidth = setting.theme.sideWidth
+      state.oldSideWidth = setting.theme.sideWidth
+      state.sideFoldWidth = setting.theme.sideFoldWidth
+      state.headerHeight = setting.theme.headerHeight
+      state.breadcrumb = setting.theme.breadcrumb
+      state.breadcrumbIcon = setting.theme.breadcrumbIcon
+      state.tag = setting.theme.tag
+      state.tagStyle = setting.theme.tagStyle
+      state.footer = setting.theme.footer
+      state.footerHeight = setting.theme.footerHeight
+    }
+
     return {
       ...toRefs(state),
       setThemeType,
@@ -102,7 +118,8 @@ const useThemeStore = defineStore(
       removeTag,
       setStatus,
       setTagStyle,
-      setFontSize
+      setFontSize,
+      initTheme
     }
   },
   {

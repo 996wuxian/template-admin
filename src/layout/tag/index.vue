@@ -46,7 +46,7 @@ const removeTag = (item: any) => {
 
 <style lang="scss" scoped>
 .tag {
-  @apply w-100% h-44px flex items-center px-20px;
+  @apply w-100% h-100% flex items-center px-20px;
   border-bottom: 1px solid #ebebeb;
 
   &-item {

@@ -1,7 +1,7 @@
-/**
- * naive ui 主题配置
- */
 import type { GlobalThemeOverrides } from 'naive-ui'
+/**
+ * @description naive ui 主题配置
+ */
 const themeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#A6E3E9', // 主题颜色

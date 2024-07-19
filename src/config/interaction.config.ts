@@ -13,6 +13,7 @@ type msgType = {
   msg: string
 }
 
+// message.js
 export function $msg({ type, msg }: msgType) {
   if (type === 'success') {
     message.success(msg)

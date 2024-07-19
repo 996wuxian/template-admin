@@ -8,7 +8,10 @@
       <i i-solar-mirror-right-bold v-if="sideWidth > sideFoldWidth"></i>
       <i i-solar-mirror-left-bold v-else></i>
     </div>
-    <n-breadcrumb class="m-t-4px" v-if="breadcrumb">
+    <n-breadcrumb
+      class="m-t-4px"
+      v-if="breadcrumb && layout !== 'top_menu' && layout !== 'top_menu_mixin'"
+    >
       <n-breadcrumb-item v-for="(item, index) in crumb" :key="index">
         <div class="flex items-center">
           <i :class="item.icon" class="m-r-5px m-b-3px" v-if="breadcrumbIcon"></i>
@@ -17,7 +20,16 @@
       </n-breadcrumb-item>
     </n-breadcrumb>
 
-    <div class="flex m-l-auto m-t-4px items-center" v-if="whetherData && whether">
+    <Aside
+      v-if="layout === 'top_menu' || layout === 'top_menu_mixin'"
+      mode="horizontal"
+      :collapsed="false"
+    />
+
+    <div
+      class="whether"
+      v-if="(layout === 'left_menu' || layout === 'left_menu_mixin') && whetherData && whether"
+    >
       <div i-solar-cloud-sun-bold-duotone v-if="whetherData?.weather === '阴'"></div>
       <div i-solar-clouds-outline v-if="whetherData?.weather === '多云'"></div>
       <div i-solar-cloud-storm-broken v-if="whetherData?.weather === '雷阵雨'"></div>
@@ -70,6 +82,8 @@ import Drawer from './components/drawer.vue'
 import { useFullscreen } from '@/utils/fullScrenn'
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
 import useuseTheme from '@/stores/modules/theme'
+import Aside from '../aside/index.vue'
+
 const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 const useTheme = useuseTheme()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
@@ -171,6 +185,13 @@ function renderIcon(option: any) {
     display: inline-block;
     @apply w-18px h-18px;
     transition: all 0.3s;
+  }
+}
+
+.whether {
+  @apply flex m-l-auto m-t-4px items-center;
+  @media (min-width: 0) and (max-width: 1320px) {
+    display: none;
   }
 }
 </style>
