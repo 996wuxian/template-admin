@@ -31,7 +31,15 @@ import useThemeStore from '@/stores/modules/theme'
 const useTheme = useThemeStore()
 const tagData = computed(() => useTheme.$state.tagData)
 const tagStyle = computed(() => useTheme.$state.tagStyle)
+import tinycolor from 'tinycolor2'
+import { getThemeOverrides } from '@/config/theme.config'
+const themeOverrides = getThemeOverrides()
 
+const color = computed(() => themeOverrides.value.common?.primaryColor)
+
+const hoverColor = computed(() => {
+  return tinycolor(color.value).darken(20).toRgbString()
+})
 const toPage = (item: any) => {
   router.push(item.key)
   useTheme.setTagData({
@@ -52,7 +60,6 @@ const removeTag = (item: any) => {
   &-item {
     @apply flex-center m-r-10px px-10px py-5px;
     cursor: pointer;
-    transition: all 0.3s;
 
     &-close {
       @apply w-16px h-16px m-b-2px m-l-10px;
@@ -63,8 +70,9 @@ const removeTag = (item: any) => {
     }
 
     &-active {
-      @apply bg-[#A6E3E9] text-white;
-      border-color: #a6e3e9 !important;
+      @apply text-white;
+      background-color: v-bind(color);
+      border-color: v-bind(color) !important;
     }
 
     &-radio-active {
@@ -76,8 +84,7 @@ const removeTag = (item: any) => {
         width: 15px;
         height: 20px;
         border-radius: 100%;
-        box-shadow: 0 0 0 40px #a6e3e9 !important; /*使用box-shadow不影响尺寸*/
-        transition: all 0.5s;
+        box-shadow: 0 0 0 40px v-bind(color) !important; /*使用box-shadow不影响尺寸*/
       }
 
       &::before {
@@ -96,12 +103,12 @@ const removeTag = (item: any) => {
     @apply flex-center b-rd-3px b-1px b-solid b-gray-300;
 
     &:hover {
-      @apply b-[#A6E3E9];
+      @apply v-bind(hoverColor);
       transition: all 0.3s;
-      color: #71c9ce;
+      color: v-bind(hoverColor);
 
       i {
-        @apply text-[#71C9CE];
+        color: v-bind(hoverColor);
         transition: all 0.3s;
       }
     }
@@ -110,17 +117,14 @@ const removeTag = (item: any) => {
   &-item_radio {
     @apply relative flex-center h-35px m-t-auto m-r-20px;
     border-radius: 10px 10px 0 0;
-    transition: all 0.3s;
 
     &:hover {
-      @apply bg-[#A6E3E9];
-      transition: all 0.3s;
+      background-color: v-bind(hoverColor);
       color: #fff;
 
       &::before,
       &::after {
-        box-shadow: 0 0 0 40px #a6e3e9; /*使用box-shadow不影响尺寸*/
-        transition: all 0.3s;
+        box-shadow: 0 0 0 40px v-bind(hoverColor) !important; /*使用box-shadow不影响尺寸*/
       }
     }
 
@@ -132,7 +136,7 @@ const removeTag = (item: any) => {
       width: 15px;
       height: 20px;
       border-radius: 100%;
-      box-shadow: 0 0 0 40px transparent; /*使用box-shadow不影响尺寸*/
+      box-shadow: 0 0 0 40px transparent;
     }
 
     &::before {

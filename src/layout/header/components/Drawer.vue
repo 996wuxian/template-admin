@@ -20,7 +20,7 @@
           <ThemeToggler />
         </div>
         <n-divider> 布局模式 </n-divider>
-        <div class="flex flex-wrap justify-between h-200px px-20px">
+        <div class="flex flex-wrap justify-between px-20px">
           <div v-for="item in layoutOption" :key="item.id" @click="changeLayout(item)">
             <Layout
               :nav="item?.nav"
@@ -39,8 +39,10 @@
           <component
             style="width: 120px"
             :is="cs.component"
+            :modes="['hex']"
             v-model:value="cs.color"
-            @update:value="(value: any) => cs.handler(value)"
+            :swatches="cs.previewColor"
+            @update:value="(value: any) => cs.handler(value, cs.type)"
           />
         </div>
         <n-divider> 页面功能 </n-divider>
@@ -72,9 +74,9 @@ import { $msg } from '@/config/interaction.config'
 import useThemeStore from '@/stores/modules/theme'
 import { State } from '@/types/theme-state-type'
 import { NInputNumber, NSwitch, NSelect, NColorPicker } from 'naive-ui'
-import { getThemeOverrides } from '@/config/theme.config'
-const themeOverrides = getThemeOverrides() // 在组件中调用
 import useClipboard from 'vue-clipboard3'
+import { getThemeOverrides } from '@/config/theme.config'
+const themeOverrides = getThemeOverrides()
 const { toClipboard } = useClipboard()
 
 const useTheme = useThemeStore()
@@ -226,9 +228,8 @@ const selectChange = (value: string, _type: keyof State, _text: string) => {
   useTheme.setTagStyle({ tagStyle: value })
 }
 
-const colorChange = (value: string) => {
-  useTheme.setColor({ type: 'primaryColor', value: value })
-  console.log('🚀 ~ colorChange ~ value:', value)
+const colorChange = (value: string, type: keyof State) => {
+  useTheme.setColor({ type: type, value: value })
 }
 
 interface Settings {
@@ -240,6 +241,15 @@ interface Settings {
   type?: keyof State
   text?: string
   hidden?: boolean
+}
+
+interface Colors {
+  label?: string
+  color?: string
+  component?: any
+  handler?: any
+  previewColor?: string[]
+  type?: keyof State
 }
 
 const settings = ref<Settings[]>([
@@ -341,36 +351,99 @@ const settings = ref<Settings[]>([
   }
 ])
 
-const colorSetting = ref([
+const colorSetting = ref<Colors[]>([
   {
     label: '主色',
-    color: themeOverrides.common?.primaryColor,
+    color: themeOverrides.value.common?.primaryColor,
     component: NColorPicker,
-    handler: colorChange
+    handler: colorChange,
+    previewColor: [
+      '#253B6E',
+      '#1F5F8B',
+      '#1891AC',
+      '#00A8CC',
+      '#71C9CE',
+      '#1FAB89',
+      '#62D2A2',
+      '#878ECD',
+      '#0F4C75',
+      '#7E6BC4',
+      '#35477D',
+      '#5E63B6',
+      '#F47C7C',
+      '#307672',
+      '#144D53',
+      '#8AAE92'
+    ],
+    type: 'primaryColor'
   },
   {
     label: '成功色',
-    color: '#67C23A',
+    color: themeOverrides.value.common?.successColor,
     component: NColorPicker,
-    handler: colorChange
+    handler: colorChange,
+    previewColor: [
+      '#2EB872',
+      '#108349',
+      '#52D681',
+      '#18A058',
+      '#36622B',
+      '#729D39',
+      '#64A80B',
+      '#7DA87B'
+    ],
+    type: 'successColor'
   },
   {
     label: '警告色',
-    color: '#E6A23C',
+    color: themeOverrides.value.common?.warningColor,
     component: NColorPicker,
-    handler: colorChange
+    handler: colorChange,
+    previewColor: [
+      '#F0A020',
+      '#FFB400',
+      '#FFDE7D',
+      '#F07B3F',
+      '#FF9A00',
+      '#FF9A3C',
+      '#FFAA64',
+      '#FFBD39'
+    ],
+    type: 'warningColor'
   },
   {
     label: '错误色',
-    color: '#F56C6C',
+    color: themeOverrides.value.common?.errorColor,
     component: NColorPicker,
-    handler: colorChange
+    handler: colorChange,
+    previewColor: [
+      '#D03050',
+      '#B83B5E',
+      '#903749',
+      '#F6416C',
+      '#88304E',
+      '#E23E57',
+      '#F73859',
+      '#D72323'
+    ],
+    type: 'errorColor'
   },
   {
     label: '信息色',
-    color: '#909399',
+    color: themeOverrides.value.common?.infoColor,
     component: NColorPicker,
-    handler: colorChange
+    handler: colorChange,
+    previewColor: [
+      '#909298',
+      '#C2C2C2',
+      '#E7E6E1',
+      '#888888',
+      '#DDDDDD',
+      '#C5C5C5',
+      '#D8DFE2',
+      '#D3D6DB'
+    ],
+    type: 'infoColor'
   }
 ])
 

@@ -37,7 +37,11 @@ const useThemeStore = defineStore(
       tagStyle: Local.get('tagStyle') || setting.theme.tagStyle,
       footer: Local.get('footer') || setting.theme.footer,
       footerHeight: Number(Local.get('footerHeight')) || setting.theme.footerHeight,
-      primaryColor: Local.get('primaryColor') || setting.theme.primaryColor
+      primaryColor: Local.get('primaryColor') || setting.theme.primaryColor,
+      successColor: Local.get('successColor') || setting.theme.successColor,
+      warningColor: Local.get('warningColor') || setting.theme.warningColor,
+      errorColor: Local.get('errorColor') || setting.theme.errorColor,
+      infoColor: Local.get('infoColor') || setting.theme.infoColor
     })
 
     const setThemeType = (actions: { themeType: string }) => {
@@ -144,10 +148,15 @@ const useThemeStore = defineStore(
       'breadcrumbIcon',
       'tag',
       'tagType',
+      'tagStyle',
       'footer',
       'footerHeight',
       'fontSize',
-      'primaryColor'
+      'primaryColor',
+      'successColor',
+      'warningColor',
+      'errorColor',
+      'infoColor'
     ])
   }
 )

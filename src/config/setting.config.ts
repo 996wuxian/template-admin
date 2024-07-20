@@ -37,6 +37,10 @@ export const setting = {
     tagStyle: 'radio',
     footer: true,
     footerHeight: 48,
-    primaryColor: '#A6E3E9'
+    primaryColor: '#71C9CE',
+    successColor: '#18A058',
+    warningColor: '#F0783D',
+    errorColor: '#E23C55',
+    infoColor: '#C2C2C2'
   }
 }

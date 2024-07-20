@@ -14,4 +14,9 @@ export type State = {
   footer: boolean
   footerHeight: number
   fontSize: string
+  primaryColor: string
+  successColor: string
+  warningColor: string
+  errorColor: string
+  infoColor: string
 }

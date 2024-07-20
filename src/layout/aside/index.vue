@@ -3,7 +3,7 @@
     class="flex w-100% h-100% flex-items-center overflow-hidden"
     :class="{ 'flex-col': props.mode === 'vertical' }"
   >
-    <div class="title" v-if="title">
+    <div class="title" v-if="title" :style="`color: ${themeOverrides.common?.primaryColor}`">
       <div
         i-solar-widget-5-bold-duotone
         :style="[
@@ -45,6 +45,10 @@ import { setting } from '@/config/setting.config'
 import useRoutesStore from '@/stores/modules/routes'
 import { NIcon } from 'naive-ui'
 import useThemeStore from '@/stores/modules/theme'
+import { getThemeOverrides } from '@/config/theme.config'
+import type { GlobalThemeOverrides } from 'naive-ui'
+const themeOverrides = getThemeOverrides() as GlobalThemeOverrides
+
 const useTheme = useThemeStore()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
 const oldSideWidth = computed(() => useTheme.$state.oldSideWidth)

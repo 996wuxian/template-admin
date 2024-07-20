@@ -2,13 +2,13 @@
   <n-tooltip placement="bottom" trigger="hover">
     <template #trigger>
       <div class="layout" :class="[isActive ? 'layout-active' : '']">
-        <div class="h-full w-10px bg-[#CBF1F5] b-rd-5px m-r-5px" v-if="nav"></div>
-        <div class="h-full w-18px bg-[#CBF1F5] b-rd-5px m-r-5px" v-if="side"></div>
+        <div class="block w-10px" v-if="nav"></div>
+        <div class="block w-18px" v-if="side"></div>
         <div class="flex flex-col flex-1">
-          <div class="w-100% h-18px bg-[#71C9CE] b-rd-5px m-b-5px" v-if="header"></div>
+          <div class="header" v-if="header"></div>
           <div class="flex-1 flex">
-            <div class="w-18px h-full bg-[#CBF1F5] b-rd-5px m-r-5px" v-if="aside"></div>
-            <div class="bg-[#E3FDFD] b-rd-5px flex-1" v-if="content"></div>
+            <div class="block w-18px" v-if="aside"></div>
+            <div class="content" v-if="content"></div>
           </div>
         </div>
       </div>
@@ -18,6 +18,18 @@
 </template>
 
 <script lang="ts" setup>
+import { getThemeOverrides } from '@/config/theme.config'
+import tinycolor from 'tinycolor2'
+const themeOverrides = getThemeOverrides()
+
+const color = computed(() => themeOverrides.value.common?.primaryColor)
+const lightenColor = computed(() => {
+  return tinycolor(color.value).lighten(20).toRgbString()
+})
+const lightenMoreColor = computed(() => {
+  return tinycolor(color.value).lighten(30).toRgbString()
+})
+
 defineProps({
   nav: {
     type: Boolean,
@@ -52,18 +64,33 @@ defineProps({
 
 <style lang="scss" scoped>
 .layout {
-  @apply w-106px h-74px rd-8px p-6px  flex b-solid b-2px b-[#fff];
+  @apply w-106px h-74px rd-8px p-6px  flex b-solid b-2px b-[#fff] m-b-20px;
   box-shadow: 0 2px 10px rgba($color: #000, $alpha: 0.1);
   transition: all 0.3s;
   cursor: pointer;
 
   &:hover {
-    @apply b-[#71C9CE];
+    border-color: v-bind(color);
     transition: all 0.3s;
   }
 }
 
 .layout-active {
-  @apply b-[#71C9CE];
+  border-color: v-bind(color);
+}
+
+.block {
+  @apply h-full  b-rd-5px m-r-5px;
+  background-color: v-bind(lightenColor);
+}
+
+.header {
+  @apply w-100% h-18px b-rd-5px m-b-5px;
+  background-color: v-bind(color);
+}
+
+.content {
+  @apply b-rd-5px flex-1;
+  background-color: v-bind(lightenMoreColor);
 }
 </style>
