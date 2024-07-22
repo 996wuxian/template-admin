@@ -19,7 +19,7 @@
         </n-layout-sider>
         <div class="w-100% h-100% flex flex-col">
           <Tag v-if="tag" class="main-tag" />
-          <n-layout-content content-style="padding: 10px;" style="flex-1">
+          <n-layout-content content-style="padding: 10px;background-color: #F7FAFC" style="flex-1">
             <router-view />
           </n-layout-content>
           <n-layout-footer

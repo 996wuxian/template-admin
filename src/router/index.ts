@@ -68,6 +68,16 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
+        path: '/user',
+        name: 'User',
+        component: () => import('@/views/user/index.vue'),
+        meta: {
+          title: '用户管理',
+          icon: 'i-solar-user-bold-duotone',
+          hidden: false
+        }
+      },
+      {
         path: '/role',
         name: 'Role',
         component: () => import('@/views/role/index.vue'),
@@ -84,16 +94,6 @@ export const asyncRoutes = [
         meta: {
           title: '菜单管理',
           icon: 'i-solar-widget-4-bold-duotone',
-          hidden: false
-        }
-      },
-      {
-        path: '/user',
-        name: 'User',
-        component: () => import('@/views/user/index.vue'),
-        meta: {
-          title: '用户管理',
-          icon: 'i-solar-user-bold-duotone',
           hidden: false
         }
       }
