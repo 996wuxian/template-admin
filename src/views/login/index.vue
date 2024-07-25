@@ -48,9 +48,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
 import { Login } from '@/service/api/mock-api'
+import { Session } from '@/utils/storage'
 const message = useMessage()
 const router = useRouter()
-import { Session } from '@/utils/storage'
 
 const $form = ref()
 const form = ref<any>({

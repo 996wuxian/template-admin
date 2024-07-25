@@ -88,8 +88,6 @@ const props = defineProps<{
   formOption?: Options
 }>()
 
-console.log(props, 'props')
-
 const getComponent = (type: string) => {
   switch (type) {
     case 'input':
