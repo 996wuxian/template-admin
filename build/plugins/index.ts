@@ -1,7 +1,6 @@
 import path from 'path'
 import type { PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import VueDevtools from 'vite-plugin-vue-devtools'
 import { setupUnocss } from './unocss'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -16,7 +15,6 @@ export function setupVitePlugins() {
         defineModel: true
       }
     }),
-    VueDevtools(),
     setupUnocss(),
     AutoImport({
       imports: [

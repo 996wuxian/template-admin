@@ -39,7 +39,7 @@
           <i i-solar-restart-circle-line-duotone class="w-20px h-20px m-r-5px"></i>
           重置</n-button
         >
-        <n-button type="primary" class="m-l-20px">
+        <n-button type="primary" class="m-l-20px" @click="search">
           <i i-solar-rounded-magnifer-bold-duotone class="w-20px h-20px m-r-5px"></i>
           查询</n-button
         >
@@ -110,6 +110,10 @@ const handleValidateClick = (e: MouseEvent) => {
       console.log(errors)
     }
   })
+}
+
+const search = () => {
+  console.log(props.form, 'props.form')
 }
 </script>
 

@@ -7,7 +7,7 @@
     <n-space justify="space-between" class="m-b-10px">
       <div class="text-16px">用户列表</div>
       <n-space>
-        <n-button ghost>
+        <n-button ghost @click="showEdit({})">
           <i i-solar-add-square-bold-duotone class="w-20px h-20px m-r-5px"></i>
           新增</n-button
         ><n-button>
@@ -51,7 +51,7 @@ import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
 import Drawer from './components/drawer.vue'
 import { useUserStore } from './store'
-const { form, showEdit } = useUserStore()
+const { form, showEdit, data, loading, reload } = useUserStore()
 
 const formOption = {
   inline: false, // 行内
@@ -69,7 +69,7 @@ const formOption = {
 const formConfig = [
   _.f('用户名', 'userName', 'input', 6, '请输入').r().b(),
   _.f('性别', 'sex', 'select', 6, '请选择')
-    .r()
+    .r('', ['blur', 'change'])
     .ops([
       { label: '不限', value: 0 },
       { label: '男', value: 1 },
@@ -87,27 +87,7 @@ const formConfig = [
     ])
     .b()
 ]
-
-const data = ref([
-  {
-    id: 1,
-    userName: 'qwer',
-    sex: '男',
-    nickName: 'overa',
-    phone: '1351231231',
-    email: 'aowbnao@gmail.com',
-    status: '启用'
-  },
-  {
-    id: 2,
-    userName: 'dala',
-    sex: '女',
-    nickName: 'eosao',
-    phone: '1351231231',
-    email: 'aowbnao@gmail.com',
-    status: '禁用'
-  }
-])
+console.log('🚀 ~ formConfig:', formConfig)
 
 const columns = ref([
   {
@@ -132,11 +112,11 @@ const columns = ref([
       return h(
         NTag,
         {
-          type: row.sex === '男' ? 'success' : 'primary',
+          type: row.sex === 1 ? 'success' : 'primary',
           bordered: false
         },
         {
-          default: () => row.sex
+          default: () => (row.sex === 1 ? '男' : '女')
         }
       )
     }
@@ -164,11 +144,11 @@ const columns = ref([
       return h(
         NTag,
         {
-          type: row.status === '启用' ? 'success' : 'error',
+          type: row.status === 1 ? 'success' : 'error',
           bordered: false
         },
         {
-          default: () => row.status
+          default: () => (row.status === 1 ? '启用' : '禁用')
         }
       )
     }
@@ -265,15 +245,9 @@ const updateDrag = (value: any) => {
 }
 
 const deleteRow = (row) => {}
-const loading = ref(false)
-const reload = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 2000)
-}
 
 const rowKey = (row) => row.id
+
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
 }

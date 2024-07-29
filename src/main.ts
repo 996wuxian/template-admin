@@ -13,9 +13,12 @@ const app = createApp(App)
 // 关闭警告
 app.config.warnHandler = () => null
 
-app.use(store)
-setupNProgress()
-app.use(svgIcon)
-setupRouter(app)
+async function setupApp() {
+  app.use(store)
+  setupNProgress()
+  app.use(svgIcon)
+  await setupRouter(app)
+  app.mount('#app')
+}
 
-app.mount('#app')
+setupApp()

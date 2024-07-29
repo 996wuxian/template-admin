@@ -7,10 +7,18 @@ import useRoutesStore from '@/stores/modules/routes'
 import getPageTitle from '@/utils/pageTitle'
 import { setting } from '@/config/setting.config'
 import { $msg } from '@/config/interaction.config'
+import { sleep } from '@/utils/tools'
+import useLoading from '@/plugins/loading'
+const { show, hide } = useLoading()
 
 export function setupPermissions(router: Router) {
   const useRouter = useRoutesStore()
   router.beforeEach(async (to: any, from: any, next: any) => {
+    if (from.path === '/') {
+      await show()
+      await sleep(2000)
+    }
+
     //设置页面title
     document.title = getPageTitle(to.meta.title)
     window?.NProgress?.start()
@@ -37,6 +45,7 @@ export function setupPermissions(router: Router) {
   })
 
   router.afterEach(() => {
+    hide()
     window?.NProgress?.done()
   })
 }

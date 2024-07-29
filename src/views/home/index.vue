@@ -10,13 +10,8 @@
       <n-button type="error"> Error </n-button>
     </n-space>
   </div>
-
-  <Draggable />
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import Draggable from '@/components/common/draggable.vue'
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss" scoped></style>
