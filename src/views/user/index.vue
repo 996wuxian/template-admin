@@ -219,7 +219,7 @@ const handleCheck = (rowKeys: DataTableRowKey[]) => {
 
 <style lang="scss" scoped>
 .card {
-  height: calc(100% - 160px);
+  height: calc(100% - 158px);
 }
 .table {
   height: calc(100% - 50px);
