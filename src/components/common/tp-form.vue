@@ -1,7 +1,8 @@
 <template>
   <n-form
+    style="width: 100%"
     ref="$formRef"
-    :model="form"
+    :model="formData"
     :inline="formOption?.inline"
     :rules="rules"
     :label-width="formOption?.labelWidth"
@@ -10,7 +11,7 @@
     :disabled="formOption?.disabled"
     :label-align="formOption?.labelAlign"
   >
-    <n-grid :x-gap="formOption?.xgap" :cols="24">
+    <n-grid :x-gap="formOption?.xgap" :cols="24" style="width: 100%">
       <n-form-item-gi
         v-for="(item, index) in config"
         :key="index"
@@ -21,7 +22,7 @@
           {
             required: item.required,
             message: item.message ? item.message : `${item.label}不能为空`,
-            trigger: item.trigger || ['blur', 'input']
+            trigger: item.trigger
           }
         ]"
         :show-label="item.showLabel"
@@ -31,11 +32,12 @@
           v-model:value="form[item.path]"
           :options="item.options"
           :placeholder="item.placeholder"
+          :multiple="item.multiple"
           clearable
         />
       </n-form-item-gi>
       <n-form-item-gi v-if="formOption?.search" span="6" class="m-l-20px">
-        <n-button type="default">
+        <n-button type="default" @click="reset">
           <i i-solar-restart-circle-line-duotone class="w-20px h-20px m-r-5px"></i>
           重置</n-button
         >
@@ -66,6 +68,7 @@ interface Config {
   message?: string
   trigger?: Array<string>
   options?: Array<{ label: string; value: string | number }>
+  multiple?: boolean
 }
 
 interface Options {
@@ -88,6 +91,8 @@ const props = defineProps<{
   formOption?: Options
 }>()
 
+const formData = ref(props.form)
+
 const getComponent = (type: string) => {
   switch (type) {
     case 'input':
@@ -101,7 +106,16 @@ const getComponent = (type: string) => {
   }
 }
 
-const handleValidateClick = (e: MouseEvent) => {
+const reset = () => {
+  for (const key in formData.value) {
+    if (Object.prototype.hasOwnProperty.call(formData.value, key)) {
+      formData.value[key] = ''
+    }
+  }
+  $formRef.value?.restoreValidation()
+}
+
+const search = (e: MouseEvent) => {
   e.preventDefault()
   $formRef.value?.validate((errors) => {
     if (!errors) {
@@ -110,10 +124,6 @@ const handleValidateClick = (e: MouseEvent) => {
       console.log(errors)
     }
   })
-}
-
-const search = () => {
-  console.log(props.form, 'props.form')
 }
 </script>
 

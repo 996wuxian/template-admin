@@ -14,7 +14,7 @@ const form = ref<User>({})
 
 const userForm = ref<User>({})
 const drawerVisible = ref(false)
-const showEdit = (row) => {
+const showEdit = (row: any) => {
   userForm.value = {
     ...row
   }
@@ -25,21 +25,21 @@ const data = ref([
   {
     id: 1,
     userName: 'qwer',
-    sex: 1,
+    sex: '1',
     nickName: 'overa',
     phone: '1351231231',
     email: 'aowbnao@gmail.com',
-    status: 1,
+    status: '1',
     role: [1]
   },
   {
     id: 2,
     userName: 'dala',
-    sex: 2,
+    sex: '2',
     nickName: 'eosao',
     phone: '1351231231',
     email: 'aowbnao@gmail.com',
-    status: 2,
+    status: '0',
     role: [2]
   }
 ])

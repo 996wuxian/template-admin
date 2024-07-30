@@ -46,7 +46,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import Form from '@/components/common/tp-form.vue'
-import _ from '@/utils/core'
+import { f } from '@/utils/form-cfg'
+import { t } from '@/utils/table-cfg'
 import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
 import Drawer from './components/drawer.vue'
@@ -67,136 +68,97 @@ const formOption = {
 }
 
 const formConfig = [
-  _.f('用户名', 'userName', 'input', 6, '请输入').r().b(),
-  _.f('性别', 'sex', 'select', 6, '请选择')
+  f('用户名', 'userName', 'input', 6, '请输入').r().b(),
+  f('性别', 'sex', 'select', 6, '请选择')
     .r('', ['blur', 'change'])
     .ops([
-      { label: '不限', value: 0 },
-      { label: '男', value: 1 },
-      { label: '女', value: 2 }
+      { label: '不限', value: '0' },
+      { label: '男', value: '1' },
+      { label: '女', value: '2' }
     ])
     .b(),
-  _.f('昵称', 'nickName', 'input', 6, '请输入').r().b(),
-  _.f('手机号', 'phone', 'input', 6, '请输入').r().b(),
-  _.f('邮箱', 'email', 'input', 6, '请输入').r().b(),
-  _.f('用户状态', 'status', 'select', 6, '请选择')
+  f('昵称', 'nickName', 'input', 6, '请输入').r().b(),
+  f('手机号', 'phone', 'input', 6, '请输入').r().b(),
+  f('邮箱', 'email', 'input', 6, '请输入').r().b(),
+  f('用户状态', 'status', 'select', 6, '请选择')
     .r()
     .ops([
-      { label: '启用', value: 1 },
-      { label: '禁用', value: 0 }
+      { label: '启用', value: '1' },
+      { label: '禁用', value: '0' }
     ])
     .b()
 ]
-console.log('🚀 ~ formConfig:', formConfig)
 
 const columns = ref([
-  {
-    type: 'selection',
-    title: '勾选'
-  },
-  {
-    title: '序号',
-    key: 'id',
-    align: 'center'
-  },
-  {
-    title: '用户名',
-    key: 'userName',
-    align: 'center'
-  },
-  {
-    title: '性别',
-    key: 'sex',
-    align: 'center',
-    render(row: any) {
-      return h(
+  t('勾选').c().b(),
+  t('序号', 'id').b(),
+  t('用户名', 'userName').b(),
+  t('性别', 'sex')
+    .r((row) =>
+      h(
         NTag,
         {
-          type: row.sex === 1 ? 'success' : 'primary',
+          type: row.sex === '1' ? 'success' : 'primary',
           bordered: false
         },
-        {
-          default: () => (row.sex === 1 ? '男' : '女')
-        }
+        { default: () => (row.sex === '1' ? '男' : '女') }
       )
-    }
-  },
-  {
-    title: '昵称',
-    key: 'nickName',
-    align: 'center'
-  },
-  {
-    title: '手机号',
-    key: 'phone',
-    align: 'center'
-  },
-  {
-    title: '邮箱',
-    key: 'email',
-    align: 'center'
-  },
-  {
-    title: '用户状态',
-    key: 'status',
-    align: 'center',
-    render(row: any) {
-      return h(
+    )
+    .b(),
+  t('昵称', 'nickName').b(),
+  t('手机号', 'phone').b(),
+  t('邮箱', 'email').b(),
+  t('用户状态', 'status')
+    .r((row) =>
+      h(
         NTag,
         {
-          type: row.status === 1 ? 'success' : 'error',
+          type: row.status === '1' ? 'success' : 'error',
           bordered: false
         },
+        { default: () => (row.status === '1' ? '启用' : '禁用') }
+      )
+    )
+    .b(),
+  t('操作')
+    .f('right', 130)
+    .r((row) => [
+      h(
+        NButton,
         {
-          default: () => (row.status === 1 ? '启用' : '禁用')
+          size: 'small',
+          type: 'primary',
+          ghost: true,
+          style: { marginRight: '10px' },
+          onClick: () => showEdit(row)
+        },
+        { default: () => '编辑' }
+      ),
+      h(
+        NPopconfirm,
+        {
+          positiveText: '确认',
+          negativeText: '取消',
+          onPositiveClick: () => deleteRow(row) // 确认删除的操作
+        },
+        {
+          trigger: () =>
+            h(
+              NButton,
+              {
+                size: 'small',
+                type: 'error',
+                ghost: true
+              },
+              { default: () => '删除' }
+            ),
+          default: () => '确定删除吗？'
         }
       )
-    }
-  },
-  {
-    title: '操作',
-    key: 'actions',
-    align: 'center',
-    fixed: 'right',
-    width: 130,
-    render(row: any) {
-      return [
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'primary',
-            ghost: true,
-            style: { marginRight: '10px' },
-            onClick: () => showEdit(row)
-          },
-          { default: () => '编辑' }
-        ),
-        h(
-          NPopconfirm,
-          {
-            positiveText: '确认',
-            negativeText: '取消',
-            onPositiveClick: () => deleteRow(row) // 确认删除的操作
-          },
-          {
-            trigger: () =>
-              h(
-                NButton,
-                {
-                  size: 'small',
-                  type: 'error',
-                  ghost: true
-                },
-                { default: () => '删除' }
-              ),
-            default: () => '确定删除吗？'
-          }
-        )
-      ]
-    }
-  }
+    ])
+    .b()
 ])
+
 const columnsCopy = ref(columns.value)
 
 const pagination = {
@@ -244,9 +206,9 @@ const updateDrag = (value: any) => {
   ]
 }
 
-const deleteRow = (row) => {}
+const deleteRow = (row: any) => {}
 
-const rowKey = (row) => row.id
+const rowKey = (row: any) => row.id
 
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
@@ -264,3 +226,4 @@ const handleCheck = (rowKeys: DataTableRowKey[]) => {
   justify-content: space-between;
 }
 </style>
+@/utils/form-cfg
