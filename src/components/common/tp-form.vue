@@ -20,6 +20,7 @@
         :path="item.path"
         :rule="[
           {
+            type: item.rType,
             required: item.required,
             message: item.message ? item.message : `${item.label}不能为空`,
             trigger: item.trigger
@@ -55,8 +56,6 @@ import { ref } from 'vue'
 import { NInput, NSelect, NSwitch, NButton } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 
-const $formRef = ref<FormInst>()
-
 interface Config {
   label: string
   path: string
@@ -69,6 +68,7 @@ interface Config {
   trigger?: Array<string>
   options?: Array<{ label: string; value: string | number }>
   multiple?: boolean
+  rType?: string
 }
 
 interface Options {
@@ -90,6 +90,8 @@ const props = defineProps<{
   rules?: Record<string, any>
   formOption?: Options
 }>()
+
+const $formRef = ref<FormInst>()
 
 const formData = ref(props.form)
 
@@ -125,6 +127,12 @@ const search = (e: MouseEvent) => {
     }
   })
 }
+
+const validate = async () => {
+  return await $formRef.value?.validate()
+}
+
+defineExpose({ validate })
 </script>
 
 <style lang="scss" scoped></style>

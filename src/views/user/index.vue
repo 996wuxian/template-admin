@@ -10,7 +10,7 @@
         <n-button ghost @click="showEdit({})">
           <i i-solar-add-square-bold-duotone class="w-20px h-20px m-r-5px"></i>
           新增</n-button
-        ><n-button>
+        ><n-button :disabled="checkedData.length === 0">
           <i i-solar-trash-bin-minimalistic-bold-duotone class="w-20px h-20px m-r-5px"></i>
           批量删除</n-button
         ><n-button @click="reload">
@@ -210,7 +210,9 @@ const deleteRow = (row: any) => {}
 
 const rowKey = (row: any) => row.id
 
+const checkedData = ref<DataTableRowKey[]>([])
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
+  checkedData.value = rowKeys
   console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
 }
 </script>

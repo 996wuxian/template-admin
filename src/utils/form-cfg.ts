@@ -11,6 +11,7 @@ interface FieldConfig {
   trigger?: Array<string>
   options?: Array<{ label: string; value: string | number }>
   multiple?: boolean
+  rType?: string
 }
 
 export const f = (
@@ -32,14 +33,20 @@ export const f = (
     message: '',
     trigger: ['blur', 'input'],
     options: [],
-    multiple: false
+    multiple: false,
+    rType: ''
   }
 
   const chainable = {
-    r(message: string = `${label}不能为空`, trigger: Array<string> = ['blur', 'input']) {
+    r(
+      message: string = `${label}不能为空`,
+      trigger: Array<string> = ['blur', 'input'],
+      rType: string = ''
+    ) {
       obj.required = true
       obj.message = message
       obj.trigger = trigger
+      obj.rType = rType
       return this
     },
     ops(options: Array<{ label: string; value: string | number }>) {

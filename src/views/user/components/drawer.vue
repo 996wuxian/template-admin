@@ -1,7 +1,11 @@
 <template>
   <n-drawer v-model:show="drawerVisible" :width="300" placement="right">
-    <n-drawer-content title="编辑用户">
-      <Form :form="userForm" :config="formConfig" :formOption="formOption" />
+    <n-drawer-content :title="userForm.id ? '编辑用户' : '新增用户'">
+      <Form ref="$userForm" :form="userForm" :config="formConfig" :formOption="formOption" />
+      <template #footer>
+        <n-button class="m-r-10px" @click="drawerVisible = false">取消</n-button>
+        <n-button type="primary" @click="submit">确认</n-button>
+      </template>
     </n-drawer-content>
   </n-drawer>
 </template>
@@ -10,7 +14,7 @@
 import Form from '@/components/common/tp-form.vue'
 import { f } from '@/utils/form-cfg'
 import { useUserStore } from '../store'
-const { drawerVisible, userForm } = useUserStore()
+const { drawerVisible, $userForm, userForm, submit } = useUserStore()
 
 const formOption = {
   inline: false, // 行内
@@ -42,11 +46,11 @@ const formConfig = [
     ])
     .b(),
   f('用户角色', 'role', 'select', 24, '请选择')
-    .r()
+    .r('', ['blur', 'change'], 'array')
     .ops([
-      { label: '普通用户', value: 1 },
-      { label: '管理员', value: 2 },
-      { label: '超级管理员', value: 3 }
+      { label: '普通用户', value: '1' },
+      { label: '管理员', value: '2' },
+      { label: '超级管理员', value: '3' }
     ])
     .mult()
     .b()

@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 interface User {
+  id?: number
   userName?: string
   sex?: null
   nickName?: string
@@ -12,6 +13,7 @@ interface User {
 
 const form = ref<User>({})
 
+const $userForm = ref()
 const userForm = ref<User>({})
 const drawerVisible = ref(false)
 const showEdit = (row: any) => {
@@ -30,7 +32,7 @@ const data = ref([
     phone: '1351231231',
     email: 'aowbnao@gmail.com',
     status: '1',
-    role: [1]
+    role: ['1']
   },
   {
     id: 2,
@@ -40,7 +42,7 @@ const data = ref([
     phone: '1351231231',
     email: 'aowbnao@gmail.com',
     status: '0',
-    role: [2]
+    role: ['2']
   }
 ])
 
@@ -52,14 +54,21 @@ const reload = () => {
   }, 2000)
 }
 
+const submit = async () => {
+  await $userForm.value?.validate()
+  console.log(userForm.value, 'userForm.value')
+}
+
 export const useUserStore = () => {
   return {
     form,
     drawerVisible,
     showEdit,
+    $userForm,
     userForm,
     data,
     loading,
-    reload
+    reload,
+    submit
   }
 }
