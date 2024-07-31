@@ -11,6 +11,10 @@ This template should help get you started developing with Vue 3 in Vite.
 > <br>
 > 如果你认为TemplateAdmin对你有帮助，或者你喜欢我的项目，请给我的项目一个⭐️ 在GitHub上。您的支持是我们不断改进的动力！感谢您的支持！如果有什么地方不够好，请提出issue，我会改进的！
 
+## Introduction
+
+该模板使用Vue3 + Ts + Vite + Pinia + UnoCss + Naive UI搭建，配置了Prettier和Eslint，配置了路由，请求，loading，进度条等...提供了主题配置，颜色配置等功能，Icon使用[UnoCss图标预设](https://icones.js.org/collection/solar)，也封装了对应的svg-icon组件，可以通过使用<svg-icon name="...">引入对应的svg图标，[Svg图标预设](https://yesicon.app/logos/?lang=zh-hans)，希望这个可以作为您的初始化项目模板，供您拓展和自定义属于您的项目。
+
 ## Recommended IDE Setup
 
 推荐的IDE：
