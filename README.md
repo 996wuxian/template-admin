@@ -1,5 +1,6 @@
 # template-admin
 
+![本地路径](./src/assets/img/logo.png)
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
