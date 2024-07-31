@@ -23,27 +23,50 @@ const showEdit = (row: any) => {
   drawerVisible.value = true
 }
 
-const data = ref([
+interface Menu {
+  id: number
+  title: string
+  icon: string
+  name: string
+  url: string
+  status: string
+  hide: string
+  sort: number
+  children: Menu[]
+}
+
+const data = ref<Menu[]>([
   {
     id: 1,
-    roleName: '普通用户',
-    roleCode: '1',
-    roleDesc: '测试角色',
-    status: '1'
+    title: '首页',
+    icon: 'home',
+    name: 'home',
+    url: '/home',
+    status: '1',
+    hide: '1',
+    sort: 1
   },
   {
     id: 2,
-    roleName: '管理员',
-    roleCode: '2',
-    roleDesc: '管理员',
-    status: '0'
-  },
-  {
-    id: 3,
-    roleName: '超级管理员',
-    roleCode: '3',
-    roleDesc: '超级管理员',
-    status: '1'
+    title: '系统管理',
+    icon: 'home',
+    name: 'home',
+    url: '/home',
+    status: '1',
+    hide: '1',
+    sort: 1,
+    children: [
+      {
+        id: 3,
+        title: '系统管理',
+        icon: 'home',
+        name: 'home',
+        url: '/home',
+        status: '1',
+        hide: '1',
+        sort: 1
+      }
+    ]
   }
 ])
 

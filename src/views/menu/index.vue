@@ -32,6 +32,7 @@
       :pagination="pagination"
       :loading="loading"
       :row-key="rowKey"
+      default-expand-all
       @update:checked-row-keys="handleCheck"
     />
   </n-card>
@@ -41,47 +42,21 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import Form from '@/components/common/tp-form.vue'
-import { f } from '@/utils/form-cfg'
 import { t } from '@/utils/table-cfg'
 import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
 import Drawer from './components/drawer.vue'
 import { useRoleStore } from './store'
-const { form, showEdit, data, loading, reload } = useRoleStore()
-
-const formOption = {
-  inline: false, // 行内
-  labelWidth: 80,
-  size: 'medium',
-  labelPlacement: 'left', // 标签位置
-  disabled: false,
-  operate: true,
-  operateText: '搜索',
-  xgap: 20,
-  labelAlign: 'right',
-  search: true
-}
-
-const formConfig = [
-  f('角色名称', 'roleName', 'input', 6, '请输入').r().b(),
-  f('角色编码', 'roleCode', 'input', 6, '请输入').r().b(),
-  f('角色状态', 'status', 'select', 6, '请选择')
-    .r()
-    .ops([
-      { label: '启用', value: '1' },
-      { label: '禁用', value: '0' }
-    ])
-    .b()
-]
+const { showEdit, data, loading, reload } = useRoleStore()
 
 const columns = ref([
   t('勾选').c().b(),
-  t('序号', 'id').b(),
-  t('角色名称', 'roleName').b(),
-  t('角色编码', 'roleCode').b(),
-  t('角色描述', 'roleDesc').b(),
-  t('角色状态', 'status')
+  t('ID', 'id').f('left', 100).b(),
+  t('菜单名称', 'title').b(),
+  t('图标', 'icon').b(),
+  t('路由名称', 'name').b(),
+  t('路由路径', 'url').b(),
+  t('菜单状态', 'status')
     .r((row) =>
       h(
         NTag,
@@ -93,9 +68,35 @@ const columns = ref([
       )
     )
     .b(),
-  t('操作')
-    .f('right', 130)
+  t('是否隐藏', 'hide')
+    .r((row) =>
+      h(
+        NTag,
+        {
+          type: row.hide === '1' ? 'default' : 'error',
+          bordered: false
+        },
+        { default: () => (row.hide === '1' ? '否' : '是') }
+      )
+    )
+    .b(),
+  t('排序', 'sort').b(),
+  t('操作', '', 'right')
+    .f('right', 230)
     .r((row) => [
+      row.children
+        ? h(
+            NButton,
+            {
+              size: 'small',
+              type: 'primary',
+              ghost: true,
+              style: { marginRight: '10px' },
+              onClick: () => showEdit(row)
+            },
+            { default: () => '新增子菜单' }
+          )
+        : null,
       h(
         NButton,
         {
@@ -131,6 +132,8 @@ const columns = ref([
     ])
     .b()
 ])
+
+console.log('🚀 ~ columns:', columns)
 
 const columnsCopy = ref(columns.value)
 

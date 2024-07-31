@@ -2,17 +2,19 @@ interface ColumnConfig {
   type?: string
   title: string
   key?: string
+  titleAlign: string
   align?: string
   render?: (row: any) => any
   fixed?: string
   width?: number
 }
 
-export const t = (title: string, key?: string) => {
+export const t = (title: string, key?: string, align?: string) => {
   const obj: ColumnConfig = {
     title,
     key,
-    align: 'center'
+    titleAlign: 'center',
+    align: align || 'center'
   }
 
   const chainable = {
