@@ -1,4 +1,4 @@
-<p align="center"><img src="./src/assets/img/logo.png" /></p>
+<p align="center"><img src="./src/assets/img/readme_imgs/logo.png" /></p>
 
 <h1 align="center">template-admin</h1>
 
@@ -18,6 +18,8 @@ This template should help get you started developing with Vue 3 in Vite.
 [VSCode](https://code.visualstudio.com/)：我已配置了Prettier和Eslint，您可以结合VsCode对应的插件使用，这将减少您手动格式化代码的麻烦。
 
 ## Example Images
+
+<p align="center"><img src="./src/assets/img/readme_imgs/page.jpg" /></p>
 
 ## Project Setup
 
