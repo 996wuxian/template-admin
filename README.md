@@ -19,7 +19,8 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Example Images
 
-<p align="center"><img src="./src/assets/img/readme_imgs/page.jpg" /></p>
+<p align="center"><img src="./src/assets/img/readme_imgs/page.png" /></p>
+<p align="center" style="margin-top: 10px"><img src="./src/assets/img/readme_imgs/theme.png" /></p>
 
 ## Project Setup
 
