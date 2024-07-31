@@ -1,6 +1,6 @@
 <p align="center"><img src="./src/assets/img/logo.png" /></p>
 
-# template-admin
+# <center> template-admin
 
 This template should help get you started developing with Vue 3 in Vite.
 
