@@ -1,4 +1,4 @@
-![本地图片]([./src/assets/img/logo.png]#pic_center)
+<p><img src="./src/assets/img/logo.png" align="middle" /></p>
 
 # template-admin
 
