@@ -1,4 +1,4 @@
-<center>![本地路径](./src/assets/img/logo.png)</center>
+<center><img src="./src/assets/img/logo.png"></center>
 
 # <center>template-admin</center>
 
