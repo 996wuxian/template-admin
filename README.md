@@ -3,6 +3,7 @@
 <h1 align="center">template-admin</h1>
 
 This template should help get you started developing with Vue 3 in Vite.
+<br>
 这个模板应该有助于你开始在Vite中使用Vue 3进行开发。
 
 > [!NOTE]
@@ -12,17 +13,11 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
 
-推荐的IDE
+推荐的IDE：
 
-[VSCode](https://code.visualstudio.com/)
+[VSCode](https://code.visualstudio.com/)：我已配置了Prettier和Eslint，您可以结合VsCode对应的插件使用，这将减少您手动格式化代码的麻烦。
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Example Images
 
 ## Project Setup
 
