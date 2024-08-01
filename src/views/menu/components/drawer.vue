@@ -13,8 +13,8 @@
 <script lang="ts" setup>
 import Form from '@/components/common/tp-form.vue'
 import { f } from '@/utils/form-cfg'
-import { useRoleStore } from '../store'
-const { drawerVisible, $roleForm, roleForm, submit } = useRoleStore()
+import { useMenuStore } from '../store'
+const { drawerVisible, $roleForm, roleForm, submit } = useMenuStore()
 
 const formOption = {
   inline: false, // 行内

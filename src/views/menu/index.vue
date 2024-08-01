@@ -37,7 +37,8 @@
     />
   </n-card>
 
-  <Drawer />
+  <!-- <Drawer /> -->
+  <Modal />
 </template>
 
 <script lang="ts" setup>
@@ -45,15 +46,19 @@ import { ref } from 'vue'
 import { t } from '@/utils/table-cfg'
 import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
-import Drawer from './components/drawer.vue'
-import { useRoleStore } from './store'
-const { showEdit, data, loading, reload } = useRoleStore()
+import Modal from './components/modal.vue'
+import { useMenuStore } from './store'
+const { showEdit, data, loading, reload } = useMenuStore()
 
 const columns = ref([
   t('勾选').c().b(),
   t('ID', 'id').f('left', 100).b(),
   t('菜单名称', 'title').b(),
-  t('图标', 'icon').b(),
+  t('图标', 'icon')
+    .r((row) => {
+      h('i', { class: row.icon }), { default: () => 123 }
+    })
+    .b(),
   t('路由名称', 'name').b(),
   t('路由路径', 'url').b(),
   t('菜单状态', 'status')

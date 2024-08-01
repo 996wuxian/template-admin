@@ -15,12 +15,12 @@ const form = ref<User>({})
 
 const $roleForm = ref()
 const roleForm = ref<User>({})
-const drawerVisible = ref(false)
+const modalVisible = ref(false)
 const showEdit = (row: any) => {
   roleForm.value = {
     ...row
   }
-  drawerVisible.value = true
+  modalVisible.value = true
 }
 
 interface Menu {
@@ -39,7 +39,7 @@ const data = ref<Menu[]>([
   {
     id: 1,
     title: '首页',
-    icon: 'home',
+    icon: 'i-solar-home-smile-bold',
     name: 'home',
     url: '/home',
     status: '1',
@@ -83,10 +83,10 @@ const submit = async () => {
   console.log(roleForm.value, 'roleForm.value')
 }
 
-export const useRoleStore = () => {
+export const useMenuStore = () => {
   return {
     form,
-    drawerVisible,
+    modalVisible,
     showEdit,
     $roleForm,
     roleForm,
