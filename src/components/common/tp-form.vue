@@ -53,7 +53,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { NInput, NSelect, NSwitch, NButton } from 'naive-ui'
+import { NInput, NSelect, NSwitch, NButton, NCascader } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 
 interface Config {
@@ -103,6 +103,8 @@ const getComponent = (type: string) => {
       return NSelect
     case 'switch':
       return NSwitch
+    case 'cascader':
+      return NCascader
     default:
       return NInput
   }

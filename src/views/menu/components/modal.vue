@@ -42,11 +42,31 @@ const formOption = {
 }
 
 const formConfig = [
-  f('父菜单', 'roleName', 'input', 12, '请输入').r().b(),
-  f('菜单名称', 'roleName', 'input', 12, '请输入').r().b(),
-  f('图标', 'roleCode', 'input', 12, '请输入').r().b(),
-  f('路由名称', 'roleDesc', 'input', 12, '请输入').r().b(),
-  f('路由路径', 'roleDesc', 'input', 12, '请输入').r().b(),
+  f('父菜单', 'parentId', 'cascader', 12, '请选择')
+    .r()
+    .ops([
+      {
+        label: '父节点',
+        value: '1',
+        children: [{ label: '子节点', value: '1-1' }]
+      },
+      {
+        label: '父节点1',
+        value: '2',
+        children: [
+          {
+            label: '子节点',
+            value: '2-1',
+            children: [{ label: '子节点', value: '2-1-1' }]
+          }
+        ]
+      }
+    ])
+    .b(),
+  f('菜单名称', 'menuName', 'input', 12, '请输入').r().b(),
+  f('图标', 'icon', 'input', 12, '请输入').r().b(),
+  f('路由名称', 'url', 'input', 12, '请输入').r().b(),
+  f('路由路径', 'path', 'input', 12, '请输入').r().b(),
   f('菜单状态', 'status', 'select', 12, '请选择')
     .r()
     .ops([
@@ -54,8 +74,8 @@ const formConfig = [
       { label: '禁用', value: '0' }
     ])
     .b(),
-  f('是否隐藏', 'roleDesc', 'input', 12, '请输入').r().b(),
-  f('排序', 'roleDesc', 'input', 12, '请输入').r().b()
+  f('是否隐藏', 'hidden', 'input', 12, '请输入').r().b(),
+  f('排序', 'sort', 'input', 12, '请输入').r().b()
 ]
 </script>
 

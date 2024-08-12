@@ -24,15 +24,15 @@ const showEdit = (row: any) => {
 }
 
 interface Menu {
-  id: number
-  title: string
-  icon: string
-  name: string
-  url: string
-  status: string
-  hide: string
-  sort: number
-  children: Menu[]
+  id?: number
+  title?: string
+  icon?: string
+  name?: string
+  url?: string
+  status?: string
+  hide?: string
+  sort?: number
+  children?: Menu[]
 }
 
 const data = ref<Menu[]>([
@@ -49,7 +49,7 @@ const data = ref<Menu[]>([
   {
     id: 2,
     title: '系统管理',
-    icon: 'home',
+    icon: 'i-solar-settings-minimalistic-bold-duotone',
     name: 'home',
     url: '/home',
     status: '1',
@@ -59,7 +59,7 @@ const data = ref<Menu[]>([
       {
         id: 3,
         title: '系统管理',
-        icon: 'home',
+        icon: 'i-solar-settings-minimalistic-bold-duotone',
         name: 'home',
         url: '/home',
         status: '1',

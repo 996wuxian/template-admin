@@ -49,7 +49,7 @@ export const f = (
       obj.rType = rType
       return this
     },
-    ops(options: Array<{ label: string; value: string | number }>) {
+    ops(options: Array<{ label: string; value: string | number; children?: any }>) {
       obj.options = options
       return this
     },

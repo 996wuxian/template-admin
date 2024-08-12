@@ -9,12 +9,13 @@ interface ColumnConfig {
   width?: number
 }
 
-export const t = (title: string, key?: string, align?: string) => {
+export const t = (title: string, key?: string, align?: string, width?: number) => {
   const obj: ColumnConfig = {
     title,
     key,
     titleAlign: 'center',
-    align: align || 'center'
+    align: align || 'center',
+    width: width
   }
 
   const chainable = {

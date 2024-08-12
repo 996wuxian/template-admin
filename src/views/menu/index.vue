@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { t } from '@/utils/table-cfg'
 import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
@@ -54,10 +54,17 @@ const columns = ref([
   t('勾选').c().b(),
   t('ID', 'id').f('left', 100).b(),
   t('菜单名称', 'title').b(),
-  t('图标', 'icon')
-    .r((row) => {
-      h('i', { class: row.icon }), { default: () => 123 }
-    })
+  t('图标', 'icon', 'center', 120)
+    .r((row) =>
+      h(
+        'div',
+        {
+          class: `${row.icon} w-100% flex-center text-20px`
+          // style: 'font-size: 20px; width: 100%; text-align: center'
+        },
+        { default: () => row.icon }
+      )
+    )
     .b(),
   t('路由名称', 'name').b(),
   t('路由路径', 'url').b(),
@@ -138,8 +145,6 @@ const columns = ref([
     .b()
 ])
 
-console.log('🚀 ~ columns:', columns)
-
 const columnsCopy = ref(columns.value)
 
 const pagination = {
@@ -194,7 +199,6 @@ const rowKey = (row: any) => row.id
 const checkedData = ref<DataTableRowKey[]>([])
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedData.value = rowKeys
-  console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
 }
 </script>
 
