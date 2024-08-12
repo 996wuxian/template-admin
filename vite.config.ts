@@ -90,7 +90,7 @@ export default defineConfig({
         },
         // 大文件拆分
         manualChunks: (id) => {
-          if (id.includes('echarts')) return 'echarts'
+          // if (id.includes('echarts')) return 'echarts'
           if (id.includes('node_modules')) return 'vendor'
         }
       }

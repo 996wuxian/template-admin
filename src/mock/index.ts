@@ -1,5 +1,7 @@
-//mock.js
+// mock.js
+// http://mockjs.com/examples.html#DPD
 import Mock from 'mockjs'
+const Random = Mock.Random
 import qs from 'qs'
 Mock.mock(/\/api\/random/, function (options: any) {
   var str = options.url.slice(options.url.indexOf('?') + 1)
@@ -55,4 +57,24 @@ Mock.mock('/api/user/login', 'post', function () {
       token: '123123'
     }
   }
+})
+// user
+Mock.mock('/api/user/list', 'get', {
+  msg: '获取用户列表成功',
+  code: 200,
+  'data|200': [
+    // 生成 200 条数据
+    {
+      'id|+1': 1, // id 从 1 开始递增
+      userName: '@word(4, 6)', // 生成 4 到 6 个字母组成的用户名
+      'sex|1': ['0', '1'],
+      nickName: '@word(5, 8)', // 生成 5 到 8 个字母组成的昵称
+      phone: /^1[385][1-9]\d{8}$/, // 生成随机手机号
+      email: '@email', // 生成随机邮箱
+      'status|1': ['0', '1'],
+      'role|1-3': function () {
+        return Mock.mock('@shuffle(["1", "2", "3"])').slice(0, Mock.mock('@integer(1, 3)'))
+      }
+    }
+  ]
 })

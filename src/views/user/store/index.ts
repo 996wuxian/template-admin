@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { UserList } from '@/service/api/mock-api'
 
 interface User {
   id?: number
@@ -23,28 +24,14 @@ const showEdit = (row: any) => {
   drawerVisible.value = true
 }
 
-const data = ref([
-  {
-    id: 1,
-    userName: 'qwer',
-    sex: '1',
-    nickName: 'overa',
-    phone: '1351231231',
-    email: 'aowbnao@gmail.com',
-    status: '1',
-    role: ['1']
-  },
-  {
-    id: 2,
-    userName: 'dala',
-    sex: '2',
-    nickName: 'eosao',
-    phone: '1351231231',
-    email: 'aowbnao@gmail.com',
-    status: '0',
-    role: ['2']
-  }
-])
+const queryData = async () => {
+  const { code, data } = await UserList()
+  if (code != 200) return
+  tableData.value = data
+  console.log('🚀 ~ queryData ~ tableData.value:', tableData.value)
+}
+
+const tableData = ref()
 
 const loading = ref(false)
 const reload = () => {
@@ -66,7 +53,8 @@ export const useUserStore = () => {
     showEdit,
     $userForm,
     userForm,
-    data,
+    queryData,
+    tableData,
     loading,
     reload,
     submit

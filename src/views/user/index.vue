@@ -30,9 +30,10 @@
       </n-space>
     </n-space>
     <n-data-table
+      v-if="tableData"
       class="table"
       :columns="columns"
-      :data="data"
+      :data="tableData"
       :pagination="pagination"
       :loading="loading"
       :row-key="rowKey"
@@ -52,7 +53,7 @@ import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
 import Drawer from './components/drawer.vue'
 import { useUserStore } from './store'
-const { form, showEdit, data, loading, reload } = useUserStore()
+const { form, showEdit, queryData, tableData, loading, reload } = useUserStore()
 
 const formOption = {
   inline: false, // 行内
@@ -162,7 +163,7 @@ const columns = ref([
 const columnsCopy = ref(columns.value)
 
 const pagination = {
-  pageSize: data.value.length
+  pageSize: 8
 }
 
 const list = ref()
@@ -213,8 +214,11 @@ const rowKey = (row: any) => row.id
 const checkedData = ref<DataTableRowKey[]>([])
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedData.value = rowKeys
-  console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
 }
+
+onBeforeMount(() => {
+  queryData()
+})
 </script>
 
 <style lang="scss" scoped>

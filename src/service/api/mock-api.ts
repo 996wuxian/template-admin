@@ -10,3 +10,11 @@ export function Login(data: any, showLoading: boolean = false, showMsg: boolean 
     showLoading
   })
 }
+
+export function UserList(showLoading: boolean = false, showMsg: boolean = false) {
+  return request<any>({
+    method: 'get',
+    url: `${module}list`,
+    showLoading
+  })
+}
