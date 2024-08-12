@@ -29,6 +29,7 @@
         :show-label="item.showLabel"
       >
         <component
+          v-if="item.type !== 'radio'"
           :is="getComponent(item.type)"
           v-model:value="form[item.path]"
           :options="item.options"
@@ -36,6 +37,14 @@
           :multiple="item.multiple"
           clearable
         />
+
+        <n-radio-group v-else v-model:value="form[item.path]" name="radiogroup">
+          <n-space>
+            <n-radio v-for="song in item.arrays" :key="song.value" :value="song.value">
+              {{ song.label }}
+            </n-radio>
+          </n-space>
+        </n-radio-group>
       </n-form-item-gi>
       <n-form-item-gi v-if="formOption?.search" span="6" class="m-l-20px">
         <n-button type="default" @click="reset">
@@ -53,7 +62,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { NInput, NSelect, NSwitch, NButton, NCascader } from 'naive-ui'
+import { NInput, NSelect, NSwitch, NButton, NCascader, NRadio } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 
 interface Config {
@@ -69,6 +78,7 @@ interface Config {
   options?: Array<{ label: string; value: string | number }>
   multiple?: boolean
   rType?: string
+  arrays?: Array<{ label: string; value: string | number }>
 }
 
 interface Options {
@@ -90,6 +100,7 @@ const props = defineProps<{
   rules?: Record<string, any>
   formOption?: Options
 }>()
+console.log(props.config, 'props.config')
 
 const $formRef = ref<FormInst>()
 
@@ -105,6 +116,8 @@ const getComponent = (type: string) => {
       return NSwitch
     case 'cascader':
       return NCascader
+    case 'radio':
+      return NRadio
     default:
       return NInput
   }

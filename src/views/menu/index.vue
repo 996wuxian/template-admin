@@ -28,16 +28,14 @@
     <n-data-table
       class="table"
       :columns="columns"
-      :data="data"
+      :data="tableData"
       :pagination="pagination"
       :loading="loading"
       :row-key="rowKey"
-      default-expand-all
       @update:checked-row-keys="handleCheck"
     />
   </n-card>
 
-  <!-- <Drawer /> -->
   <Modal />
 </template>
 
@@ -48,11 +46,24 @@ import { NButton, NTag, NPopconfirm, DataTableRowKey } from 'naive-ui'
 import Draggable from '@/components/common/draggable.vue'
 import Modal from './components/modal.vue'
 import { useMenuStore } from './store'
-const { showEdit, data, loading, reload } = useMenuStore()
+const { showEdit, queryData, tableData, loading, reload } = useMenuStore()
 
 const columns = ref([
   t('勾选').c().b(),
   t('ID', 'id').f('left', 100).b(),
+  t('菜单类型', 'menuType')
+    .f('left', 100)
+    .r((row) =>
+      h(
+        NTag,
+        {
+          type: row.menuType === '1' ? 'success' : 'default',
+          bordered: false
+        },
+        { default: () => (row.menuType === '1' ? '菜单' : '目录') }
+      )
+    )
+    .b(),
   t('菜单名称', 'title').b(),
   t('图标', 'icon', 'center', 120)
     .r((row) =>
@@ -92,11 +103,12 @@ const columns = ref([
       )
     )
     .b(),
+  t('父级菜单ID', 'parentId').b(),
   t('排序', 'sort').b(),
   t('操作', '', 'right')
     .f('right', 230)
     .r((row) => [
-      row.children
+      row.children && row.children.length > 0
         ? h(
             NButton,
             {
@@ -148,7 +160,7 @@ const columns = ref([
 const columnsCopy = ref(columns.value)
 
 const pagination = {
-  pageSize: data.value.length
+  pageSize: 10
 }
 
 const list = ref()
@@ -173,6 +185,7 @@ const updateList = (value: any) => {
     columns.value.splice(index, 0, columnsCopy.value[index])
   }
 }
+
 const updateDrag = (value: any) => {
   const start = value.start
   const end = value.end
@@ -200,6 +213,10 @@ const checkedData = ref<DataTableRowKey[]>([])
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedData.value = rowKeys
 }
+
+onBeforeMount(() => {
+  queryData()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -42,29 +42,11 @@ const formOption = {
 }
 
 const formConfig = [
-  f('父菜单', 'parentId', 'cascader', 12, '请选择')
+  f('菜单类型', 'menuType', 'radio', 12, '请选择')
     .r()
-    .ops([
-      {
-        label: '无',
-        value: 0
-      },
-      {
-        label: '父节点',
-        value: 1,
-        children: [{ label: '子节点', value: '1-1' }]
-      },
-      {
-        label: '父节点1',
-        value: 2,
-        children: [
-          {
-            label: '子节点',
-            value: '2-1',
-            children: [{ label: '子节点', value: '2-1-1' }]
-          }
-        ]
-      }
+    .ary([
+      { label: '目录', value: '0' },
+      { label: '菜单', value: '1' }
     ])
     .b(),
   f('菜单名称', 'title', 'input', 12, '请输入').r().b(),

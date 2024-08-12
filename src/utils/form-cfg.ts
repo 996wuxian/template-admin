@@ -11,7 +11,9 @@ interface FieldConfig {
   trigger?: Array<string>
   options?: Array<{ label: string; value: string | number }>
   multiple?: boolean
+  disabled?: boolean
   rType?: string
+  arrays?: Array<{ label: string; value: string | number }>
 }
 
 export const f = (
@@ -34,7 +36,9 @@ export const f = (
     trigger: ['blur', 'input'],
     options: [],
     multiple: false,
-    rType: ''
+    rType: '',
+    arrays: [],
+    disabled: false
   }
 
   const chainable = {
@@ -53,8 +57,16 @@ export const f = (
       obj.options = options
       return this
     },
+    ary(arrays: Array<{ label: string; value: string | number; children?: any }>) {
+      obj.arrays = arrays
+      return this
+    },
     mult() {
       obj.multiple = true
+      return this
+    },
+    d() {
+      obj.disabled = true
       return this
     },
     b() {

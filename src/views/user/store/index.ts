@@ -28,7 +28,6 @@ const queryData = async () => {
   const { code, data } = await UserList()
   if (code != 200) return
   tableData.value = data
-  console.log('🚀 ~ queryData ~ tableData.value:', tableData.value)
 }
 
 const tableData = ref()

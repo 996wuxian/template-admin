@@ -1,4 +1,6 @@
 import { ref } from 'vue'
+import { MenuList } from '@/service/api/mock-api'
+import { arrayToTree, treeFilter } from '@/utils/tools'
 
 interface User {
   id?: number
@@ -36,43 +38,13 @@ interface Menu {
   children?: Menu[]
 }
 
-const data = ref<Menu[]>([
-  {
-    id: 1,
-    title: '首页',
-    icon: 'i-solar-home-smile-bold',
-    name: 'home',
-    url: '/home',
-    status: '1',
-    hide: '1',
-    sort: 1,
-    parentId: 0
-  },
-  {
-    id: 2,
-    title: '系统管理',
-    icon: 'i-solar-settings-minimalistic-bold-duotone',
-    name: 'home',
-    url: '/home',
-    status: '1',
-    hide: '1',
-    sort: 1,
-    parentId: 0,
-    children: [
-      {
-        id: 3,
-        title: '系统管理',
-        icon: 'i-solar-settings-minimalistic-bold-duotone',
-        name: 'home',
-        url: '/home',
-        status: '1',
-        hide: '1',
-        sort: 1,
-        parentId: 2
-      }
-    ]
-  }
-])
+const queryData = async () => {
+  const { code, data } = await MenuList(true)
+  if (code !== 200) return
+  tableData.value = arrayToTree<Menu>(data, 'id', 'parentId', 'children')
+}
+
+const tableData = ref<Menu[]>([])
 
 const loading = ref(false)
 const reload = () => {
@@ -94,7 +66,8 @@ export const useMenuStore = () => {
     showEdit,
     $roleForm,
     roleForm,
-    data,
+    queryData,
+    tableData,
     loading,
     reload,
     submit

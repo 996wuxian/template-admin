@@ -1,14 +1,15 @@
 // 数组转树形结构
-export const arrayToTree = <T>(
+export const arrayToTree = <T extends Record<string, any>>(
   list: T[],
-  id = 'id',
-  parentId = 'parentId',
-  children = 'children'
+  id: keyof T = 'id',
+  parentId: keyof T = 'parentId',
+  children: keyof T = 'children'
 ) => {
-  const treeList: T[] = [],
-    map = {}
+  const treeList: T[] = []
+  const map: Record<string, T> = {}
+
   list.forEach((item) => {
-    if (!item[children]) item[children] = []
+    if (!item[children]) item[children] = [] as any
     map[item[id]] = item
   })
   list.forEach((item) => {
@@ -20,49 +21,49 @@ export const arrayToTree = <T>(
 }
 
 // 树形转数组结构
-export const treeToArray = <T>(
+export const treeToArray = <T extends Record<string, any>>(
   tree: T[],
   children = 'children',
-  callback?: (item: T, parentNode: T, level?: number) => T,
+  callback?: (item?: T, parentNode?: T, level?: number) => T,
   level = 1,
   parentNode?: T,
   temp: T[] = []
 ) => {
   tree.forEach((item) => {
     if (callback) item = callback(item, parentNode, level) ?? item
-    if (item[children]?.length > 0)
-      temp.push(...treeToArray<T>(item[children], children, callback, level + 1, item))
+    if (item[children] && (item[children] as T[]).length > 0)
+      temp.push(...treeToArray<T>(item[children] as T[], children, callback, level + 1, item))
     delete temp[temp.push(item) - 1][children]
   })
   return temp
 }
 
 // 过滤树形节点
-export const treeFilter = <T>(
+export const treeFilter = <T extends Record<string, any>>(
   tree: T[],
   callback: (item: T, level?: number) => boolean,
-  children = 'children',
+  children: keyof T = 'children',
   temp: T[] = [],
   level = 1
-) => {
+): T[] => {
   tree.forEach((item, index) => {
     if (!callback(item, level)) return
     const length = temp.push(item)
     if (tree[index][children]?.length > 0) {
       temp[length - 1][children] = treeFilter<T>(
-        tree[index][children],
+        tree[index][children] as T[],
         callback,
         children,
         [],
         level + 1
-      )
+      ) as T[keyof T]
     }
   })
   return temp
 }
 
 // 查找指定树形节点
-export const treeFind = <T>(
+export const treeFind = <T extends Record<string, any>>(
   tree: T[],
   callback: (item: T, level?: number) => boolean,
   children = 'children',
@@ -71,9 +72,10 @@ export const treeFind = <T>(
   for (const item of tree) {
     if (callback(item, level)) return item
     let result: T
-    if (item[children]?.length > 0)
-      result = treeFind<T>(item[children], callback, children, level + 1)
-    if (result) return result
+    if (item[children]?.length > 0) {
+      result = treeFind<T>(item[children], callback, children, level + 1) as any
+      if (result) return result
+    }
   }
 }
 
