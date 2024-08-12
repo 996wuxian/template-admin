@@ -24,6 +24,7 @@ const showEdit = (row: any) => {
 }
 
 interface Menu {
+  parentId?: number
   id?: number
   title?: string
   icon?: string
@@ -44,7 +45,8 @@ const data = ref<Menu[]>([
     url: '/home',
     status: '1',
     hide: '1',
-    sort: 1
+    sort: 1,
+    parentId: 0
   },
   {
     id: 2,
@@ -55,6 +57,7 @@ const data = ref<Menu[]>([
     status: '1',
     hide: '1',
     sort: 1,
+    parentId: 0,
     children: [
       {
         id: 3,
@@ -64,7 +67,8 @@ const data = ref<Menu[]>([
         url: '/home',
         status: '1',
         hide: '1',
-        sort: 1
+        sort: 1,
+        parentId: 2
       }
     ]
   }

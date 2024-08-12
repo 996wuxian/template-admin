@@ -46,13 +46,17 @@ const formConfig = [
     .r()
     .ops([
       {
+        label: '无',
+        value: 0
+      },
+      {
         label: '父节点',
-        value: '1',
+        value: 1,
         children: [{ label: '子节点', value: '1-1' }]
       },
       {
         label: '父节点1',
-        value: '2',
+        value: 2,
         children: [
           {
             label: '子节点',
@@ -63,10 +67,10 @@ const formConfig = [
       }
     ])
     .b(),
-  f('菜单名称', 'menuName', 'input', 12, '请输入').r().b(),
+  f('菜单名称', 'title', 'input', 12, '请输入').r().b(),
   f('图标', 'icon', 'input', 12, '请输入').r().b(),
-  f('路由名称', 'url', 'input', 12, '请输入').r().b(),
-  f('路由路径', 'path', 'input', 12, '请输入').r().b(),
+  f('路由名称', 'name', 'input', 12, '请输入').r().b(),
+  f('路由路径', 'url', 'input', 12, '请输入').r().b(),
   f('菜单状态', 'status', 'select', 12, '请选择')
     .r()
     .ops([
@@ -74,7 +78,7 @@ const formConfig = [
       { label: '禁用', value: '0' }
     ])
     .b(),
-  f('是否隐藏', 'hidden', 'input', 12, '请输入').r().b(),
+  f('是否隐藏', 'hide', 'switch', 12, '请输入').r().b(),
   f('排序', 'sort', 'input', 12, '请输入').r().b()
 ]
 </script>
