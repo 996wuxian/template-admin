@@ -51,8 +51,7 @@ export const asyncRoutes = [
         name: 'Home',
         component: () => import('@/views/home/index.vue'),
         meta: {
-          title: '首页',
-          icon: 'i-solar-home-smile-bold'
+          title: '首页'
         }
       }
     ]
@@ -68,7 +67,7 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
-        path: '/user',
+        path: '/system/user',
         name: 'User',
         component: () => import('@/views/user/index.vue'),
         meta: {
@@ -78,7 +77,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: '/role',
+        path: '/system/role',
         name: 'Role',
         component: () => import('@/views/role/index.vue'),
         meta: {
@@ -88,13 +87,55 @@ export const asyncRoutes = [
         }
       },
       {
-        path: '/menu',
+        path: '/system/menu',
         name: 'Menu',
         component: () => import('@/views/menu/index.vue'),
         meta: {
           title: '菜单管理',
           icon: 'i-solar-widget-4-bold-duotone',
           hidden: false
+        }
+      }
+    ]
+  },
+  {
+    path: '/change-role',
+    name: 'ChangeRole',
+    component: Layout,
+    meta: {
+      title: '切换权限',
+      icon: 'i-solar-square-transfer-horizontal-bold',
+      hidden: false
+    },
+    children: [
+      {
+        path: '/change-role',
+        name: 'ChangeRole',
+        component: () => import('@/views/change-role/index.vue'),
+        meta: {
+          title: '切换权限',
+          icon: 'i-solar-square-transfer-horizontal-bold'
+        }
+      }
+    ]
+  },
+  {
+    path: '/text-sadmin',
+    name: 'TextAadmin',
+    component: Layout,
+    meta: {
+      title: '超级管理员可见',
+      icon: 'i-solar-key-minimalistic-square-2-bold',
+      hidden: false
+    },
+    children: [
+      {
+        path: '/text-sadmin',
+        name: 'TextAadmin',
+        component: () => import('@/views/text-sadmin/index.vue'),
+        meta: {
+          title: '超级管理员可见',
+          icon: 'i-solar-key-minimalistic-square-2-bold'
         }
       }
     ]

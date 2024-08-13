@@ -4,16 +4,36 @@ import Mock from 'mockjs'
 const Random = Mock.Random
 
 // login
-Mock.mock('/api/user/login', 'post', function () {
+Mock.mock('/api/user/login', 'post', function (e: any) {
+  const { userName } = JSON.parse(e.body)
+  let userInfo = {} as any
+  if (userName === 'user') {
+    userInfo = {
+      userName,
+      roleId: 3,
+      roleName: '普通用户'
+    }
+  }
+  if (userName === 'admin') {
+    userInfo = {
+      userName,
+      roleId: 2,
+      roleName: '管理员'
+    }
+  }
+  if (userName === 'sadmin') {
+    userInfo = {
+      userName,
+      roleId: 1,
+      roleName: '超级管理员'
+    }
+  }
+
   return {
     msg: '登录成功',
     code: 200,
     data: {
-      userInfo: {
-        userName: 'wuxian',
-        roleId: 1,
-        roleName: '超级管理员'
-      },
+      userInfo: userInfo,
       token: '123123'
     }
   }
@@ -48,60 +68,140 @@ Mock.mock('/api/user/menuList', 'get', {
       parentId: 0,
       title: '首页',
       icon: 'i-solar-home-smile-bold',
-      name: 'home',
-      url: '/home',
+      path: '/',
+      name: 'Root',
+      url: 'Layout',
       status: '1',
       hide: '1',
       sort: 1,
-      menuType: '1'
+      menuType: '0',
+      roles: ['1', '2', '3']
     },
     {
       id: 2,
-      parentId: 0,
-      title: '系统管理',
-      icon: 'i-solar-settings-minimalistic-bold-duotone',
-      name: 'System',
-      url: '/system',
+      parentId: 1,
+      title: '首页',
+      icon: 'i-solar-home-smile-bold',
+      path: '/home',
+      name: 'Home',
+      url: '/home/index.vue',
       status: '1',
       hide: '1',
       sort: 2,
-      menuType: '0'
+      menuType: '1',
+      roles: ['1', '2', '3']
     },
     {
       id: 3,
-      parentId: 2,
-      title: '用户管理',
+      parentId: 0,
+      title: '系统管理',
       icon: 'i-solar-settings-minimalistic-bold-duotone',
-      name: 'User',
-      url: '/user',
+      path: '/system',
+      name: 'System',
+      url: 'Layout',
       status: '1',
       hide: '1',
       sort: 3,
-      menuType: '1'
+      menuType: '0',
+      roles: ['1', '2']
     },
     {
       id: 4,
-      parentId: 2,
-      title: '角色管理',
+      parentId: 3,
+      title: '用户管理',
       icon: 'i-solar-settings-minimalistic-bold-duotone',
-      name: 'Role',
-      url: '/role',
+      path: '/system/user',
+      name: 'User',
+      url: '/user/index.vue',
       status: '1',
       hide: '1',
       sort: 4,
-      menuType: '1'
+      menuType: '1',
+      roles: ['1', '2']
     },
     {
       id: 5,
-      parentId: 2,
-      title: '菜单管理',
+      parentId: 3,
+      title: '角色管理',
       icon: 'i-solar-settings-minimalistic-bold-duotone',
-      name: 'Menu',
-      url: '/menu',
+      path: '/system/role',
+      name: 'Role',
+      url: '/role/index.vue',
       status: '1',
       hide: '1',
       sort: 5,
-      menuType: '1'
+      menuType: '1',
+      roles: ['1', '2']
+    },
+    {
+      id: 6,
+      parentId: 3,
+      title: '菜单管理',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
+      path: '/system/menu',
+      name: 'Menu',
+      url: '/menu/index.vue',
+      status: '1',
+      hide: '1',
+      sort: 6,
+      menuType: '1',
+      roles: ['1', '2']
+    },
+    {
+      id: 7,
+      parentId: 0,
+      title: '切换权限',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
+      path: '/change-role',
+      name: 'ChangeRole',
+      url: 'Layout',
+      status: '1',
+      hide: '1',
+      sort: 7,
+      menuType: '0',
+      roles: ['1', '2']
+    },
+    {
+      id: 8,
+      parentId: 7,
+      title: '切换权限',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
+      path: '/change-role',
+      name: 'ChangeRole',
+      url: '/change-role/index.vue',
+      status: '1',
+      hide: '1',
+      sort: 8,
+      menuType: '1',
+      roles: ['1', '2']
+    },
+    {
+      id: 9,
+      parentId: 0,
+      title: '超级管理员可见',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
+      path: '/text-sadmin',
+      name: 'TextAadmin',
+      url: 'Layout',
+      status: '1',
+      hide: '1',
+      sort: 9,
+      menuType: '0',
+      roles: ['1']
+    },
+    {
+      id: 10,
+      parentId: 9,
+      title: '超级管理员可见',
+      icon: 'i-solar-settings-minimalistic-bold-duotone',
+      path: '/text-sadmin',
+      name: 'TextAadmin',
+      url: '/text-sadmin/index.vue',
+      status: '1',
+      hide: '1',
+      sort: 10,
+      menuType: '1',
+      roles: ['1']
     }
   ]
 })

@@ -49,8 +49,10 @@ import { useRouter } from 'vue-router'
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
 import { Login } from '@/service/api/mock-api'
 import { Session } from '@/utils/storage'
+import useUserStore from '@/stores/modules/user'
 const message = useMessage()
 const router = useRouter()
+const userStore = useUserStore()
 
 const $form = ref()
 const form = ref<any>({
@@ -76,6 +78,7 @@ const login = () => {
     if (!valid) {
       const { data } = await Login(form.value)
       Session.set('token', data.token)
+      userStore.setUserInfo({ userInfo: data.userInfo })
       router.push('/home')
     } else {
       message.error('请输入账号密码')

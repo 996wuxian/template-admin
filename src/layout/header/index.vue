@@ -46,9 +46,6 @@
       <i i-solar-maximize-square-minimalistic-outline v-if="!isFullscreen"></i>
       <i i-solar-minimize-square-minimalistic-linear v-else></i>
     </div>
-    <!-- <i i-solar-rewind-back-circle-bold></i>
-    <i i-solar-rewind-forward-circle-bold></i> -->
-    <!--  -->
     <div class="header-block">
       <i i-solar-palette-bold-duotone class="m-l-auto" @click="drawerShow = true"></i>
     </div>
@@ -64,7 +61,7 @@
     >
       <div class="header-block">
         <i i-solar-user-bold-duotone class="w-20px h-20px"></i>
-        <span class="mx-10px">Belinda</span>
+        <span class="mx-10px">{{ userInfo.roleName }}</span>
         <i i-solar-alt-arrow-down-bold-duotone></i>
       </div>
     </n-dropdown>
@@ -83,9 +80,11 @@ import { useFullscreen } from '@/utils/fullScrenn'
 import ThemeToggler from '@/components/custom/theme-toggler.vue'
 import useuseTheme from '@/stores/modules/theme'
 import Aside from '../aside/index.vue'
+import useUserStore from '@/stores/modules/user'
 
 const { isFullscreen, enterFullscreen, exitFullscreen } = useFullscreen()
 const useTheme = useuseTheme()
+const userStore = useUserStore()
 const sideWidth = computed(() => useTheme.$state.sideWidth)
 const oldSideWidth = computed(() => useTheme.$state.oldSideWidth)
 const sideFoldWidth = computed(() => useTheme.$state.sideFoldWidth)
@@ -101,6 +100,7 @@ const crumb = computed(() =>
 const whether = computed(() => useTheme.$state.whether)
 const breadcrumb = computed(() => useTheme.$state.breadcrumb)
 const breadcrumbIcon = computed(() => useTheme.$state.breadcrumbIcon)
+const userInfo = computed(() => userStore.$state.userInfo)
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
     exitFullscreen()

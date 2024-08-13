@@ -3,14 +3,10 @@ import { reactive, toRefs } from 'vue'
 import piniaPersistConfig from '@/utils/persist'
 
 interface User {
-  id: number
-  userName: string
-  phone: string
-  address: string
-  roles: Array<any>
-  state: number
-  createdAt: string
-  updatedAt: string
+  id?: number
+  userName?: string
+  roleName?: string
+  roleId?: number
 }
 
 const useUserStore = defineStore(
@@ -20,7 +16,7 @@ const useUserStore = defineStore(
       userInfo: {} as User
     })
 
-    const setUserInfo = async (action) => {
+    const setUserInfo = async (action: any) => {
       state.userInfo = action.userInfo
     }
 

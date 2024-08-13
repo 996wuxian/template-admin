@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { reactive, toRefs } from 'vue'
 
-// import { QueryUserMenu } from '@/api/user'
-
+import { MenuList } from '@/service/api/mock-api'
 import { isArray } from '@/utils/validate'
 import router from '@/router'
+
+import useUserStore from './user'
 
 // 引入架构组件Layout
 import Layout from '@/layout/index.vue'
@@ -16,29 +17,32 @@ import { setting } from '@/config/setting.config'
 import { RouteRecordRaw } from 'vue-router'
 
 const useRoutesStore = defineStore('routes', () => {
+  const { userInfo } = useUserStore()
+
   const state = reactive({
     routes: [] as any
   })
 
   const setRoutes = async () => {
     // 设置后端路由(不需要可以删除)
+    const { code, data } = await MenuList()
+    // 获取后端路由信息
+    if (!isArray(data)) return
+    const routers = data.filter((item: any) => item.roles.includes(userInfo.roleId?.toString()))
+    console.log('🚀 ~ setRoutes ~ routers:', routers)
+    const res = await routerGo(routers)
+
+    console.log(res, 'res')
+
     if (setting.authentication === 'all') {
-      // // 获取后端路由信息
-      // const { userInfo } = JSON.parse(window.localStorage.getItem('userInfo'))
-      // const { data } = (await QueryUserMenu(userInfo.id)) as any
-      // if (!isArray(data)) return
-      // const res = await routerGo(data)
-      // res.forEach((item) => {
-      //   if (item.children) {
-      //     if (item.children.length === 1 && item.children[0].meta.title === item.meta.title) {
-      //       item.path = item.children[0].path
-      //       delete item.children
-      //     } else if (item.children.length > 1) {
-      //       item.children = item.children.filter((_item) => _item.meta.title !== item.meta.title)
-      //     }
-      //   }
-      // })
-      // state.routes = [...res]
+      const { code, data } = await MenuList()
+      console.log('🚀 ~ setRoutes ~ data:', data)
+      console.log('🚀 ~ setRoutes ~ data:', userInfo)
+      // 获取后端路由信息
+      if (!isArray(data)) return
+      const res = await routerGo(data)
+
+      state.routes = [...res]
     } else {
       // 前端写死的动态路由
       const routes = await mapRoute(asyncRoutes)
@@ -109,20 +113,22 @@ const useRoutesStore = defineStore('routes', () => {
   }
 
   /**
-   * 过滤路由拼接Component
+   * 过滤路由拼接组成路由文件路径
    * @param asyncRouterMap // 路由
    * @returns accessedRouters // 转换为组件对象
    */
-  function filterAsyncRouter(asyncRouterMap) {
+  function filterAsyncRouter(asyncRouterMap: any) {
+    console.log('🚀 ~ filterAsyncRouter ~ asyncRouterMap:', asyncRouterMap)
     // 遍历后台传来的路由字符串，转换为组件对象
-    const accessedRouters = asyncRouterMap.filter((route) => {
-      if (route.component) {
-        if (route.component === 'Layout') {
+    const accessedRouters = asyncRouterMap.filter((route: any) => {
+      if (route.url) {
+        if (route.url === 'Layout') {
           // Layout组件特殊处理
-          route.component = Layout
+          route.url = Layout
         } else {
           // 当发现不匹配时，考虑是不是有幽灵符
-          route.component = modules[`../../views/${route.component}`]
+          // console.log(modules['../../views/home/index.vue'])
+          route.url = modules[`../../views${route.url}`]
         }
       }
       if (route.children && route.children.length) {

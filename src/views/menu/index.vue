@@ -65,7 +65,7 @@ const columns = ref([
     )
     .b(),
   t('菜单名称', 'title').b(),
-  t('图标', 'icon', 'center', 120)
+  t('图标', 'icon', 'center', 100)
     .r((row) =>
       h(
         'div',
@@ -77,8 +77,9 @@ const columns = ref([
       )
     )
     .b(),
+  t('路由地址', 'path').f('left', 200).b(),
   t('路由名称', 'name').b(),
-  t('路由路径', 'url').b(),
+  t('路由路径', 'url').f('left', 200).b(),
   t('菜单状态', 'status')
     .r((row) =>
       h(
