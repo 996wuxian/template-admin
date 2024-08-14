@@ -95,7 +95,6 @@ const useThemeStore = defineStore(
 
     const setColor = (actions: { type: keyof typeof state; value: string }) => {
       state[actions.type] = actions.value
-      console.log(actions.type, actions.value)
     }
 
     const setFontSize = (actions: { fontSize: string }) => {

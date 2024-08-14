@@ -100,7 +100,6 @@ const props = defineProps<{
   rules?: Record<string, any>
   formOption?: Options
 }>()
-console.log(props.config, 'props.config')
 
 const $formRef = ref<FormInst>()
 

@@ -56,7 +56,6 @@ const reload = () => {
 
 const submit = async () => {
   await $roleForm.value?.validate()
-  console.log(roleForm.value, 'roleForm.value')
 }
 
 export const useMenuStore = () => {

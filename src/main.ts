@@ -9,9 +9,19 @@ import { setupRouter } from '@/router'
 import { setupNProgress } from './plugins'
 import svgIcon from '@/plugins/svg-icon'
 
+import { vPer } from '@/directive/v-per'
+
 const app = createApp(App)
 // 关闭警告
 app.config.warnHandler = () => null
+
+// 自定义指令
+// 使用的时候v-per
+app.directive('per', {
+  mounted: (el, bindings) => {
+    vPer(el, bindings)
+  }
+})
 
 async function setupApp() {
   await app.use(store)

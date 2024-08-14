@@ -28,6 +28,14 @@
             <n-button :loading="loading" @click="changeRole('user')">普通用户</n-button>
           </td>
         </tr>
+        <tr>
+          <td>v-per按钮权限（超级管理员和管理员可见，普通用户不可见）</td>
+        </tr>
+        <tr>
+          <td>
+            <n-button type="default" v-per>删除</n-button>
+          </td>
+        </tr>
       </tbody>
     </n-table>
   </n-card>

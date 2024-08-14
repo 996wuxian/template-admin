@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, withDirectives } from 'vue'
 import Form from '@/components/common/tp-form.vue'
 import { f } from '@/utils/form-cfg'
 import { t } from '@/utils/table-cfg'
@@ -54,6 +54,7 @@ import Draggable from '@/components/common/draggable.vue'
 import Drawer from './components/drawer.vue'
 import { useUserStore } from './store'
 const { form, showEdit, queryData, tableData, loading, reload } = useUserStore()
+import { vPer } from '@/directive/v-per'
 
 const formOption = {
   inline: false, // 行内
@@ -144,15 +145,19 @@ const columns = ref([
         },
         {
           trigger: () =>
-            h(
-              NButton,
-              {
-                size: 'small',
-                type: 'error',
-                ghost: true
-              },
-              { default: () => '删除' }
+            withDirectives(
+              h(
+                NButton,
+                {
+                  size: 'small',
+                  type: 'error',
+                  ghost: true
+                },
+                { default: () => '删除' }
+              ),
+              [[vPer, '']]
             ),
+
           default: () => '确定删除吗？'
         }
       )
@@ -232,4 +237,4 @@ onBeforeMount(() => {
   justify-content: space-between;
 }
 </style>
-@/utils/form-cfg
+@/utils/form-cfg @/directive/v-per

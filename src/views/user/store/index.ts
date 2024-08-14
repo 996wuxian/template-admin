@@ -42,7 +42,6 @@ const reload = () => {
 
 const submit = async () => {
   await $userForm.value?.validate()
-  console.log(userForm.value, 'userForm.value')
 }
 
 export const useUserStore = () => {

@@ -55,11 +55,11 @@ const oldSideWidth = computed(() => useTheme.$state.oldSideWidth)
 const sideFoldWidth = computed(() => useTheme.$state.sideFoldWidth)
 const layout = computed(() => useTheme.$state.layout)
 const routes = useRoutesStore().routes
+const useRoutes = useRoutesStore()
 const route = useRoute()
 const router = useRouter()
 
 const menuOptions = ref(routes)
-console.log('🚀 ~ menuOptions:', menuOptions)
 
 const props = defineProps({
   mode: { type: String, default: 'vertical' },
@@ -86,6 +86,7 @@ const change = (key: any, item: any) => {
       close: true
     }
   })
+  useRoutes.setCurrentRoute({ route: item })
 }
 
 const changeSide = () => {

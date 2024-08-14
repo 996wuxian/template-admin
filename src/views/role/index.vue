@@ -190,7 +190,6 @@ const rowKey = (row: any) => row.id
 const checkedData = ref<DataTableRowKey[]>([])
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedData.value = rowKeys
-  console.log('🚀 ~ handleCheck ~ rowKeys:', rowKeys)
 }
 </script>
 
