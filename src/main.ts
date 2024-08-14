@@ -14,10 +14,10 @@ const app = createApp(App)
 app.config.warnHandler = () => null
 
 async function setupApp() {
-  app.use(store)
+  await app.use(store)
   setupNProgress()
   app.use(svgIcon)
-  await setupRouter(app)
+  setupRouter(app)
   app.mount('#app')
 }
 

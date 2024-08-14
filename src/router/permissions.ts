@@ -28,8 +28,13 @@ export function setupPermissions(router: Router) {
       if (to.path === '/login') {
         next({ path: '/' })
       } else {
-        await useRouter.setRoutes()
-        next()
+        if (useRouter.routes.length === 0) {
+          // 需加，否则死循环
+          await useRouter.setRoutes()
+          next({ ...to, replace: true }) // 避免重复加载路由
+        } else {
+          next()
+        }
       }
     } else {
       if (setting.routesWhiteList.indexOf(to.path) !== -1) {

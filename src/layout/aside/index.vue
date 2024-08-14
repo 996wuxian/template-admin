@@ -59,6 +59,7 @@ const route = useRoute()
 const router = useRouter()
 
 const menuOptions = ref(routes)
+console.log('🚀 ~ menuOptions:', menuOptions)
 
 const props = defineProps({
   mode: { type: String, default: 'vertical' },

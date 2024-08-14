@@ -22,7 +22,7 @@ export const setting = {
   title: 'template-admin',
   isHashRouterMode: true,
   routesWhiteList: ['/login', '/register', '/404', '/403'],
-  authentication: 'intelligence',
+  authentication: 'all',
   theme: {
     defaultTheme: 'light',
     defaultThemeValue: 1,

@@ -14,7 +14,7 @@ const modules = import.meta.glob('../../views/*/*.vue')
 
 import { asyncRoutes, addRouter } from '@/router'
 import { setting } from '@/config/setting.config'
-import { RouteRecordRaw } from 'vue-router'
+// import { RouteRecordRaw } from 'vue-router'
 
 const useRoutesStore = defineStore('routes', () => {
   const { userInfo } = useUserStore()
@@ -25,24 +25,18 @@ const useRoutesStore = defineStore('routes', () => {
 
   const setRoutes = async () => {
     // 设置后端路由(不需要可以删除)
-    const { code, data } = await MenuList()
-    // 获取后端路由信息
-    if (!isArray(data)) return
-    const routers = data.filter((item: any) => item.roles.includes(userInfo.roleId?.toString()))
-    console.log('🚀 ~ setRoutes ~ routers:', routers)
-    const res = await routerGo(routers)
-
-    console.log(res, 'res')
-
     if (setting.authentication === 'all') {
       const { code, data } = await MenuList()
-      console.log('🚀 ~ setRoutes ~ data:', data)
-      console.log('🚀 ~ setRoutes ~ data:', userInfo)
       // 获取后端路由信息
-      if (!isArray(data)) return
-      const res = await routerGo(data)
-
-      state.routes = [...res]
+      if (!isArray(data) || code !== 200) return
+      const routers = data.filter((item: any) => item.roles.includes(userInfo.roleId?.toString()))
+      const res = await routerGo(routers)
+      const newRoutes = await transformMenuData(res)
+      console.log('🚀 ~ setRoutes ~ newRoutes:', newRoutes)
+      // 必须在addroutes前，使用router.options.routes=XXXXX的方法手动添加,才会显示菜单
+      router.options.routes = router.options.routes.concat(newRoutes)
+      addRouter(newRoutes) // 动态添加路由'
+      state.routes = await mapRoute(newRoutes)
     } else {
       // 前端写死的动态路由
       const routes = await mapRoute(asyncRoutes)
@@ -57,7 +51,7 @@ const useRoutesStore = defineStore('routes', () => {
     name?: string
     meta?: {
       title?: string
-      hidden?: boolean
+      hide?: boolean
       icon?: string
     }
     redirect?: string
@@ -67,7 +61,7 @@ const useRoutesStore = defineStore('routes', () => {
   async function mapRoute(routes: Router[]) {
     const mapChildren = (children: Router[]): Router[] => {
       return children
-        .filter((child) => !child?.meta?.hidden)
+        .filter((child) => !child?.meta?.hide)
         .map((child) => ({
           key: child?.path,
           label: child.meta?.title,
@@ -77,13 +71,17 @@ const useRoutesStore = defineStore('routes', () => {
     }
 
     return routes
-      .filter((route) => !route?.meta?.hidden)
+      .filter((route) => !route?.meta?.hide)
       .map((route) => {
         const children = route.children ? mapChildren(route.children) : []
         return {
+          // key, path 对齐 n-menu的options
           key:
-            children.length === 1 && children[0]?.meta?.title === route?.meta?.title
+            (children.length === 1 && children[0]?.meta?.title) ||
+            children[0].label === route?.meta?.title
               ? children[0].path
+                ? children[0].path
+                : children[0].key
               : route.redirect || route.path,
           label: route.meta?.title,
           children: children.length > 1 ? children : undefined,
@@ -96,19 +94,17 @@ const useRoutesStore = defineStore('routes', () => {
    * 导航到一个新的路由方法封装
    * @param routerList 后端路由
    */
-  async function routerGo(routerList) {
+  async function routerGo(routerList: any) {
     const newRouter = filterAsyncRouter(routerList)
     newRouter.push({
       path: '/:pathMatch(.*)*',
       name: 'NoFound',
       redirect: '/404',
       meta: {
-        hidden: true
+        hide: true
       }
     }) // 404放在最后
-    // 必须在addroutes前，使用router.options.routes=XXXXX的方法手动添加,才会显示菜单
-    router.options.routes = router.options.routes.concat(newRouter)
-    addRouter(newRouter) // 动态添加路由'
+
     return newRouter
   }
 
@@ -118,7 +114,6 @@ const useRoutesStore = defineStore('routes', () => {
    * @returns accessedRouters // 转换为组件对象
    */
   function filterAsyncRouter(asyncRouterMap: any) {
-    console.log('🚀 ~ filterAsyncRouter ~ asyncRouterMap:', asyncRouterMap)
     // 遍历后台传来的路由字符串，转换为组件对象
     const accessedRouters = asyncRouterMap.filter((route: any) => {
       if (route.url) {
@@ -137,6 +132,72 @@ const useRoutesStore = defineStore('routes', () => {
       return true
     })
     return accessedRouters
+  }
+
+  async function transformMenuData(data: any) {
+    const result = []
+    // Helper function to find child routes
+    const findChildren = (parentId: number) => {
+      return data
+        .filter((item: any) => item.parentId === parentId)
+        .map((item: any) => {
+          const route = {
+            path: item.path,
+            name: item.name,
+            meta: {
+              title: item.title,
+              icon: item.icon || '',
+              hide: item.hide === '1'
+            },
+            component: item.menuType === '0' ? Layout : item.url
+          }
+
+          const children = findChildren(item.id)
+          if (children.length) {
+            ;(route as any).children = children
+          }
+
+          return route
+        })
+    }
+
+    // Find top-level routes
+    const topLevelRoutes = data.filter((item: any) => item.parentId === 0)
+
+    // Process each top-level route
+    topLevelRoutes.forEach((item: any) => {
+      const route = {
+        path: item.path,
+        name: item.name,
+        component: Layout,
+        meta: {
+          title: item.title,
+          icon: item.icon || '',
+          hide: item.hide === '1'
+        }
+      }
+
+      // Find children of the current route
+      const children = findChildren(item.id)
+      if (children.length) {
+        ;(route as any).children = children
+      }
+
+      // Redirect rule for root routes
+      if (item.name === 'Root') {
+        ;(route as any).redirect = children.length ? children[0].path : undefined
+      }
+
+      result.push(route)
+    })
+
+    // Add the "NoFound" route at the end
+    const noFoundRoute = data.find((item: any) => item.name === 'NoFound')
+    if (noFoundRoute) {
+      result.push(noFoundRoute)
+    }
+
+    return result
   }
 
   return {

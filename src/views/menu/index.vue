@@ -97,10 +97,10 @@ const columns = ref([
       h(
         NTag,
         {
-          type: row.hide === '1' ? 'default' : 'error',
+          type: row.hide === '0' ? 'success' : 'default',
           bordered: false
         },
-        { default: () => (row.hide === '1' ? '否' : '是') }
+        { default: () => (row.hide === '0' ? '否' : '是') }
       )
     )
     .b(),

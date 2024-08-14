@@ -13,7 +13,7 @@ const constantRoutes = [
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: {
-      hidden: true
+      hide: true
     }
   },
   {
@@ -21,7 +21,7 @@ const constantRoutes = [
     name: '403',
     component: () => import('@/views/error-page/403.vue'),
     meta: {
-      hidden: true
+      hide: true
     }
   },
   {
@@ -29,7 +29,7 @@ const constantRoutes = [
     name: '404',
     component: () => import('@/views/error-page/404.vue'),
     meta: {
-      hidden: true
+      hide: true
     }
   }
 ]
@@ -43,7 +43,7 @@ export const asyncRoutes = [
     meta: {
       title: '首页',
       icon: 'i-solar-home-smile-bold',
-      hidden: false
+      hide: false
     },
     children: [
       {
@@ -62,7 +62,7 @@ export const asyncRoutes = [
     meta: {
       title: '系统管理',
       icon: 'i-solar-settings-minimalistic-bold-duotone',
-      hidden: false
+      hide: false
     },
     component: Layout,
     children: [
@@ -73,7 +73,7 @@ export const asyncRoutes = [
         meta: {
           title: '用户管理',
           icon: 'i-solar-user-bold-duotone',
-          hidden: false
+          hide: false
         }
       },
       {
@@ -83,7 +83,7 @@ export const asyncRoutes = [
         meta: {
           title: '角色管理',
           icon: 'i-solar-user-plus-bold-duotone',
-          hidden: false
+          hide: false
         }
       },
       {
@@ -93,7 +93,7 @@ export const asyncRoutes = [
         meta: {
           title: '菜单管理',
           icon: 'i-solar-widget-4-bold-duotone',
-          hidden: false
+          hide: false
         }
       }
     ]
@@ -105,7 +105,7 @@ export const asyncRoutes = [
     meta: {
       title: '切换权限',
       icon: 'i-solar-square-transfer-horizontal-bold',
-      hidden: false
+      hide: false
     },
     children: [
       {
@@ -126,7 +126,7 @@ export const asyncRoutes = [
     meta: {
       title: '超级管理员可见',
       icon: 'i-solar-key-minimalistic-square-2-bold',
-      hidden: false
+      hide: false
     },
     children: [
       {
@@ -145,7 +145,7 @@ export const asyncRoutes = [
     name: 'NoFound',
     redirect: '/404',
     meta: {
-      hidden: true
+      hide: true
     }
   }
 ]

@@ -64,6 +64,7 @@ const changeRole = (role: String) => {
   setTimeout(() => {
     loading.value = false
     userStore.setUserInfo({ userInfo: userInfo })
+    window.location.reload()
   }, 1500)
 }
 </script>
