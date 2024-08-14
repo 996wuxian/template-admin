@@ -26,9 +26,13 @@ This template should help get you started developing with Vue 3 in Vite.
 ### 页面示例
 
 <p align="center"><img src="./src/assets/img/readme_imgs/page.png" /></p>
+
 ### 主题配置
+
 <p align="center" style="margin-top: 10px"><img src="./src/assets/img/readme_imgs/theme.png" /></p>
+
 ### 角色权限
+
 <p align="center" style="margin-top: 10px"><img src="./src/assets/img/readme_imgs/role.png" /></p>
 
 ## Project Setup
