@@ -20,6 +20,8 @@ This template should help get you started developing with Vue 3 in Vite.
 推荐的IDE：
 
 [VSCode](https://code.visualstudio.com/)：我已配置了Prettier和Eslint，您可以结合VsCode对应的插件使用，这将减少您手动格式化代码的麻烦。
+node版本: v20.9.0
+pnpm版本: 9.3.0
 
 ## Example Images
 
