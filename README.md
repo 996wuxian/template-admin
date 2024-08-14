@@ -13,7 +13,7 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Introduction
 
-该模板使用Vue3 + Ts + Vite + Pinia + UnoCss + Naive UI搭建，配置了Prettier和Eslint，配置了路由，请求，loading，进度条等...提供了主题配置，颜色配置等功能，Icon使用[UnoCss图标预设](https://icones.js.org/collection/solar)，也封装了对应的svg-icon组件，可以通过使用<svg-icon name="...">引入对应的svg图标，[Svg图标预设](https://yesicon.app/logos/?lang=zh-hans)，希望这个可以作为您的初始化项目模板，供您拓展和自定义属于您的项目。
+该模板使用Vue3 + Ts + Vite + Pinia + UnoCss + Naive UI搭建，配置了Prettier和Eslint，提供了前端路由和动态路由，请求封装，全局loading，进度条、主题布局配置、全局颜色修改、路由权限，按钮权限等功能，Icon使用[UnoCss图标预设](https://icones.js.org/collection/solar)，封装了对应的svg-icon组件，可以通过使用`svg-icon name="..."`引入对应的svg图标，对应[Svg图标预设](https://yesicon.app/logos/?lang=zh-hans)，希望这个可以作为您的初始化项目模板，供您拓展和自定义属于您的项目。
 
 ## Recommended IDE Setup
 
@@ -23,8 +23,13 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Example Images
 
+### 页面示例
+
 <p align="center"><img src="./src/assets/img/readme_imgs/page.png" /></p>
+### 主题配置
 <p align="center" style="margin-top: 10px"><img src="./src/assets/img/readme_imgs/theme.png" /></p>
+### 角色权限
+<p align="center" style="margin-top: 10px"><img src="./src/assets/img/readme_imgs/role.png" /></p>
 
 ## Project Setup
 
