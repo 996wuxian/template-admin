@@ -6,8 +6,8 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { visualizer } from 'rollup-plugin-visualizer'
-
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+// import { manualChunksPlugin } from 'vite-plugin-webpackchunkname' //
 export function setupVitePlugins() {
   const plugins: PluginOption = [
     vue({

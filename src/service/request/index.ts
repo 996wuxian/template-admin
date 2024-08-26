@@ -71,7 +71,7 @@ const responseHandlers: any = {
 
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
-  // baseURL: import.meta.env.VITE_API_URL, // mock时不用
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 50000,
   headers: { 'Content-Type': 'application/json' },
   paramsSerializer: {
