@@ -4,6 +4,7 @@ import { reactive, toRefs } from 'vue'
 import { MenuList } from '@/service/api/mock-api'
 import { isArray } from '@/utils/validate'
 import router from '@/router'
+import { $msg } from '@/config/interaction.config'
 
 import useUserStore from './user'
 
@@ -20,23 +21,28 @@ import piniaPersistConfig from '@/utils/persist'
 const useRoutesStore = defineStore(
   'routes',
   () => {
-    const { userInfo } = useUserStore()
-
     const state = reactive({
       routes: [] as any,
       route: [] as any
     })
 
     const setRoutes = async () => {
+      const { userInfo } = useUserStore()
+
       // 设置后端路由(不需要可以删除)
       if (setting.authentication === 'all') {
         const { code, data } = await MenuList()
         // 获取后端路由信息
-        if (!isArray(data) || code !== 200) return
+        if (!isArray(data) || code !== 200) {
+          $msg({
+            type: 'error',
+            msg: '获取菜单失败'
+          })
+          return
+        }
         const routers = data.filter((item: any) => item.roles.includes(userInfo.roleId?.toString()))
         const res = await routerGo(routers)
         const newRoutes = await transformMenuData(res)
-        console.log('🚀 ~ setRoutes ~ newRoutes:', newRoutes)
         // 必须在addroutes前，使用router.options.routes=XXXXX的方法手动添加,才会显示菜单
         router.options.routes = router.options.routes.concat(newRoutes)
         addRouter(newRoutes) // 动态添加路由'
@@ -205,7 +211,6 @@ const useRoutesStore = defineStore(
     }
 
     const setCurrentRoute = async (action: any) => {
-      console.log('🚀 ~ setCurrentRoute ~ action:', action)
       state.route = action.route
     }
 

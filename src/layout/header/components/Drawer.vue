@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits, onMounted, defineProps } from 'vue'
+import { ref, onMounted } from 'vue'
 import Layout from './layout.vue'
 import { $msg } from '@/config/interaction.config'
 import useThemeStore from '@/stores/modules/theme'

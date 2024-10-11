@@ -53,7 +53,7 @@ const footerHeight = computed(() => useTheme.$state.footerHeight)
   @apply flex-1  h-100% transition-all;
 
   &-tag {
-    @apply h-44px;
+    @apply h-44px w-100%;
     min-width: 1000px;
   }
 

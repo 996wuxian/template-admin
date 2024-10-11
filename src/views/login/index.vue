@@ -73,12 +73,12 @@ const rules = {
   }
 }
 
-const login = () => {
+const login = async () => {
   $form.value.validate(async (valid: boolean) => {
     if (!valid) {
       const { data } = await Login(form.value)
-      Session.set('token', data.token)
-      userStore.setUserInfo({ userInfo: data.userInfo })
+      await Session.set('token', data.token)
+      await userStore.setUserInfo({ userInfo: data.userInfo })
       router.push('/home')
     } else {
       message.error('请输入账号密码')
