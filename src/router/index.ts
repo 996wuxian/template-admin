@@ -141,6 +141,33 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/virtual-list',
+    name: 'VirtualList',
+    component: Layout,
+    meta: {
+      title: '虚拟列表',
+      hide: false
+    },
+    children: [
+      {
+        path: '/virtual-list-fixed-height',
+        name: 'VirtualListFixedHeight',
+        component: () => import('@/views/virtual-list-fixed-height/index.vue'),
+        meta: {
+          title: '虚拟列表-固定高度'
+        }
+      },
+      {
+        path: '/virtual-list-no-fixed-height',
+        name: 'VirtualListNoFixedHeight',
+        component: () => import('@/views/virtual-list-no-fixed-height/index.vue'),
+        meta: {
+          title: '虚拟列表-不固定高度'
+        }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NoFound',
     redirect: '/404',
