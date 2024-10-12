@@ -50,7 +50,7 @@ const { showEdit, queryData, tableData, loading, reload } = useMenuStore()
 
 const columns = ref([
   t('勾选').c().b(),
-  t('ID', 'id').f('left', 100).b(),
+  t('ID', 'id').f('left', 60).b(),
   t('菜单类型', 'menuType')
     .f('left', 100)
     .r((row) =>
@@ -64,8 +64,8 @@ const columns = ref([
       )
     )
     .b(),
-  t('菜单名称', 'title').b(),
-  t('图标', 'icon', 'center', 100)
+  t('菜单名称', 'title').f('left', 130).b(),
+  t('图标', 'icon', 'center', 60)
     .r((row) =>
       h(
         'div',
@@ -77,9 +77,9 @@ const columns = ref([
       )
     )
     .b(),
-  t('路由地址', 'path').f('left', 200).b(),
-  t('路由名称', 'name').b(),
-  t('路由路径', 'url').f('left', 200).b(),
+  t('路由地址', 'path').f('left', 150).e().b(),
+  t('路由名称', 'name').f('left', 150).e().b(),
+  t('路由路径', 'url').f('left', 150).e().b(),
   t('菜单状态', 'status')
     .r((row) =>
       h(
@@ -91,6 +91,7 @@ const columns = ref([
         { default: () => (row.status === '1' ? '启用' : '禁用') }
       )
     )
+    .e()
     .b(),
   t('是否隐藏', 'hide')
     .r((row) =>
@@ -103,8 +104,9 @@ const columns = ref([
         { default: () => (row.hide === '0' ? '否' : '是') }
       )
     )
+    .e()
     .b(),
-  t('父级菜单ID', 'parentId').b(),
+  t('父级菜单ID', 'parentId').e().b(),
   t('排序', 'sort').b(),
   t('操作', '', 'right')
     .f('right', 230)

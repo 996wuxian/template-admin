@@ -7,6 +7,9 @@ interface ColumnConfig {
   render?: (row: any) => any
   fixed?: string
   width?: number
+  ellipsis?: {
+    tooltip: boolean
+  }
 }
 
 export const t = (title: string, key?: string, align?: string, width?: number) => {
@@ -15,7 +18,10 @@ export const t = (title: string, key?: string, align?: string, width?: number) =
     key,
     titleAlign: 'center',
     align: align || 'center',
-    width: width
+    width: width,
+    ellipsis: {
+      tooltip: false
+    }
   }
 
   const chainable = {
@@ -30,6 +36,10 @@ export const t = (title: string, key?: string, align?: string, width?: number) =
     },
     r(fn: (row: any) => any) {
       obj.render = fn
+      return this
+    },
+    e() {
+      obj.ellipsis!.tooltip = true
       return this
     },
     b() {
