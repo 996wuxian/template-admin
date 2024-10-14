@@ -50,12 +50,14 @@
     "npm-run-all2": "^6.2.0",
     "prettier": "^3.2.5",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.79.5",
+    "sass": "1.77.6",
     "typescript": "~5.4.0",
     "unocss": "^0.61.3",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.2",
     "vite": "^5.3.1",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-restart": "^0.4.1",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^2.0.21"
   }

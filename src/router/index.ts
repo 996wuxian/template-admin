@@ -168,6 +168,25 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/pdfjs',
+    name: 'PdfJs',
+    component: Layout,
+    meta: {
+      title: 'pdfjs',
+      hide: false
+    },
+    children: [
+      {
+        path: '/pdfjs',
+        name: 'PdfJs',
+        component: () => import('@/views/pdfjs/index.vue'),
+        meta: {
+          title: 'pdfjs'
+        }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NoFound',
     redirect: '/404',

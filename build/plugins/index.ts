@@ -7,6 +7,8 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import viteCompression from 'vite-plugin-compression'
+import viteRestart from 'vite-plugin-restart'
 // import { manualChunksPlugin } from 'vite-plugin-webpackchunkname' //
 export function setupVitePlugins() {
   const plugins: PluginOption = [
@@ -32,6 +34,19 @@ export function setupVitePlugins() {
     }),
     Components({
       resolvers: [NaiveUiResolver()]
+    }),
+    // gzip
+    viteCompression({
+      verbose: true, //默认即可
+      disable: false, //开启压缩（不禁用），默认即可
+      deleteOriginFile: false, //删除源文件
+      threshold: 10240, //压缩前最小文件大小
+      algorithm: 'gzip', //压缩算法
+      ext: '.gz' //广文件类型
+    }),
+    // 自动重启，监听哪些文件改变会自动重启
+    viteRestart({
+      restart: ['*.config.[jt]s', '**/config/*.[jt]s', '*.config.cjs']
     }),
     // 打包分析
     visualizer({
