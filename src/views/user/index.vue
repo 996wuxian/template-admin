@@ -228,7 +228,7 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .card {
-  height: calc(100% - 158px);
+  height: calc(100% - 120px);
 }
 .table {
   height: calc(100% - 50px);

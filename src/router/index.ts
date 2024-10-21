@@ -187,6 +187,33 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/upload',
+    name: 'Upload',
+    component: Layout,
+    meta: {
+      title: '上传',
+      hide: false
+    },
+    children: [
+      {
+        path: '/upload-split',
+        name: 'UploadSplit',
+        component: () => import('@/views/upload-split/index.vue'),
+        meta: {
+          title: '大文件分片上传'
+        }
+      },
+      {
+        path: '/upload-crop',
+        name: 'UploadCrop',
+        component: () => import('@/views/upload-crop/index.vue'),
+        meta: {
+          title: '裁剪上传'
+        }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NoFound',
     redirect: '/404',

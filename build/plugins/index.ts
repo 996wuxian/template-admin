@@ -43,8 +43,6 @@ export function setupVitePlugins(isBuild: boolean, viteEnv: ImportMetaEnv) {
     // 打包分析
     VITE_VISUALIZER && plugins.push(setupVisualizer())
   }
-  console.log('🚀 ~ setupVitePlugins ~ VITE_VISUALIZER:', VITE_VISUALIZER)
-  console.log('🚀 ~ setupVitePlugins ~ VITE_GZIP:', VITE_GZIP)
 
   return plugins
 }

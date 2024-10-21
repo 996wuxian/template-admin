@@ -1,7 +1,6 @@
 // mock.js
 // http://mockjs.com/examples.html#DPD
 import Mock from 'mockjs'
-const Random = Mock.Random
 
 // login
 Mock.mock('/api/user/login', 'post', function (e: any) {

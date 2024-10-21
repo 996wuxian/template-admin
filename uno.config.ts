@@ -12,7 +12,8 @@ export default defineConfig({
     'i-solar-user-plus-bold-duotone',
     'i-solar-widget-4-bold-duotone',
     'i-solar-square-transfer-horizontal-bold',
-    'i-solar-key-minimalistic-square-2-bold'
+    'i-solar-key-minimalistic-square-2-bold',
+    'i-solar-download-outline'
   ],
   shortcuts: [['flex-center', 'flex items-center justify-center']]
 })
