@@ -37,31 +37,31 @@
         <div v-for="cs in colorSetting" :key="cs.label" class="step-block">
           {{ cs.label }}
           <component
-            style="width: 120px"
             :is="cs.component"
-            :modes="['hex']"
             v-model:value="cs.color"
+            style="width: 120px"
+            :modes="['hex']"
             :swatches="cs.previewColor"
-            @update:value="(value: any) => cs.handler(value, cs.type)"
+            @update:value="(value) => cs.handler(value, cs.type)"
           />
         </div>
         <n-divider> 页面功能 </n-divider>
         <div v-for="setting in settings" :key="setting.label">
-          <div class="step-block" v-if="!setting.hidden">
+          <div v-if="!setting.hidden" class="step-block">
             {{ setting.label }}
             <component
               :is="setting.component"
               v-model:value="setting.model"
               placeholder=""
               v-bind="setting.props"
-              @update:value="(value: any) => setting.handler(value, setting.type, setting?.text)"
+              @update:value="(value) => setting.handler(value, setting.type, setting?.text)"
             />
           </div>
         </div>
       </div>
       <div class="w-100% flex m-t-20px">
         <n-button type="primary" @click="initTheme">重置配置</n-button>
-        <n-button type="primary" @click="copyTheme" class="m-l-auto">复制配置</n-button>
+        <n-button type="primary" class="m-l-auto" @click="copyTheme">复制配置</n-button>
       </div>
     </n-drawer-content>
   </n-drawer>
@@ -80,7 +80,7 @@ const themeOverrides = getThemeOverrides()
 const { toClipboard } = useClipboard()
 
 const useTheme = useThemeStore()
-const whether = computed(() => useTheme.whether)
+// const whether = computed(() => useTheme.whether)
 const breadcrumb = computed(() => useTheme.breadcrumb)
 const breadcrumbIcon = computed(() => useTheme.breadcrumbIcon)
 const sideWidth = computed(() => useTheme.sideWidth)
@@ -189,7 +189,7 @@ const changeLayout = (item: any) => {
 }
 
 const loadMessage = (value: boolean, text: string) => {
-  let msg = value ? `已显示${text}` : `已隐藏${text}`
+  const msg = value ? `已显示${text}` : `已隐藏${text}`
   $msg({
     type: 'success',
     msg
@@ -197,7 +197,7 @@ const loadMessage = (value: boolean, text: string) => {
 }
 
 // 对于某些处理器不需要使用到的参数（如_text），可以通过下划线前缀来标记它是未使用的，这是一种常见的TS做法。
-const sizeChange = (value: number, type: keyof State, _text: string) => {
+const sizeChange = (value: number, type: keyof State) => {
   useTheme.setSize({ type: type, size: value })
   if (type === 'sideWidth') {
     useTheme.setSize({ type: 'oldSideWidth', size: value })
@@ -224,7 +224,7 @@ const switchChange = (value: boolean, type: keyof State, text: string) => {
   }
 }
 
-const selectChange = (value: string, _type: keyof State, _text: string) => {
+const selectChange = (value: string) => {
   useTheme.setTagStyle({ tagStyle: value })
 }
 
@@ -280,16 +280,16 @@ const settings = ref<Settings[]>([
     type: 'headerHeight',
     hidden: false
   },
-  {
-    label: '显示天气',
-    component: NSwitch,
-    model: whether.value,
-    props: {},
-    handler: switchChange,
-    type: 'whether',
-    text: '天气',
-    hidden: false
-  },
+  // {
+  //   label: '显示天气',
+  //   component: NSwitch,
+  //   model: whether.value,
+  //   props: {},
+  //   handler: switchChange,
+  //   type: 'whether',
+  //   text: '天气',
+  //   hidden: false
+  // },
   {
     label: '显示面包屑',
     component: NSwitch,

@@ -30,7 +30,7 @@ export const setting = {
     sideWidth: 200,
     sideFoldWidth: 90,
     headerHeight: 58,
-    whether: true,
+    // whether: true,
     breadcrumb: true,
     breadcrumbIcon: true,
     tag: true,

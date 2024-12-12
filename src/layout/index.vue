@@ -1,22 +1,17 @@
 <template>
   <n-layout has-sider class="w-100vw h-100vh overflow-hidden">
-    <n-layout-sider
-      :width="layout === 'left_menu' || layout === 'left_menu_mixin' ? sideWidth : 0"
-      collapse-mode="width"
-      class="aside"
-    >
-      <Aside v-if="layout === 'left_menu' || layout === 'left_menu_mixin'" />
+    <n-layout-sider :width="leftSiderWidth" collapse-mode="width" class="aside">
+      <Aside v-if="isLeftMenuLayout" />
     </n-layout-sider>
+
     <n-layout class="main">
       <n-layout-header :style="{ height: headerHeight + 'px' }"><Header /></n-layout-header>
+
       <n-layout has-sider class="main-content" :style="`height: calc(100vh - ${headerHeight}px)`">
-        <n-layout-sider
-          :width="layout === 'top_menu_mixin' ? sideWidth : 0"
-          collapse-mode="width"
-          class="aside"
-        >
+        <n-layout-sider :width="rightSiderWidth" collapse-mode="width" class="aside">
           <Aside v-if="layout === 'top_menu_mixin'" :title="false" />
         </n-layout-sider>
+
         <div class="w-100% h-100% flex flex-col">
           <Tag v-if="tag" class="main-tag" />
           <n-layout-content content-style="padding: 10px;background-color: #F7FAFC" style="flex-1">
@@ -38,14 +33,22 @@
 import Header from './header/index.vue'
 import Aside from './aside/index.vue'
 import Tag from './tag/index.vue'
+
 import useThemeStore from '@/stores/modules/theme'
+
 const useTheme = useThemeStore()
+
 const layout = computed(() => useTheme.$state.layout)
 const sideWidth = computed(() => useTheme.$state.sideWidth)
 const tag = computed(() => useTheme.$state.tag)
 const headerHeight = computed(() => useTheme.$state.headerHeight)
 const footer = computed(() => useTheme.$state.footer)
 const footerHeight = computed(() => useTheme.$state.footerHeight)
+const isLeftMenuLayout = computed(
+  () => layout.value === 'left_menu' || layout.value === 'left_menu_mixin'
+)
+const leftSiderWidth = computed(() => (isLeftMenuLayout.value ? sideWidth.value : 0))
+const rightSiderWidth = computed(() => (layout.value === 'top_menu_mixin' ? sideWidth.value : 0))
 </script>
 
 <style scoped lang="scss">

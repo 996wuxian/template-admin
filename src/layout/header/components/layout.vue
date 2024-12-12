@@ -2,13 +2,13 @@
   <n-tooltip placement="bottom" trigger="hover">
     <template #trigger>
       <div class="layout" :class="[isActive ? 'layout-active' : '']">
-        <div class="block w-10px" v-if="nav"></div>
-        <div class="block w-18px" v-if="side"></div>
+        <div v-if="nav" class="block w-10px"></div>
+        <div v-if="side" class="block w-18px"></div>
         <div class="flex flex-col flex-1">
-          <div class="header" v-if="header"></div>
+          <div v-if="header" class="header"></div>
           <div class="flex-1 flex">
-            <div class="block w-18px" v-if="aside"></div>
-            <div class="content" v-if="content"></div>
+            <div v-if="aside" class="block w-18px"></div>
+            <div v-if="content" class="content"></div>
           </div>
         </div>
       </div>

@@ -1,22 +1,22 @@
 <template>
   <div class="tag">
     <div
-      class="tag-item"
       v-for="(item, index) in tagData"
       :key="index"
-      @click="toPage(item)"
       :class="{
         'tag-item_button': tagStyle === 'button',
         'tag-item-active': item.isActive === true,
         'tag-item_radio': tagStyle === 'radio',
-        'tag-item-radio-active': item.isActive === true
+        'tag-item-radio-active': tagStyle === 'radio' && item.isActive === true
       }"
+      class="tag-item"
+      @click="toPage(item)"
     >
       <i :class="item.icon" class="inline-block m-r-5px m-b-2px"></i>{{ item.label }}
       <i
+        v-if="item.close"
         i-solar-close-square-bold-duotone
         class="tag-item-close"
-        v-if="item.close"
         @click.stop="removeTag(item)"
       ></i>
     </div>
@@ -24,21 +24,22 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
-import useThemeStore from '@/stores/modules/theme'
-const useTheme = useThemeStore()
-const tagData = computed(() => useTheme.$state.tagData)
-const tagStyle = computed(() => useTheme.$state.tagStyle)
 import tinycolor from 'tinycolor2'
+import { useRouter } from 'vue-router'
+import useThemeStore from '@/stores/modules/theme'
 import { getThemeOverrides } from '@/config/theme.config'
+
+const router = useRouter()
+const useTheme = useThemeStore()
 const themeOverrides = getThemeOverrides()
 
+const tagData = computed(() => useTheme.$state.tagData)
+const tagStyle = computed(() => useTheme.$state.tagStyle)
 const color = computed(() => themeOverrides.value.common?.primaryColor)
-
 const hoverColor = computed(() => {
   return tinycolor(color.value).darken(20).toRgbString()
 })
+
 const toPage = (item: any) => {
   router.push(item.key)
   useTheme.setTagData({
@@ -75,14 +76,11 @@ const removeTag = (item: any) => {
     }
 
     &-radio-active {
+      position: relative;
       &::before,
       &::after {
-        position: absolute;
-        bottom: 0;
+        @apply absolute bottom-0 w-15px h-20px rd-100%;
         content: '';
-        width: 15px;
-        height: 20px;
-        border-radius: 100%;
         box-shadow: 0 0 0 40px v-bind(color) !important; /*使用box-shadow不影响尺寸*/
       }
 
@@ -129,12 +127,8 @@ const removeTag = (item: any) => {
 
     &::before,
     &::after {
-      position: absolute;
-      bottom: 0;
+      @apply absolute bottom-0 w-15px h-20px rd-100%;
       content: '';
-      width: 15px;
-      height: 20px;
-      border-radius: 100%;
       box-shadow: 0 0 0 40px transparent;
     }
 

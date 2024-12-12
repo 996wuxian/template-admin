@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { MenuList } from '@/service/api/mock-api'
-import { arrayToTree, treeFilter } from '@/utils/tools'
+import { arrayToTree } from '@/utils/tools'
 
 interface User {
   id?: number

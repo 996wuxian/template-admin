@@ -16,7 +16,7 @@ export function setupPermissions(router: Router) {
   router.beforeEach(async (to: any, from: any, next: any) => {
     if (from.path === '/') {
       await show()
-      await sleep(2000)
+      await sleep(1000)
     }
 
     //设置页面title

@@ -52,7 +52,7 @@ const themeDatas = ref([
   {
     id: 2,
     name: 'dark',
-    color: 'color-[#282A36]',
+    color: '',
     icon: 'i-solar-moon-fog-bold-duotone'
   }
 ])
