@@ -13,3 +13,5 @@ declare interface Window {
 declare module 'mockjs'
 
 declare module 'qs'
+
+declare module 'spark-md5'
