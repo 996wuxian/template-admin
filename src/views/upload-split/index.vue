@@ -1,6 +1,6 @@
 <template>
   <n-card>
-    <n-upload multiple directory-dnd :default-upload="false" :max="5" @change="handleChange">
+    <n-upload multiple directory-dnd :default-upload="false" :max="100" @change="handleChange">
       <n-upload-dragger>
         <div style="margin-bottom: 12px" class="flex justify-center">
           <i i-solar-download-outline class="w-30px h-30px color-#666"></i>
@@ -12,18 +12,18 @@
       </n-upload-dragger>
     </n-upload>
 
-    <div v-if="uploadInfo.fileName" class="mt-4">
+    <div v-for="[taskId, task] in Array.from(uploadInfo.tasks)" :key="taskId" class="mt-4">
       <div class="flex items-center justify-between mb-2">
-        <span>{{ uploadInfo.fileName }}</span>
-        <div v-if="!uploadInfo.isCompleted">
-          <n-button v-if="!uploadInfo.isPaused" size="small" @click="pauseUpload">暂停</n-button>
-          <n-button v-else size="small" type="primary" @click="resumeUpload">继续</n-button>
+        <span>{{ task.fileName }}</span>
+        <div v-if="!task.isCompleted">
+          <n-button v-if="!task.isPaused" size="small" @click="pauseUpload(taskId)">暂停</n-button>
+          <n-button v-else size="small" type="primary" @click="resumeUpload(taskId)">继续</n-button>
         </div>
       </div>
       <n-progress
-        :percentage="uploadInfo.progress"
-        :processing="!uploadInfo.isPaused && !uploadInfo.isCompleted"
-        :status="uploadInfo.isCompleted ? 'success' : 'default'"
+        :percentage="task.progress"
+        :processing="!task.isPaused && !task.isCompleted"
+        :status="task.isCompleted ? 'success' : 'default'"
       />
     </div>
   </n-card>
@@ -117,7 +117,7 @@ const calculateHash = async (file: File): Promise<string> => {
   // - 断点续传的文件标识
 }
 
-interface UploadInfoState {
+interface UploadTask {
   fileName: string
   progress: number
   isPaused: boolean
@@ -128,16 +128,76 @@ interface UploadInfoState {
   fileHash: string
 }
 
+interface UploadInfoState {
+  tasks: Map<string, UploadTask>
+  concurrentLimit: number
+  activeUploads: number
+}
+
 const uploadInfo = ref<UploadInfoState>({
-  fileName: '',
-  progress: 0,
-  isPaused: false,
-  uploadedChunks: new Set<number>(),
-  controller: null as AbortController | null,
-  isCompleted: false, // 添加完成状态
-  currentFile: null,
-  fileHash: ''
+  tasks: new Map(),
+  concurrentLimit: 6, // 同时上传的文件数量限制
+  activeUploads: 0
 })
+
+// 添加任务队列
+const uploadQueue: string[] = []
+
+// 添加新的上传任务
+const addUploadTask = (file: File) => {
+  const taskId = `${file.name}-${Date.now()}`
+  uploadInfo.value.tasks.set(taskId, {
+    fileName: file.name,
+    progress: 0,
+    isPaused: false,
+    uploadedChunks: new Set<number>(),
+    controller: null,
+    isCompleted: false,
+    currentFile: file,
+    fileHash: ''
+  })
+  uploadQueue.push(taskId)
+  processQueue()
+}
+
+// 处理上传队列
+const processQueue = async () => {
+  while (
+    uploadQueue.length > 0 &&
+    uploadInfo.value.activeUploads < uploadInfo.value.concurrentLimit
+  ) {
+    const taskId = uploadQueue.shift()
+    if (taskId) {
+      uploadInfo.value.activeUploads++
+      const task = uploadInfo.value.tasks.get(taskId)
+      if (task) {
+        try {
+          // 计算文件hash
+          task.fileHash = await calculateHash(task.currentFile!)
+
+          // 获取已上传进度
+          task.uploadedChunks = getUploadProgress(task.fileHash)
+
+          // 检查文件是否已存在
+          const exists = await getFileExist(task.fileHash)
+          if (exists) {
+            console.log(`文件 ${task.fileName} 已存在，秒传成功`)
+            task.isCompleted = true
+            task.progress = 100
+          } else {
+            // 开始上传
+            await handleUpload(taskId)
+          }
+        } catch (error) {
+          console.error(`处理文件 ${task.fileName} 失败:`, error)
+        } finally {
+          uploadInfo.value.activeUploads--
+          processQueue() // 继续处理队列
+        }
+      }
+    }
+  }
+}
 
 // 保存上传进度到localStorage
 const saveUploadProgress = (fileHash: string, chunks: Set<number>) => {
@@ -154,18 +214,24 @@ const getUploadProgress = (fileHash: string) => {
 }
 
 // 暂停上传
-const pauseUpload = () => {
-  uploadInfo.value.isPaused = true
-  if (uploadInfo.value.controller) {
-    uploadInfo.value.controller.abort()
-    uploadInfo.value.controller = null
+const pauseUpload = (taskId: string) => {
+  const task = uploadInfo.value.tasks.get(taskId)
+  if (task) {
+    task.isPaused = true
+    if (task.controller) {
+      task.controller.abort()
+      task.controller = null
+    }
   }
 }
 
 // 继续上传
-const resumeUpload = () => {
-  uploadInfo.value.isPaused = false
-  handleUpload()
+const resumeUpload = (taskId: string) => {
+  const task = uploadInfo.value.tasks.get(taskId)
+  if (task) {
+    task.isPaused = false
+    handleUpload(taskId)
+  }
 }
 
 // 上传单个分片
@@ -174,17 +240,21 @@ const uploadChunk = async (
   index: number,
   fileHash: string,
   fileName: string,
-  totalChunks: number
+  totalChunks: number,
+  taskId: string
 ) => {
+  const task = uploadInfo.value.tasks.get(taskId)
+  if (!task) return Promise.reject('任务不存在')
+
   // 检查分片是否已上传，如果已上传则跳过
-  if (uploadInfo.value.uploadedChunks.has(index)) {
+  if (task.uploadedChunks.has(index)) {
     console.log(`分片 ${index} 已上传，跳过`)
     return Promise.resolve()
   }
 
   // 创建 AbortController，用于取消请求
   const controller = new AbortController()
-  uploadInfo.value.controller = controller
+  task.controller = controller
 
   const data = new FormData()
   data.append('name', `${fileHash}_${fileName}-${index}`)
@@ -199,133 +269,129 @@ const uploadChunk = async (
       method: 'POST',
       body: data,
       headers: { Authorization: token },
-      signal: controller.signal // 关联 AbortController
+      signal: controller.signal
     })
 
     if (response.ok) {
-      uploadInfo.value.uploadedChunks.add(index)
-      uploadInfo.value.progress = Math.floor(
-        (uploadInfo.value.uploadedChunks.size / totalChunks) * 100
-      )
+      task.uploadedChunks.add(index)
+      task.progress = Math.floor((task.uploadedChunks.size / totalChunks) * 100)
       // 保存上传进度到localStorage
-      saveUploadProgress(fileHash, uploadInfo.value.uploadedChunks)
-      console.log(`分片 ${index} 上传成功，当前进度: ${uploadInfo.value.progress}%`)
+      saveUploadProgress(fileHash, task.uploadedChunks)
+      console.log(`分片 ${index} 上传成功，当前进度: ${task.progress}%`)
     }
   } catch (error: any) {
     if (error.name === 'AbortError') {
       console.log(`分片 ${index} 上传已暂停`)
       return Promise.reject('paused')
     }
-
     console.error(`分片 ${index} 上传失败:`, error)
     throw error
   }
 }
 
-const getFileExist = async () => {
-  const res = await fetch(
-    `http://localhost:9528/api/upload/checkFileExist?hash=${uploadInfo.value.fileHash}`,
-    {
-      method: 'GET',
-      headers: { Authorization: token }
-    }
-  )
+// 修改 getFileExist 方法
+const getFileExist = async (fileHash: string) => {
+  const res = await fetch(`http://localhost:9528/api/upload/checkFileExist?hash=${fileHash}`, {
+    method: 'GET',
+    headers: { Authorization: token }
+  })
   const data = await res.json()
-  console.log('🚀 ~ getFileExist ~ data:', data)
-  if (data.code !== 200) return
+  if (data.code !== 200) return false
   return data.exist
 }
 
 // 修改 handleUpload 方法
-const handleUpload = async () => {
-  if (!uploadInfo.value.currentFile || !uploadInfo.value.fileHash) return
+const handleUpload = async (taskId: string) => {
+  const task = uploadInfo.value.tasks.get(taskId)
+  if (!task || !task.currentFile || !task.fileHash) return
 
-  // 使用动态计算的分片大小
-  const dynamicChunkSize = calculateChunkSize(uploadInfo.value.currentFile.size)
-  console.log(`文件大小: ${uploadInfo.value.currentFile.size}，分片大小: ${dynamicChunkSize}`)
-
+  const dynamicChunkSize = calculateChunkSize(task.currentFile.size)
   const chunks = []
   let startPos = 0
 
-  while (startPos < uploadInfo.value.currentFile.size) {
-    chunks.push(uploadInfo.value.currentFile.slice(startPos, startPos + dynamicChunkSize))
+  while (startPos < task.currentFile.size) {
+    chunks.push(task.currentFile.slice(startPos, startPos + dynamicChunkSize))
     startPos += dynamicChunkSize
   }
-  console.log(`总分片数: ${chunks.length}，已上传分片数: ${uploadInfo.value.uploadedChunks.size}`)
 
   // 更新进度条显示已上传的分片
-  if (uploadInfo.value.uploadedChunks.size > 0) {
-    uploadInfo.value.progress = Math.floor(
-      (uploadInfo.value.uploadedChunks.size / chunks.length) * 100
-    )
+  if (task.uploadedChunks.size > 0) {
+    task.progress = Math.floor((task.uploadedChunks.size / chunks.length) * 100)
   }
 
+  // 使用 Promise.all 并发上传分片，但限制并发数
+  const concurrentLimit = 3 // 每个文件同时上传的分片数
+  const pendingChunks = []
+
   for (let i = 0; i < chunks.length; i++) {
-    if (uploadInfo.value.isPaused) {
-      console.log('上传已暂停')
+    if (task.isPaused) {
+      console.log('上传已暂停，停止添加新分片')
       break
     }
 
-    try {
-      await uploadChunk(
-        chunks[i],
-        i,
-        uploadInfo.value.fileHash,
-        uploadInfo.value.currentFile.name,
-        chunks.length
+    // 如果分片已上传，跳过
+    if (task.uploadedChunks.has(i)) {
+      continue
+    }
+
+    // 创建上传任务
+    const uploadTask = () =>
+      uploadChunk(chunks[i], i, task.fileHash, task.fileName, chunks.length, taskId).catch(
+        (error) => {
+          if (error === 'paused') {
+            console.log(`分片 ${i} 上传已暂停`)
+            return
+          }
+          console.error(`分片 ${i} 上传失败:`, error)
+        }
       )
-    } catch (error) {
-      if (error === 'paused') break
-      console.error('Upload error:', error)
+
+    pendingChunks.push(uploadTask)
+
+    // 当达到并发限制或所有分片都已添加时，执行上传
+    if (pendingChunks.length >= concurrentLimit || i === chunks.length - 1) {
+      await Promise.all(pendingChunks.map((task) => task()))
+      pendingChunks.length = 0 // 清空待处理队列
+
+      // 再次检查是否暂停
+      if (task.isPaused) {
+        console.log('上传已暂停，不继续上传下一批分片')
+        break
+      }
     }
   }
 
   // 所有分片上传完成，请求合并
-  if (!uploadInfo.value.isPaused && uploadInfo.value.uploadedChunks.size === chunks.length) {
+  if (!task.isPaused && task.uploadedChunks.size === chunks.length) {
     try {
       console.log('所有分片上传完成，开始合并文件')
-      await fetch(
-        `http://localhost:9528/api/upload/merge?name=${uploadInfo.value.fileHash}_${uploadInfo.value.currentFile.name}&fileHash=${uploadInfo.value.fileHash}`,
+      const mergeResponse = await fetch(
+        `http://localhost:9528/api/upload/merge?name=${task.fileHash}_${task.fileName}&fileHash=${task.fileHash}`,
         {
           method: 'GET',
           headers: { Authorization: token }
         }
       )
+      const mergeResult = await mergeResponse.json()
+      console.log('合并响应:', mergeResult)
+
       // 清理进度记录
-      localStorage.removeItem(`upload_${uploadInfo.value.fileHash}`)
+      localStorage.removeItem(`upload_${task.fileHash}`)
       // 设置完成状态
-      uploadInfo.value.isCompleted = true
+      task.isCompleted = true
       console.log('文件合并完成')
     } catch (error) {
-      console.error('Merge error:', error)
+      console.error('合并文件失败:', error)
     }
   }
 }
 
 // 修改 handleChange 方法，重置完成状态
 const handleChange = async ({ file }: any) => {
-  uploadInfo.value.fileName = file.file.name
-  uploadInfo.value.progress = 0
-  uploadInfo.value.isPaused = false
-  uploadInfo.value.isCompleted = false // 重置完成状态
-  uploadInfo.value.currentFile = file.file
-
-  // 计算文件hash
-  uploadInfo.value.fileHash = await calculateHash(file.file)
-
-  // 获取已上传的进度
-  uploadInfo.value.uploadedChunks = getUploadProgress(uploadInfo.value.fileHash)
-
-  // 检查文件是否已存在
-  const res = await getFileExist()
-  if (res) {
-    console.log('文件已存在，秒传成功')
-    uploadInfo.value.isCompleted = true
-    uploadInfo.value.progress = 100
+  if (file.status === 'removed') {
     return
   }
-  // 开始上传
-  handleUpload()
+  addUploadTask(file.file)
 }
 </script>
 
