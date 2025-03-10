@@ -214,6 +214,25 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/dialog',
+    name: 'Dialog',
+    component: Layout,
+    meta: {
+      title: '命令式弹窗',
+      hide: false
+    },
+    children: [
+      {
+        path: '/dialog',
+        name: 'Dialog',
+        component: () => import('@/views/dialog/index.vue'),
+        meta: {
+          title: '命令式弹窗'
+        }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NoFound',
     redirect: '/404',

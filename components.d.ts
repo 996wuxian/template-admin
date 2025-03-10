@@ -7,13 +7,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Dialog: typeof import('./src/components/common/dialog.vue')['default']
     Draggable: typeof import('./src/components/common/draggable.vue')['default']
     Loading: typeof import('./src/components/common/loading.vue')['default']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
     NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
+    NCardBody: typeof import('naive-ui')['NCardBody']
+    NCardFooter: typeof import('naive-ui')['NCardFooter']
+    NCardHeader: typeof import('naive-ui')['NCardHeader']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDataTable: typeof import('naive-ui')['NDataTable']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NDrawer: typeof import('naive-ui')['NDrawer']
@@ -29,6 +34,8 @@ declare module 'vue' {
     NLayoutSider: typeof import('naive-ui')['NLayoutSider']
     NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
+    NModal: typeof import('naive-ui')['NModal']
+    NModalProvider: typeof import('naive-ui')['NModalProvider']
     NP: typeof import('naive-ui')['NP']
     NProgress: typeof import('naive-ui')['NProgress']
     NSpace: typeof import('naive-ui')['NSpace']

@@ -34,7 +34,7 @@ import { ref } from 'vue'
 import SparkMD5 from 'spark-md5'
 
 // const chunkSize = 1024 * 1024 // 1MB
-const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjEsInVzZXJOYW1lIjoiYWRtaW4iLCJlbWFpbCI6bnVsbCwicGhvbmUiOm51bGwsInN0YXRlIjowLCJjcmVhdGVkQXQiOiIyMDI0LTEwLTE4VDAxOjUxOjQ0LjE1NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTEwLTE4VDAxOjUxOjQ0LjE1NloiLCJyb2xlcyI6W3siaWQiOjEsIm5hbWUiOiLnrqHnkIblkZgiLCJjcmVhdGVUaW1lIjoiMjAyNC0xMC0xOFQwMTo1MTo0NC4xNDlaIiwidXBkYXRlVGltZSI6IjIwMjQtMTAtMThUMDE6NTE6NDQuMTQ5WiJ9XX0sImlkIjoid3V4aWFuIiwiaWF0IjoxNzQxMzA4NDA2LCJleHAiOjE3NDEzMjY0MDZ9.g1cu5b971zRSeFWI9gEvgHXlf14sDbQMfzIyh-_Qews`
+const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjEsInVzZXJOYW1lIjoiYWRtaW4iLCJlbWFpbCI6bnVsbCwicGhvbmUiOm51bGwsInN0YXRlIjowLCJjcmVhdGVkQXQiOiIyMDI0LTEwLTE4VDAxOjUxOjQ0LjE1NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTEwLTE4VDAxOjUxOjQ0LjE1NloiLCJyb2xlcyI6W3siaWQiOjEsIm5hbWUiOiLnrqHnkIblkZgiLCJjcmVhdGVUaW1lIjoiMjAyNC0xMC0xOFQwMTo1MTo0NC4xNDlaIiwidXBkYXRlVGltZSI6IjIwMjQtMTAtMThUMDE6NTE6NDQuMTQ5WiJ9XX0sImlkIjoid3V4aWFuIiwiaWF0IjoxNzQxNTk1MzY5LCJleHAiOjE3NDE2MTMzNjl9.Al6iYH9OYszVxO9sUMq6VJcB25t0zyOI41E7WdAvu8w`
 
 // 动态计算最佳分片大小(calculateChunkSize 中的分片是为了实际的文件上传)
 const calculateChunkSize = (fileSize: number) => {
@@ -234,37 +234,90 @@ const resumeUpload = (taskId: string) => {
   }
 }
 
-// 上传单个分片
+// 添加网络状态监听和重连相关的状态
+const isOnline = ref(navigator.onLine)
+const retryCount = ref(0)
+const maxRetries = 3
+const retryDelay = 1000 // 重试延迟时间（毫秒）
+
+// 监听网络状态
+onMounted(() => {
+  window.addEventListener('online', handleOnline)
+  window.addEventListener('offline', handleOffline)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('online', handleOnline)
+  window.removeEventListener('offline', handleOffline)
+})
+
+// 网络状态处理函数
+const handleOnline = () => {
+  isOnline.value = true
+  console.log('网络已连接，尝试恢复上传')
+  resumeAllPendingTasks()
+}
+
+const handleOffline = () => {
+  isOnline.value = false
+  console.log('网络已断开，暂停所有上传')
+  pauseAllTasks()
+}
+
+// 暂停所有任务
+const pauseAllTasks = () => {
+  uploadInfo.value.tasks.forEach((task, taskId) => {
+    if (!task.isCompleted && !task.isPaused) {
+      pauseUpload(taskId)
+    }
+  })
+}
+
+// 恢复所有待处理的任务
+const resumeAllPendingTasks = () => {
+  uploadInfo.value.tasks.forEach((task, taskId) => {
+    if (!task.isCompleted && task.isPaused) {
+      resumeUpload(taskId)
+    }
+  })
+}
+
+// 修改 uploadChunk 方法，添加重试机制
 const uploadChunk = async (
   chunk: Blob,
   index: number,
   fileHash: string,
   fileName: string,
   totalChunks: number,
-  taskId: string
+  taskId: string,
+  retryCount = 0
 ) => {
   const task = uploadInfo.value.tasks.get(taskId)
   if (!task) return Promise.reject('任务不存在')
 
-  // 检查分片是否已上传，如果已上传则跳过
+  if (!isOnline.value) {
+    console.log('当前处于离线状态，暂停上传')
+    task.isPaused = true
+    return Promise.reject('offline')
+  }
+
+  // 检查分片是否已上传
   if (task.uploadedChunks.has(index)) {
     console.log(`分片 ${index} 已上传，跳过`)
     return Promise.resolve()
   }
 
-  // 创建 AbortController，用于取消请求
   const controller = new AbortController()
   task.controller = controller
 
-  const data = new FormData()
-  data.append('name', `${fileHash}_${fileName}-${index}`)
-  data.append('files', chunk)
-  data.append('fileHash', fileHash)
-  data.append('chunkIndex', index.toString())
-  data.append('totalChunks', totalChunks.toString())
-
   try {
-    console.log(`开始上传分片 ${index}`)
+    const data = new FormData()
+    data.append('name', `${fileHash}_${fileName}-${index}`)
+    data.append('files', chunk)
+    data.append('fileHash', fileHash)
+    data.append('chunkIndex', index.toString())
+    data.append('totalChunks', totalChunks.toString())
+
     const response = await fetch('http://localhost:9528/api/upload/uploadFile', {
       method: 'POST',
       body: data,
@@ -275,16 +328,24 @@ const uploadChunk = async (
     if (response.ok) {
       task.uploadedChunks.add(index)
       task.progress = Math.floor((task.uploadedChunks.size / totalChunks) * 100)
-      // 保存上传进度到localStorage
       saveUploadProgress(fileHash, task.uploadedChunks)
       console.log(`分片 ${index} 上传成功，当前进度: ${task.progress}%`)
+    } else {
+      throw new Error('上传失败')
     }
   } catch (error: any) {
     if (error.name === 'AbortError') {
-      console.log(`分片 ${index} 上传已暂停`)
       return Promise.reject('paused')
     }
-    console.error(`分片 ${index} 上传失败:`, error)
+
+    // 网络错误或其他错误时进行重试
+    if (retryCount < maxRetries && isOnline.value) {
+      console.log(`分片 ${index} 上传失败，${retryDelay / 1000}秒后进行第 ${retryCount + 1} 次重试`)
+      await new Promise((resolve) => setTimeout(resolve, retryDelay))
+      return uploadChunk(chunk, index, fileHash, fileName, totalChunks, taskId, retryCount + 1)
+    }
+
+    console.error(`分片 ${index} 上传失败，已达到最大重试次数:`, error)
     throw error
   }
 }
@@ -336,15 +397,21 @@ const handleUpload = async (taskId: string) => {
 
     // 创建上传任务
     const uploadTask = () =>
-      uploadChunk(chunks[i], i, task.fileHash, task.fileName, chunks.length, taskId).catch(
-        (error) => {
-          if (error === 'paused') {
-            console.log(`分片 ${i} 上传已暂停`)
-            return
-          }
-          console.error(`分片 ${i} 上传失败:`, error)
+      uploadChunk(
+        chunks[i],
+        i,
+        task.fileHash,
+        task.fileName,
+        chunks.length,
+        taskId,
+        retryCount.value
+      ).catch((error) => {
+        if (error === 'paused') {
+          console.log(`分片 ${i} 上传已暂停`)
+          return
         }
-      )
+        console.error(`分片 ${i} 上传失败:`, error)
+      })
 
     pendingChunks.push(uploadTask)
 

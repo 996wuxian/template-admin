@@ -35,11 +35,13 @@ onMounted(() => {
 
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :theme="theme">
-    <n-dialog-provider>
-      <n-message-provider>
-        <RouterView />
-      </n-message-provider>
-    </n-dialog-provider>
+    <n-modal-provider>
+      <n-dialog-provider>
+        <n-message-provider>
+          <RouterView />
+        </n-message-provider>
+      </n-dialog-provider>
+    </n-modal-provider>
   </n-config-provider>
 </template>
 
