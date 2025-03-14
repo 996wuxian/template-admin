@@ -6,6 +6,7 @@ import { SetupGzip } from './viteCompression'
 import { setupViteRestart } from './viteRestart'
 import { setupSvg } from './svgIcon'
 import { setupVisualizer } from './visualizer'
+import { setupInspector } from './inspector'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 export function setupVitePlugins(isBuild: boolean, viteEnv: ImportMetaEnv) {
   const { VITE_GZIP, VITE_VISUALIZER } = viteEnv
@@ -32,7 +33,7 @@ export function setupVitePlugins(isBuild: boolean, viteEnv: ImportMetaEnv) {
   // 开发需要，生产不要
   if (!isBuild) {
     // 自动重启，监听哪些文件改变会自动重启
-    plugins.push(setupViteRestart())
+    plugins.push(setupViteRestart(), setupInspector())
   }
 
   if (isBuild) {
