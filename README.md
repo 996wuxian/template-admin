@@ -1,4 +1,4 @@
-<p align="center"><img src="/logo.png" /></p>
+<p align="center"><img src="./public/logo.png" /></p>
 
 <h1 align="center">template-admin</h1>
 
@@ -27,7 +27,7 @@ pnpm版本: 8.8.0
 
 ### 页面示例
 
-<p align="center"><img src="/page.jpg" /></p>
+<p align="center"><img src="./public//page.jpg" /></p>
 
 ## Project Setup
 
