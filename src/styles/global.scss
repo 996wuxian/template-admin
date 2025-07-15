@@ -1,0 +1,25 @@
+@use './scrollbar.scss' as scroll;
+@use './theme.scss';
+
+// 为 html 和 body 应用自定义滚动条
+html,
+body {
+  @include scroll.custom-scrollbar();
+  overflow-x: hidden;
+}
+
+// 为所有可滚动元素应用滚动条样式
+.scrollable-container {
+  overflow: auto;
+  @include scroll.custom-scrollbar();
+}
+
+// 为暗色主题元素应用滚动条样式
+.dark-theme {
+  @include scroll.dark-scrollbar();
+}
+
+// 如果需要隐藏滚动条但保留滚动功能
+.no-scrollbar {
+  @include scroll.hidden-scrollbar();
+}

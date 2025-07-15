@@ -1,0 +1,81 @@
+@use 'sass:color';
+
+// 自定义滚动条混合器
+@mixin custom-scrollbar(
+  $track-color: transparent,
+  $thumb-color: rgba(144, 147, 153, 0.9),
+  $thumb-hover-color: rgba(144, 147, 153, 0.5),
+  $width: 12px,  // 增加宽度
+  $height: 12px,  // 增加高度
+  $border-radius: 6px  // 调整圆角
+) {
+  // 针对 Firefox
+  scrollbar-width: auto;  // 改为 auto 使其更粗
+  scrollbar-color: $thumb-color $track-color;
+
+  // 针对 Webkit 浏览器 (Chrome, Safari, Edge等)
+  &::-webkit-scrollbar {
+    width: $width !important;  // 添加 !important 提高优先级
+    height: $height !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $track-color;
+    border-radius: $border-radius;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+    border-radius: $border-radius;
+
+    // 可选：添加内边距和边框，使滚动条看起来更精致
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $thumb-hover-color;
+  }
+
+  // 禁用水平和垂直滚动条交叉处的按钮
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+}
+
+// 暗色主题滚动条
+@mixin dark-scrollbar {
+  @include custom-scrollbar(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3));
+}
+
+// 亮色主题滚动条
+@mixin light-scrollbar {
+  @include custom-scrollbar(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+}
+
+// 隐藏滚动条但保留滚动功能
+@mixin hidden-scrollbar {
+  -ms-overflow-style: none; // IE and Edge
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+}
+
+// 应用默认滚动条样式的辅助类
+.scrollbar {
+  @include custom-scrollbar();
+}
+
+.scrollbar-dark {
+  @include dark-scrollbar();
+}
+
+.scrollbar-light {
+  @include light-scrollbar();
+}
+
+.scrollbar-hidden {
+  @include hidden-scrollbar();
+}
