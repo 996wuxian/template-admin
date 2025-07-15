@@ -75,6 +75,33 @@
   // 处理菜单点击
   function handleUpdateValue(key: string) {
     router.push(key)
+
+    // 查找对应的菜单项
+    const findMenuItem = (options: MenuOption[], targetKey: string): MenuOption | null => {
+      for (const option of options) {
+        if (option.key === targetKey) {
+          return option
+        }
+        if (option.children) {
+          const found = findMenuItem(option.children, targetKey)
+          if (found) return found
+        }
+      }
+      return null
+    }
+
+    const menuItem = findMenuItem(menuOptions, key)
+    if (menuItem) {
+      useTheme.setTagData({
+        tag: {
+          key: menuItem.key,
+          label: menuItem.label,
+          icon: menuItem.icon,
+          close: key !== '/home', // 首页不允许关闭
+          isActive: true,
+        },
+      })
+    }
   }
 
   const menuOptions = transformRoutesToMenu(routes.value)
